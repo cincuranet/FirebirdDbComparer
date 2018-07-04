@@ -4,12 +4,16 @@
     <id>FirebirdDbComparer</id>
     <version>0.0.0.0</version>
     <title>FirebirdDbComparer</title>
-    <authors>Jiøí Èinèura</authors>
-    <owners>Jiøí Èinèura</owners>
+    <authors>JiÅ™Ã­ ÄŒinÄura</authors>
+    <owners>JiÅ™Ã­ ÄŒinÄura</owners>
     <projectUrl>https://github.com/cincuranet/FirebirdDbComparer</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>https://www.tabsoverspaces.com/tools/firebird-db-comparer</description>
     <tags>firebird, compare, comparare, metadata, structure</tags>
+    <dependencies>
+      <dependency id="Castle.Windsor" version="4.1.0" />
+      <dependency id="FirebirdSql.Data.FirebirdClient" version="6.0.0" />
+    </dependencies>
   </metadata>
   <files>
     <file src="bin\Release\FirebirdDbComparer.dll" target="lib\net462" />
