@@ -1,0 +1,1 @@
+﻿create table t (a varchar(20) unique, b char(20));

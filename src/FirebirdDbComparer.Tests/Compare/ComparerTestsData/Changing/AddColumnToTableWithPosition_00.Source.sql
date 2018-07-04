@@ -1,0 +1,1 @@
+﻿create table t (x varchar(20), a int);

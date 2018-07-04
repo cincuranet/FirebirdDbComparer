@@ -1,0 +1,1 @@
+﻿alter character set utf8 set default collation unicode_ci;

@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>FirebirdDbComparer</id>
+    <version>0.0.0.0</version>
+    <title>FirebirdDbComparer</title>
+    <authors>Jiøí Èinèura</authors>
+    <owners>Jiøí Èinèura</owners>
+    <projectUrl>https://github.com/cincuranet/FirebirdDbComparer</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>https://www.tabsoverspaces.com/tools/firebird-db-comparer</description>
+    <tags>firebird, compare, comparare, metadata, structure</tags>
+  </metadata>
+  <files>
+    <file src="bin\Release\FirebirdDbComparer.dll" target="lib\net462" />
+    <file src="bin\Release\FirebirdDbComparer.pdb" target="lib\net462" />
+  </files>
+</package>

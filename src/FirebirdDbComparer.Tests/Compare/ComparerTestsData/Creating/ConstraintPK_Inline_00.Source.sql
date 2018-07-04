@@ -1,0 +1,1 @@
+﻿create table t (i int not null primary key);

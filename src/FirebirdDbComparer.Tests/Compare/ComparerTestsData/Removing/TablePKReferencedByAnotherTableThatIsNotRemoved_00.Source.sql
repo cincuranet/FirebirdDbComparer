@@ -1,0 +1,1 @@
+﻿create table detail (id int primary key, fk int);

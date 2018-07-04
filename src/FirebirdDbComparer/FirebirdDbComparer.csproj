@@ -1,0 +1,231 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{458AD688-EEFC-4ECA-BF7E-931EF941930B}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>FirebirdDbComparer</RootNamespace>
+    <AssemblyName>FirebirdDbComparer</AssemblyName>
+    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <CodeContractsAssemblyMode>0</CodeContractsAssemblyMode>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <NoWarn>
+    </NoWarn>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <DocumentationFile />
+    <Prefer32Bit>false</Prefer32Bit>
+    <OutputPath>bin\Debug\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <NoWarn>
+    </NoWarn>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <DocumentationFile />
+    <Prefer32Bit>false</Prefer32Bit>
+    <OutputPath>bin\Release\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignManifests>false</SignManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Castle.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <HintPath>..\packages\Castle.Core.4.3.0\lib\net45\Castle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Windsor, Version=4.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <HintPath>..\packages\Castle.Windsor.4.1.0\lib\net45\Castle.Windsor.dll</HintPath>
+    </Reference>
+    <Reference Include="FirebirdSql.Data.FirebirdClient, Version=6.0.0.0, Culture=neutral, PublicKeyToken=3750abcc3150b00c, processorArchitecture=MSIL">
+      <HintPath>..\packages\FirebirdSql.Data.FirebirdClient.6.0.0\lib\net452\FirebirdSql.Data.FirebirdClient.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net" />
+    <Reference Include="System.Runtime.Remoting" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Common\Equatable\EquatableProperty.cs" />
+    <Compile Include="Common\Equatable\EquatableHelper.cs" />
+    <Compile Include="Compare\CompareResult.cs" />
+    <Compile Include="Compare\ComparerSettings.cs" />
+    <Compile Include="DatabaseObjects\DeterministicFlagType.cs" />
+    <Compile Include="DatabaseObjects\IdentityTypeType.cs" />
+    <Compile Include="DatabaseObjects\Implementations\MetadataCharacterSets30.cs" />
+    <Compile Include="DatabaseObjects\Implementations\MetadataCollations30.cs" />
+    <Compile Include="DatabaseObjects\Implementations\MetadataConstraints30.cs" />
+    <Compile Include="DatabaseObjects\Implementations\MetadataDatabase30.cs" />
+    <Compile Include="DatabaseObjects\Implementations\MetadataDependencies30.cs" />
+    <Compile Include="DatabaseObjects\Implementations\MetadataExceptions30.cs" />
+    <Compile Include="DatabaseObjects\Implementations\MetadataFields30.cs" />
+    <Compile Include="DatabaseObjects\Implementations\MetadataFunctions30.cs" />
+    <Compile Include="DatabaseObjects\Implementations\MetadataGenerators30.cs" />
+    <Compile Include="DatabaseObjects\Implementations\MetadataIndices30.cs" />
+    <Compile Include="DatabaseObjects\Implementations\MetadataPackages30.cs" />
+    <Compile Include="DatabaseObjects\Implementations\MetadataProcedures30.cs" />
+    <Compile Include="DatabaseObjects\Implementations\MetadataRelations30.cs" />
+    <Compile Include="DatabaseObjects\Implementations\MetadataRoles30.cs" />
+    <Compile Include="DatabaseObjects\Implementations\MetadataTriggers30.cs" />
+    <Compile Include="DatabaseObjects\Implementations\MetadataUserPrivileges30.cs" />
+    <Compile Include="DatabaseObjects\LegacyFlagType.cs" />
+    <Compile Include="DatabaseObjects\Primitives\Package.cs" />
+    <Compile Include="DatabaseObjects\PrivateFlagType.cs" />
+    <Compile Include="DatabaseObjects\SqlElement.cs" />
+    <Compile Include="Compare\TargetVersion.cs" />
+    <Compile Include="DatabaseObjects\ContextTypeType.cs" />
+    <Compile Include="Exceptions\CrossTypesOfSameObjectTypesException.cs" />
+    <Compile Include="Exceptions\DeadCodePathException.cs" />
+    <Compile Include="Interfaces\IComparer.cs" />
+    <Compile Include="Interfaces\IComparerFactory.cs" />
+    <Compile Include="Interfaces\IDatabaseObjectFactory.cs" />
+    <Compile Include="Interfaces\IMetadataFactory.cs" />
+    <Compile Include="Interfaces\IMetadataPackages.cs" />
+    <Compile Include="Interfaces\ISqlHelper.cs" />
+    <Compile Include="IoC\Bootstrapper.cs" />
+    <Compile Include="IoC\DatabaseObjectFactorySelector.cs" />
+    <Compile Include="IoC\DatabaseObjectSelector.cs" />
+    <Compile Include="IoC\SqlHelperSelector.cs" />
+    <Compile Include="IoC\FactoryInstaller.cs" />
+    <Compile Include="IoC\ServiceInstaller.cs" />
+    <Compile Include="IoC\VersionHandlerSelector.cs" />
+    <Compile Include="SqlGeneration\ScriptBuilder.cs" />
+    <Compile Include="DatabaseObjects\CollationAttributes.cs" />
+    <Compile Include="DatabaseObjects\BasicElement.cs" />
+    <Compile Include="DatabaseObjects\Identifier.cs" />
+    <Compile Include="DatabaseObjects\DatabaseStringOrdinal.cs" />
+    <Compile Include="DatabaseObjects\TreeNode.cs" />
+    <Compile Include="Exceptions\NotSupportedOnFirebirdException.cs" />
+    <Compile Include="Interfaces\IComparerSettings.cs" />
+    <Compile Include="Interfaces\IElement.cs" />
+    <Compile Include="Interfaces\ITypeObjectNameKey.cs" />
+    <Compile Include="DatabaseObjects\PropertiesEqualityComparerBase.cs" />
+    <Compile Include="DatabaseObjects\EquatableKeys\TypeObjectNameKey.cs" />
+    <Compile Include="DatabaseObjects\FieldType.cs" />
+    <Compile Include="DatabaseObjects\FunctionArgumentMechanism.cs" />
+    <Compile Include="DatabaseObjects\MetadataFieldType.cs" />
+    <Compile Include="DatabaseObjects\MetadataRelationType.cs" />
+    <Compile Include="DatabaseObjects\Elements\CheckConstraint.cs" />
+    <Compile Include="DatabaseObjects\Elements\Dependency.cs" />
+    <Compile Include="DatabaseObjects\Elements\FunctionArgument.cs" />
+    <Compile Include="DatabaseObjects\Elements\IndexSegment.cs" />
+    <Compile Include="DatabaseObjects\Elements\ProcedureParameter.cs" />
+    <Compile Include="DatabaseObjects\Primitives\RelationField.cs" />
+    <Compile Include="DatabaseObjects\Elements\ViewRelation.cs" />
+    <Compile Include="DatabaseObjects\Privilege.cs" />
+    <Compile Include="DatabaseObjects\ProcedureParameterMechanism.cs" />
+    <Compile Include="DatabaseObjects\ProcedureParameterType.cs" />
+    <Compile Include="DatabaseObjects\ProcedureProcedureType.cs" />
+    <Compile Include="DatabaseObjects\RelationConstraintType.cs" />
+    <Compile Include="DatabaseObjects\ConstraintRule.cs" />
+    <Compile Include="DatabaseObjects\EquatableKeys\CollationKey.cs" />
+    <Compile Include="DatabaseObjects\EquatableKeys\FunctionArgumentKey.cs" />
+    <Compile Include="DatabaseObjects\EquatableKeys\ProcedureParameterKey.cs" />
+    <Compile Include="DatabaseObjects\EquatableKeys\RelationFieldKey.cs" />
+    <Compile Include="DatabaseObjects\Primitive.cs" />
+    <Compile Include="DatabaseObjects\Primitives\RelationConstraint.cs" />
+    <Compile Include="DatabaseObjects\Primitives\CharacterSet.cs" />
+    <Compile Include="DatabaseObjects\Primitives\Collation.cs" />
+    <Compile Include="DatabaseObjects\Primitives\DbException.cs" />
+    <Compile Include="DatabaseObjects\Primitives\Field.cs" />
+    <Compile Include="DatabaseObjects\Primitives\Function.cs" />
+    <Compile Include="DatabaseObjects\Primitives\Generator.cs" />
+    <Compile Include="DatabaseObjects\Primitives\Index.cs" />
+    <Compile Include="DatabaseObjects\Primitives\Procedure.cs" />
+    <Compile Include="DatabaseObjects\Primitives\ReferenceConstraint.cs" />
+    <Compile Include="DatabaseObjects\Primitives\Relation.cs" />
+    <Compile Include="DatabaseObjects\Primitives\Role.cs" />
+    <Compile Include="DatabaseObjects\Primitives\Trigger.cs" />
+    <Compile Include="DatabaseObjects\Primitives\UserPrivilege.cs" />
+    <Compile Include="DatabaseObjects\RoleFlagType.cs" />
+    <Compile Include="DatabaseObjects\SystemFlagType.cs" />
+    <Compile Include="DatabaseObjects\TriggerClassType.cs" />
+    <Compile Include="DatabaseObjects\TriggerActionType.cs" />
+    <Compile Include="Interfaces\IUsesField.cs" />
+    <Compile Include="Interfaces\IHasCollation.cs" />
+    <Compile Include="Interfaces\IHasValidationSource.cs" />
+    <Compile Include="Interfaces\IHasDefaultSource.cs" />
+    <Compile Include="Interfaces\IHasDescription.cs" />
+    <Compile Include="Interfaces\IHasNullable.cs" />
+    <Compile Include="Interfaces\IHasSystemFlag.cs" />
+    <Compile Include="Interfaces\IMetadataDependencies.cs" />
+    <Compile Include="DatabaseObjects\Implementations\MetadataDependencies25.cs" />
+    <Compile Include="Interfaces\IMetadataUserPrivileges.cs" />
+    <Compile Include="DatabaseObjects\Implementations\MetadataUserPrivileges25.cs" />
+    <Compile Include="DatabaseObjects\ObjectType.cs" />
+    <Compile Include="Interfaces\IMetadataProcedures.cs" />
+    <Compile Include="DatabaseObjects\Implementations\MetadataProcedures25.cs" />
+    <Compile Include="Interfaces\IMetadataFunctions.cs" />
+    <Compile Include="DatabaseObjects\Implementations\MetadataFunctions25.cs" />
+    <Compile Include="Interfaces\IMetadataRoles.cs" />
+    <Compile Include="Interfaces\IMetadataGenerators.cs" />
+    <Compile Include="DatabaseObjects\Implementations\MetadataGenerators25.cs" />
+    <Compile Include="Interfaces\IMetadataDbExceptions.cs" />
+    <Compile Include="DatabaseObjects\Implementations\MetadataExceptions25.cs" />
+    <Compile Include="Interfaces\IMetadataCharacterSets.cs" />
+    <Compile Include="DatabaseObjects\Implementations\MetadataCharacterSets25.cs" />
+    <Compile Include="Interfaces\IMetadataCollations.cs" />
+    <Compile Include="DatabaseObjects\Implementations\MetadataCollations25.cs" />
+    <Compile Include="Interfaces\IMetadataTriggers.cs" />
+    <Compile Include="DatabaseObjects\Implementations\MetadataTriggers25.cs" />
+    <Compile Include="Interfaces\IMetadataConstraints.cs" />
+    <Compile Include="DatabaseObjects\Implementations\MetadataConstraints25.cs" />
+    <Compile Include="Interfaces\IMetadataIndices.cs" />
+    <Compile Include="DatabaseObjects\Implementations\MetadataIndices25.cs" />
+    <Compile Include="DatabaseObjects\Implementations\MetadataRelations25.cs" />
+    <Compile Include="Interfaces\IMetadataFields.cs" />
+    <Compile Include="DatabaseObjects\Implementations\MetadataDatabase25.cs" />
+    <Compile Include="DatabaseObjects\DatabaseObject.cs" />
+    <Compile Include="DatabaseObjects\Implementations\MetadataFields25.cs" />
+    <Compile Include="DatabaseObjects\Metadata.cs" />
+    <Compile Include="Interfaces\IMetadata.cs" />
+    <Compile Include="Interfaces\IMetadataDatabase.cs" />
+    <Compile Include="Interfaces\IDatabaseObject.cs" />
+    <Compile Include="Interfaces\IMetadataRelations.cs" />
+    <Compile Include="DatabaseObjects\Implementations\MetadataRoles25.cs" />
+    <Compile Include="Interfaces\IComparerContext.cs" />
+    <Compile Include="Interfaces\ISupportsComment.cs" />
+    <Compile Include="Common\Extensions.cs" />
+    <Compile Include="Interfaces\IDataType.cs" />
+    <Compile Include="Compare\Comparer.cs" />
+    <Compile Include="Compare\ScriptResult.cs" />
+    <Compile Include="Compare\ComparerContext.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SqlGeneration\Command.cs" />
+    <Compile Include="SqlGeneration\CommandGroup.cs" />
+    <Compile Include="SqlGeneration\PSqlCommand.cs" />
+    <Compile Include="SqlGeneration\SqlHelper30.cs" />
+    <Compile Include="SqlGeneration\SqlHelper25.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="FirebirdDbComparer.nuspec" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

@@ -1,0 +1,1 @@
+﻿create table t (a int check (a < 66));

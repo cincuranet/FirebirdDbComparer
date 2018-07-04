@@ -1,0 +1,1 @@
+﻿create table t (i int unique);

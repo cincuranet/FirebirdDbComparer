@@ -1,0 +1,1 @@
+﻿create table t (a char(1) not null, b char(1));
