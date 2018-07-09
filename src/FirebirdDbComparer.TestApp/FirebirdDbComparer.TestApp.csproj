@@ -2,7 +2,6 @@
     <PropertyGroup>
         <OutputType>Exe</OutputType>
         <TargetFrameworks>net462</TargetFrameworks>
-        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     </PropertyGroup>
     <ItemGroup>
         <ProjectReference Include="..\FirebirdDbComparer\FirebirdDbComparer.csproj" />
