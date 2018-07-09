@@ -15,12 +15,16 @@ namespace FirebirdDbComparer.Common
                 return true;
             }
 
+#pragma warning disable IDE0041 // Use 'is null' check
             if (ReferenceEquals(obj, null))
+#pragma warning restore IDE0041 // Use 'is null' check
             {
                 return false;
             }
 
+#pragma warning disable IDE0041 // Use 'is null' check
             if (ReferenceEquals(null, other))
+#pragma warning restore IDE0041 // Use 'is null' check
             {
                 return false;
             }
