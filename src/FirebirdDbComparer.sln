@@ -4,9 +4,9 @@ VisualStudioVersion = 15.0.26430.6
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FirebirdDbComparer", "FirebirdDbComparer\FirebirdDbComparer.csproj", "{458AD688-EEFC-4ECA-BF7E-931EF941930B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FirebirdDbComparer.Tests", "FirebirdDbComparer.Tests\FirebirdDbComparer.Tests.csproj", "{8381D807-0CC0-410F-8212-E0A3C7E6BEC9}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FirebirdDbComparer.TestApp", "FirebirdDbComparer.TestApp\FirebirdDbComparer.TestApp.csproj", "{C5884D95-0A31-4A15-BB16-97F3446BC701}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FirebirdDbComparer.Tests", "FirebirdDbComparer.Tests\FirebirdDbComparer.Tests.csproj", "{EECAC9FA-3833-48D7-9579-0F18FC4D85E5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -18,16 +18,19 @@ Global
 		{458AD688-EEFC-4ECA-BF7E-931EF941930B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{458AD688-EEFC-4ECA-BF7E-931EF941930B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{458AD688-EEFC-4ECA-BF7E-931EF941930B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8381D807-0CC0-410F-8212-E0A3C7E6BEC9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8381D807-0CC0-410F-8212-E0A3C7E6BEC9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8381D807-0CC0-410F-8212-E0A3C7E6BEC9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8381D807-0CC0-410F-8212-E0A3C7E6BEC9}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C5884D95-0A31-4A15-BB16-97F3446BC701}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C5884D95-0A31-4A15-BB16-97F3446BC701}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C5884D95-0A31-4A15-BB16-97F3446BC701}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C5884D95-0A31-4A15-BB16-97F3446BC701}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EECAC9FA-3833-48D7-9579-0F18FC4D85E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EECAC9FA-3833-48D7-9579-0F18FC4D85E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EECAC9FA-3833-48D7-9579-0F18FC4D85E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EECAC9FA-3833-48D7-9579-0F18FC4D85E5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {68BFA5F2-6AF1-4CF4-8E1F-5CE94DF487E5}
 	EndGlobalSection
 EndGlobal

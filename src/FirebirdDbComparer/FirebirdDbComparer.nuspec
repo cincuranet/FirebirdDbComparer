@@ -16,7 +16,7 @@
     </dependencies>
   </metadata>
   <files>
-    <file src="bin\Release\FirebirdDbComparer.dll" target="lib\net462" />
-    <file src="bin\Release\FirebirdDbComparer.pdb" target="lib\net462" />
+    <file src="bin\Release\net462\FirebirdDbComparer.dll" target="lib\net462" />
+    <file src="bin\Release\net462\FirebirdDbComparer.pdb" target="lib\net462" />
   </files>
 </package>
