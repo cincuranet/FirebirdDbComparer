@@ -1,3 +1,4 @@
+using System.Reflection;
 using Castle.Facilities.TypedFactory;
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.Resolvers.SpecializedResolvers;
@@ -19,7 +20,7 @@ namespace FirebirdDbComparer.IoC
             container.Kernel.AddHandlerSelector(new DatabaseObjectSelector(settings));
             container.AddFacility<TypedFactoryFacility>();
             container.Register(Component.For<IComparerSettings>().Instance(settings));
-            container.Install(FromAssembly.InThisApplication());
+            container.Install(FromAssembly.InThisApplication(Assembly.GetExecutingAssembly()));
             return container;
         }
     }

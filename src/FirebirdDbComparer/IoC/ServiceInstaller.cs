@@ -1,3 +1,4 @@
+using System.Reflection;
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
@@ -15,12 +16,12 @@ namespace FirebirdDbComparer.Ioc
         {
             container.Register(
                 Classes
-                    .FromAssemblyInThisApplication()
+                    .FromAssemblyInThisApplication(Assembly.GetExecutingAssembly())
                     .BasedOn<IDatabaseObject>()
                     .WithService.FirstInterface()
                     .LifestyleTransient(),
                 Classes
-                    .FromAssemblyInThisApplication()
+                    .FromAssemblyInThisApplication(Assembly.GetExecutingAssembly())
                     .BasedOn<ISqlHelper>()
                     .WithService.DefaultInterfaces()
                     .LifestyleSingleton(),
