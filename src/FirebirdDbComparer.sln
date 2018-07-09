@@ -2,11 +2,16 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26430.6
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FirebirdDbComparer", "FirebirdDbComparer\FirebirdDbComparer.csproj", "{458AD688-EEFC-4ECA-BF7E-931EF941930B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FirebirdDbComparer", "FirebirdDbComparer\FirebirdDbComparer.csproj", "{458AD688-EEFC-4ECA-BF7E-931EF941930B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FirebirdDbComparer.TestApp", "FirebirdDbComparer.TestApp\FirebirdDbComparer.TestApp.csproj", "{C5884D95-0A31-4A15-BB16-97F3446BC701}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FirebirdDbComparer.TestApp", "FirebirdDbComparer.TestApp\FirebirdDbComparer.TestApp.csproj", "{C5884D95-0A31-4A15-BB16-97F3446BC701}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FirebirdDbComparer.Tests", "FirebirdDbComparer.Tests\FirebirdDbComparer.Tests.csproj", "{EECAC9FA-3833-48D7-9579-0F18FC4D85E5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FirebirdDbComparer.Tests", "FirebirdDbComparer.Tests\FirebirdDbComparer.Tests.csproj", "{EECAC9FA-3833-48D7-9579-0F18FC4D85E5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{90F4A7C9-F77C-4774-ACD2-EDACF44A892F}"
+	ProjectSection(SolutionItems) = preProject
+		Directory.Build.props = Directory.Build.props
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
