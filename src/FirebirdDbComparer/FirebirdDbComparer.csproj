@@ -7,7 +7,7 @@
     <PropertyGroup>
         <PackageId>FirebirdDbComparer</PackageId>
         <PackageVersion>$(Version)</PackageVersion>
-        <Authors>Jiří Činčura</Authors>
+        <Authors>Jiří Činčura, Danny Van den Wouwer</Authors>
         <PackageProjectUrl>https://github.com/cincuranet/FirebirdDbComparer</PackageProjectUrl>
         <Description>https://www.tabsoverspaces.com/tools/firebird-db-comparer</Description>
         <PackageTags>firebird, compare, comparare, metadata, structure</PackageTags>
