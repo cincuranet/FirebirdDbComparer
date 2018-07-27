@@ -18,7 +18,7 @@ namespace FirebirdDbComparer.Tests.Common.Equatable
             public bool Equals(EquatableEqualsWasCalled other)
             {
                 Result = true;
-                return default(bool);
+                return default;
             }
         }
 

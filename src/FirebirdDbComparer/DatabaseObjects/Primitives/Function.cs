@@ -166,7 +166,7 @@ namespace FirebirdDbComparer.DatabaseObjects.Primitives
         private string CreateLegacyArgumentDefinition(FunctionArgument argument)
         {
             var builder = new StringBuilder();
-            builder.Append(SqlHelper.GetDataType(argument, default(IDictionary<int, CharacterSet>), default(int)));
+            builder.Append(SqlHelper.GetDataType(argument, default, default));
             switch (argument.MechanismMechanism)
             {
                 case FunctionArgumentMechanism.BY_VALUE:
