@@ -75,7 +75,7 @@ namespace FirebirdDbComparer.DatabaseObjects.Elements
                     SystemFlag = (SystemFlagType)values["RDB$SYSTEM_FLAG"].DbValueToInt32().GetValueOrDefault(),
                     DefaultSource = values["RDB$DEFAULT_SOURCE"].DbValueToString(),
                     CollationId = values["RDB$COLLATION_ID"].DbValueToInt32(),
-                    Nullable = values["RDB$NULL_FLAG"].DbValueToNullable(),
+                    Nullable = values["RDB$NULL_FLAG"].DbValueToNullableFlag(),
                     ParameterMechanism = (ProcedureParameterMechanism)values["RDB$PARAMETER_MECHANISM"].DbValueToInt32().GetValueOrDefault(),
                     FieldName = new Identifier(sqlHelper, values["RDB$FIELD_NAME"].DbValueToString()),
                     RelationName = new Identifier(sqlHelper, values["RDB$RELATION_NAME"].DbValueToString())

@@ -168,7 +168,7 @@ namespace FirebirdDbComparer.DatabaseObjects.Implementations
                     primitiveType = null;
                     break;
             }
-            return primitiveType == null || !context.IsDropped(privilege.TypeObjectNameKey);
+            return primitiveType == null || !context.DroppedObjects.Contains(privilege.TypeObjectNameKey);
         }
     }
 }

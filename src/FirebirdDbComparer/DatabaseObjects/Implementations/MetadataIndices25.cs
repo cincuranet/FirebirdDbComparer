@@ -44,11 +44,11 @@ select trim(I.RDB$INDEX_NAME) as RDB$INDEX_NAME,
 
         public override void Initialize()
         {
-            var indexSegments = 
+            var indexSegments =
                 Execute(IndexSegmentCommandText)
                 .Select(o => IndexSegment.CreateFrom(SqlHelper, o))
                 .ToLookup(x => x.IndexName);
-            m_Indices = 
+            m_Indices =
                 Execute(IndexCommandText)
                 .Select(o => Index.CreateFrom(SqlHelper, o, indexSegments))
                 .ToDictionary(x => x.IndexName);
@@ -100,7 +100,7 @@ select trim(I.RDB$INDEX_NAME) as RDB$INDEX_NAME,
             var result = new CommandGroup();
             result.Append(SelectIndicesHelper(IndicesToBeCreatedPredicate, this, other, context).SelectMany(i => i.Create(Metadata, other, context)));
             result.Append(SelectIndicesHelper(IndicesToBeAlteredPredicate, this, other, context).SelectMany(i => i.Alter(Metadata, other, context)));
-            result.Append(SelectIndicesHelper(IndicesToBeDropCreatedPredicate, this, other, context).SelectMany(i => i.Drop(Metadata, other, context).Concat(i.Create(Metadata, other, context))));
+            result.Append(SelectIndicesHelper(IndicesToBeDropCreatedPredicate, this, other, context).SelectMany(i => DropCreateHelper(i, other, context)));
             result.Append(SelectIndicesHelper(IndicesToBeRecreatedPredicate, this, other, context).SelectMany(i => i.Create(Metadata, other, context)));
             if (!result.IsEmpty)
             {
@@ -112,7 +112,23 @@ select trim(I.RDB$INDEX_NAME) as RDB$INDEX_NAME,
         {
             return other.MetadataIndices.Indices.Values
                 .Where(i => i.IsUserCreatedIndex && i.Segments.Any(predicate))
+                .Where(i => !context.DroppedObjects.Contains(i.TypeObjectNameKey))
                 .SelectMany(i => i.Drop(Metadata, other, context));
+        }
+
+        private IEnumerable<Command> DropCreateHelper(Index index, IMetadata other, IComparerContext context)
+        {
+            if (!context.DroppedObjects.Contains(index.TypeObjectNameKey))
+            {
+                foreach (var item in index.Drop(Metadata, other, context))
+                {
+                    yield return item;
+                }
+            }
+            foreach (var item in index.Create(Metadata, other, context))
+            {
+                yield return item;
+            }
         }
 
         private static IEnumerable<Index> SelectIndicesHelper(Func<Index, IMetadata, IComparerContext, bool> predicate, IMetadataIndices indices, IMetadata other, IComparerContext context)
@@ -146,7 +162,7 @@ select trim(I.RDB$INDEX_NAME) as RDB$INDEX_NAME,
 
         private static bool IndicesToBeRecreatedPredicate(Index index, IMetadata metadata, IComparerContext context)
         {
-            return context.IsDropped(index.TypeObjectNameKey)
+            return context.DroppedObjects.Contains(index.TypeObjectNameKey)
                 && metadata.MetadataIndices.Indices.TryGetValue(index.IndexName, out var otherIndex)
                 && index == otherIndex;
         }

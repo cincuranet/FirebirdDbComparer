@@ -23,7 +23,11 @@ namespace FirebirdDbComparer.DatabaseObjects.Implementations
 
         public IDictionary<int, Procedure> ProceduresById => m_ProceduresById;
 
-        public IDictionary<Identifier, Procedure> ProceduresByName => m_ProceduresByName;
+        public virtual IDictionary<Identifier, Procedure> ProceduresByName => m_ProceduresByName;
+
+        public virtual IDictionary<Identifier, Procedure> NonPackageProceduresByName => ProceduresByName;
+
+        public virtual IDictionary<Identifier, Procedure> PackageProceduresByName => null;
 
         protected virtual string ProcedureCommandText => @"
 select trim(P.RDB$PROCEDURE_NAME) as RDB$PROCEDURE_NAME,
@@ -110,7 +114,7 @@ select trim(PP.RDB$PARAMETER_NAME) as RDB$PARAMETER_NAME,
             }
         }
 
-        public IEnumerable<CommandGroup> CreateEmptyProcedures(IMetadata other, IComparerContext context)
+        public IEnumerable<CommandGroup> CreateEmptyNewProcedures(IMetadata other, IComparerContext context)
         {
             return FilterNewProcedures(other)
                 .Select(procedure => new CommandGroup().Append(WrapActionWithEmptyBody(procedure.Create)(Metadata, other, context)));
@@ -136,19 +140,19 @@ select trim(PP.RDB$PARAMETER_NAME) as RDB$PARAMETER_NAME,
                 .Select(procedure => new CommandGroup().Append(procedure.Drop(Metadata, other, context)));
         }
 
-        private IEnumerable<Procedure> FilterNewProcedures(IMetadata other)
+        protected virtual IEnumerable<Procedure> FilterNewProcedures(IMetadata other)
         {
             return FilterSystemFlagUser(ProceduresByName.Values)
                 .Where(p => !other.MetadataProcedures.ProceduresByName.ContainsKey(p.ProcedureName));
         }
 
-        private IEnumerable<Procedure> FilterProceduresToBeDropped(IMetadata other)
+        protected virtual IEnumerable<Procedure> FilterProceduresToBeDropped(IMetadata other)
         {
             return FilterSystemFlagUser(other.MetadataProcedures.ProceduresByName.Values)
                 .Where(p => !ProceduresByName.ContainsKey(p.ProcedureName));
         }
 
-        private IEnumerable<Procedure> FilterProceduresToBeAltered(IMetadata other)
+        protected virtual IEnumerable<Procedure> FilterProceduresToBeAltered(IMetadata other)
         {
             return FilterSystemFlagUser(ProceduresByName.Values)
                 .Where(p => other.MetadataProcedures.ProceduresByName.TryGetValue(p.ProcedureName, out var otherProcedure) && otherProcedure != p);

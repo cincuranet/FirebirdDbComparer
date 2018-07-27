@@ -37,7 +37,27 @@ namespace FirebirdDbComparer.DatabaseObjects.Primitives
 
         protected override IEnumerable<Command> OnCreate(IMetadata sourceMetadata, IMetadata targetMetadata, IComparerContext context)
         {
-            throw new NotImplementedException();
+            var command = new PSqlCommand();
+            if (context.EmptyBodiesEnabled)
+            {
+                command.Append($"CREATE OR ALTER PACKAGE {PackageName.AsSqlIndentifier()}");
+            }
+            else
+            {
+                command.Append($"RECREATE PACKAGE BODY {PackageName.AsSqlIndentifier()}");
+            }
+            command.AppendLine();
+            command.Append("AS");
+            command.AppendLine();
+            if (context.EmptyBodiesEnabled)
+            {
+                command.Append(PackageHeaderSource);
+            }
+            else
+            {
+                command.Append(PackageBodySource);
+            }
+            yield return command;
         }
 
         protected override IEnumerable<Command> OnDrop(IMetadata sourceMetadata, IMetadata targetMetadata, IComparerContext context)
@@ -47,7 +67,7 @@ namespace FirebirdDbComparer.DatabaseObjects.Primitives
 
         protected override IEnumerable<Command> OnAlter(IMetadata sourceMetadata, IMetadata targetMetadata, IComparerContext context)
         {
-            throw new NotImplementedException();
+            return OnCreate(sourceMetadata, targetMetadata, context);
         }
 
         protected override Identifier OnPrimitiveTypeKeyObjectName() => PackageName;
@@ -60,7 +80,7 @@ namespace FirebirdDbComparer.DatabaseObjects.Primitives
                     PackageName = new Identifier(sqlHelper, values["RDB$PACKAGE_NAME"].DbValueToString()),
                     PackageHeaderSource = values["RDB$PACKAGE_HEADER_SOURCE"].DbValueToString(),
                     PackageBodySource = values["RDB$PACKAGE_BODY_SOURCE"].DbValueToString(),
-                    ValidBodyFlag = values["RDB$VALID_BODY_FLAG"].DbValueToNullable(),
+                    ValidBodyFlag = values["RDB$VALID_BODY_FLAG"].DbValueToFlag(),
                     OwnerName = new Identifier(sqlHelper, values["RDB$OWNER_NAME"].DbValueToString()),
                     SystemFlag = (SystemFlagType)values["RDB$SYSTEM_FLAG"].DbValueToInt32().GetValueOrDefault(),
                     Description = values["RDB$DESCRIPTION"].DbValueToString()

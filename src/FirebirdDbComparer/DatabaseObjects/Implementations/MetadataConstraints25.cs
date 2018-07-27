@@ -162,6 +162,7 @@ select trim(RC.RDB$CONSTRAINT_NAME) as RDB$CONSTRAINT_NAME,
                                  || c.RelationConstraintType == RelationConstraintType.UNIQUE
                                  || c.RelationConstraintType == RelationConstraintType.FOREIGN_KEY)
                                 && c.Index.Segments.Any(selector))
+                    .Where(c => !context.DroppedObjects.Contains(c.TypeObjectNameKey))
                     .OrderBy(c => c.RelationConstraintType == RelationConstraintType.PRIMARY_KEY
                                   || c.RelationConstraintType == RelationConstraintType.UNIQUE);
             foreach (var relationConstraint in relationConstraints)
@@ -170,7 +171,9 @@ select trim(RC.RDB$CONSTRAINT_NAME) as RDB$CONSTRAINT_NAME,
                 {
                     if (other.MetadataConstraints.ReferenceConstraintsByNameUq.TryGetValue(relationConstraint.ConstraintName, out var referenceConstraints))
                     {
-                        var dependencies = referenceConstraints.Select(rc => other.MetadataConstraints.ReferenceConstraintsByName[rc.ConstraintName]);
+                        var dependencies = referenceConstraints
+                            .Select(rc => other.MetadataConstraints.ReferenceConstraintsByName[rc.ConstraintName])
+                            .Where(rc => !context.DroppedObjects.Contains(rc.RelationConstraint.TypeObjectNameKey));
                         foreach (var command in dependencies.SelectMany(d => d.RelationConstraint.Drop(Metadata, other, context)))
                         {
                             yield return command;
@@ -223,6 +226,7 @@ select trim(RC.RDB$CONSTRAINT_NAME) as RDB$CONSTRAINT_NAME,
                     .RelationConstraintsByName
                     .Values
                     .Where(c => predicate(other.MetadataConstraints, Metadata.MetadataConstraints, c))
+                    .Where(c => !context.DroppedObjects.Contains(c.TypeObjectNameKey))
                     .OrderBy(rc => rc.RelationName)
                     .ThenBy(rc => rc.ConstraintName);
             foreach (var constraint in constraintsToBeDropped)
@@ -235,7 +239,7 @@ select trim(RC.RDB$CONSTRAINT_NAME) as RDB$CONSTRAINT_NAME,
                             referenceConstraints
                                 .Select(rc => ReferenceConstraintsByName[rc.ConstraintName])
                                 .Where(rc => other.MetadataConstraints.ReferenceConstraintsByName.ContainsKey(rc.ConstraintName))
-                                .Where(rc => !context.IsDropped(rc.TypeObjectNameKey));
+                                .Where(rc => !context.DroppedObjects.Contains(rc.TypeObjectNameKey));
                         foreach (var item in dependencies.SelectMany(d => d.RelationConstraint.Drop(Metadata, other, context)))
                         {
                             yield return item;
@@ -283,7 +287,7 @@ select trim(RC.RDB$CONSTRAINT_NAME) as RDB$CONSTRAINT_NAME,
                                 (rc.RelationConstraintType == RelationConstraintType.FOREIGN_KEY
                                  || rc.RelationConstraintType == RelationConstraintType.PRIMARY_KEY
                                  || rc.RelationConstraintType == RelationConstraintType.UNIQUE)
-                                && context.IsDropped(rc.TypeObjectNameKey)
+                                && context.DroppedObjects.Contains(rc.TypeObjectNameKey)
                                 && otherRelationConstraint != null
                                 && otherRelationConstraint == rc;
                         })

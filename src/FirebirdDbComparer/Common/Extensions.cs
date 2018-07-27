@@ -43,7 +43,12 @@ namespace FirebirdDbComparer.Common
             return DbValueToHelper(value, (bool?)null, x => Convert.ToBoolean(x, CultureInfo.InvariantCulture));
         }
 
-        public static bool DbValueToNullable(this object value)
+        public static bool DbValueToFlag(this object value)
+        {
+            return DbValueToHelper(value, false, x => Convert.ToInt32(x, CultureInfo.InvariantCulture) != 0);
+        }
+
+        public static bool DbValueToNullableFlag(this object value)
         {
             return DbValueToHelper(value, true, x => Convert.ToInt32(x, CultureInfo.InvariantCulture) == 0);
         }

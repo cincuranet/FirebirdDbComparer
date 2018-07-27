@@ -15,7 +15,7 @@ using FirebirdDbComparer.SqlGeneration;
 namespace FirebirdDbComparer.DatabaseObjects.Primitives
 {
     [DebuggerDisplay("{FunctionName}")]
-    public sealed class Function : Primitive<Function>, IHasSystemFlag, IHasDescription
+    public sealed class Function : Primitive<Function>, IHasSystemFlag, IHasDescription, IHasPackage
     {
         private static readonly EquatableProperty<Function>[] s_EquatableProperties =
         {

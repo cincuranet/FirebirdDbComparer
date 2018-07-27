@@ -12,7 +12,7 @@ namespace FirebirdDbComparer.Interfaces
         IDictionary<ProcedureParameterKey, ProcedureParameter> ProcedureParameters { get; }
         IDictionary<int, Procedure> ProceduresById { get; }
         IDictionary<Identifier, Procedure> ProceduresByName { get; }
-        IEnumerable<CommandGroup> CreateEmptyProcedures(IMetadata other, IComparerContext context);
+        IEnumerable<CommandGroup> CreateEmptyNewProcedures(IMetadata other, IComparerContext context);
         IEnumerable<CommandGroup> AlterProceduresToFullBody(IMetadata other, IComparerContext context);
         IEnumerable<CommandGroup> AlterProceduresToEmptyBodyForAlteringOrDropping(IMetadata other, IComparerContext context);
         IEnumerable<CommandGroup> DropProcedures(IMetadata other, IComparerContext context);

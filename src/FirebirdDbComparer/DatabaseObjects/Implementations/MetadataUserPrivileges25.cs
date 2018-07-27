@@ -216,7 +216,7 @@ select trim(UP.RDB$USER) as RDB$USER,
                     primitiveType = null;
                     break;
             }
-            return primitiveType == null || !context.IsDropped(privilege.TypeObjectNameKey);
+            return primitiveType == null || !context.DroppedObjects.Contains(privilege.TypeObjectNameKey);
         }
 
         protected virtual string CreatePrivilegeName(UserPrivilege userPrivilege)

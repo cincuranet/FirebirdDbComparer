@@ -13,7 +13,6 @@ namespace FirebirdDbComparer.Compare
 
         public ComparerContext(IComparerSettings settings)
         {
-            CreatedObjects = new HashSet<TypeObjectNameKey>();
             DroppedObjects = new HashSet<TypeObjectNameKey>();
             CreatedRelationFields = new HashSet<RelationFieldKey>();
             DeferredColumnsToDrop = new List<CommandGroup>();
@@ -24,10 +23,6 @@ namespace FirebirdDbComparer.Compare
         public IComparerSettings Settings { get; }
 
         public HashSet<TypeObjectNameKey> DroppedObjects { get; }
-        public bool IsDropped(TypeObjectNameKey key) => DroppedObjects.Contains(key);
-
-        public HashSet<TypeObjectNameKey> CreatedObjects { get; }
-        public bool IsCreated(TypeObjectNameKey key) => CreatedObjects.Contains(key);
 
         public HashSet<RelationFieldKey> CreatedRelationFields { get; }
 

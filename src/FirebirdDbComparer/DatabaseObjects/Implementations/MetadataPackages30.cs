@@ -47,5 +47,24 @@ select trim(P.RDB$PACKAGE_NAME) as RDB$PACKAGE_NAME,
                 yield return result;
             }
         }
+
+        public IEnumerable<CommandGroup> CreateNewPackagesHeaders(IMetadata other, IComparerContext context)
+        {
+            return FilterNewPackages(other)
+                .Select(package => new CommandGroup().Append(WrapActionWithEmptyBody(package.Create)(Metadata, other, context)));
+        }
+
+        public IEnumerable<CommandGroup> CreateNewPackagesBodies(IMetadata other, IComparerContext context)
+        {
+            return FilterNewPackages(other)
+                .Where(package => package.ValidBodyFlag)
+                .Select(package => new CommandGroup().Append(package.Create(Metadata, other, context)));
+        }
+
+        private IEnumerable<Package> FilterNewPackages(IMetadata other)
+        {
+            return FilterSystemFlagUser(PackagesByName.Values)
+                .Where(p => !other.MetadataPackages.PackagesByName.ContainsKey(p.PackageName));
+        }
     }
 }

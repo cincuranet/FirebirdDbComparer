@@ -155,7 +155,7 @@ namespace FirebirdDbComparer.DatabaseObjects.Primitives
                     CharacterLength = values["RDB$CHARACTER_LENGTH"].DbValueToInt32(),
                     CharacterSetId = values["RDB$CHARACTER_SET_ID"].DbValueToInt32(),
                     CollationId = values["RDB$COLLATION_ID"].DbValueToInt32(),
-                    Nullable = values["RDB$NULL_FLAG"].DbValueToNullable(),
+                    Nullable = values["RDB$NULL_FLAG"].DbValueToNullableFlag(),
                     SystemFlag = (SystemFlagType)values["RDB$SYSTEM_FLAG"].DbValueToInt32().GetValueOrDefault()
                 };
             result.FieldPrecision = AdjustFieldPrecision(values["RDB$FIELD_PRECISION"].DbValueToInt32(), result.FieldType);

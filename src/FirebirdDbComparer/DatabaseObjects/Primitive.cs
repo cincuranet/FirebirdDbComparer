@@ -22,27 +22,17 @@ namespace FirebirdDbComparer.DatabaseObjects
             EnsureParameters(sourceMetadata, targetMetadata, context);
 
             context.DroppedObjects.Remove(TypeObjectNameKey);
-            if (context.CreatedObjects.Add(TypeObjectNameKey))
-            {
-                foreach (var item in OnCreate(sourceMetadata, targetMetadata, context))
-                {
-                    yield return item;
-                }
-            }
+
+            return OnCreate(sourceMetadata, targetMetadata, context);
         }
 
         public IEnumerable<Command> Drop(IMetadata sourceMetadata, IMetadata targetMetadata, IComparerContext context)
         {
             EnsureParameters(sourceMetadata, targetMetadata, context);
 
-            context.CreatedObjects.Remove(TypeObjectNameKey);
-            if (context.DroppedObjects.Add(TypeObjectNameKey))
-            {
-                foreach (var item in OnDrop(sourceMetadata, targetMetadata, context))
-                {
-                    yield return item;
-                }
-            }
+            context.DroppedObjects.Add(TypeObjectNameKey);
+
+            return OnDrop(sourceMetadata, targetMetadata, context);
         }
 
         public IEnumerable<Command> Alter(IMetadata sourceMetadata, IMetadata targetMetadata, IComparerContext context)
@@ -50,7 +40,6 @@ namespace FirebirdDbComparer.DatabaseObjects
             EnsureParameters(sourceMetadata, targetMetadata, context);
 
             context.DroppedObjects.Remove(TypeObjectNameKey);
-            context.CreatedObjects.Add(TypeObjectNameKey);
 
             return OnAlter(sourceMetadata, targetMetadata, context);
         }

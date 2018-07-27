@@ -103,7 +103,7 @@ namespace FirebirdDbComparer.DatabaseObjects.Elements
                 result.FieldSource = new Identifier(sqlHelper, values["RDB$FIELD_SOURCE"].DbValueToString());
                 result.DefaultSource = values["RDB$DEFAULT_SOURCE"].DbValueToString();
                 result.CollationId = values["RDB$COLLATION_ID"].DbValueToInt32();
-                result.Nullable = values["RDB$NULL_FLAG"].DbValueToNullable();
+                result.Nullable = values["RDB$NULL_FLAG"].DbValueToNullableFlag();
                 result.ArgumentMechanismLegacyStyle = (FunctionArgumentMechanism)values["RDB$ARGUMENT_MECHANISM"].DbValueToInt32().GetValueOrDefault();
                 result.FieldName = new Identifier(sqlHelper, values["RDB$FIELD_NAME"].DbValueToString());
                 result.RelationName = new Identifier(sqlHelper, values["RDB$RELATION_NAME"].DbValueToString());

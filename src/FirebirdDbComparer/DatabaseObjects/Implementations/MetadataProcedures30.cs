@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using FirebirdDbComparer.DatabaseObjects.EquatableKeys;
+using FirebirdDbComparer.DatabaseObjects.Primitives;
 using FirebirdDbComparer.Interfaces;
 using FirebirdDbComparer.SqlGeneration;
 
@@ -8,6 +9,9 @@ namespace FirebirdDbComparer.DatabaseObjects.Implementations
 {
     public class MetadataProcedures30 : MetadataProcedures25, ISupportsComment
     {
+        private IDictionary<Identifier, Procedure> m_NonPackageProceduresByName;
+        private IDictionary<Identifier, Procedure> m_PackageProceduresByName;
+
         public MetadataProcedures30(IMetadata metadata, ISqlHelper sqlHelper)
             : base(metadata, sqlHelper)
         { }
@@ -45,9 +49,21 @@ select trim(PP.RDB$PARAMETER_NAME) as RDB$PARAMETER_NAME,
        trim(PP.RDB$PACKAGE_NAME) as RDB$PACKAGE_NAME
   from RDB$PROCEDURE_PARAMETERS PP";
 
+        public override IDictionary<Identifier, Procedure> NonPackageProceduresByName => m_NonPackageProceduresByName;
+
+        public override IDictionary<Identifier, Procedure> PackageProceduresByName => m_PackageProceduresByName;
+
         public override void FinishInitialization()
         {
             base.FinishInitialization();
+
+            m_NonPackageProceduresByName = ProceduresByName.Values
+               .Where(x => x.PackageName == null)
+               .ToDictionary(x => x.ProcedureName, x => x);
+
+            m_PackageProceduresByName = ProceduresByName.Values
+                .Where(x => x.PackageName != null)
+                .ToDictionary(x => x.ProcedureName, x => x);
 
             foreach (var procedureParameter in ProcedureParameters.Values)
             {
@@ -72,13 +88,12 @@ select trim(PP.RDB$PARAMETER_NAME) as RDB$PARAMETER_NAME,
             }
         }
 
-        IEnumerable<CommandGroup> ISupportsComment.Handle(IMetadata other, IComparerContext context)
+        // CrossTypesOfSameObjectTypesException and packages
+
+        protected override IEnumerable<Procedure> FilterNewProcedures(IMetadata other)
         {
-            var result = new CommandGroup().Append(HandleComment(ProceduresByName, other.MetadataProcedures.ProceduresByName, x => x.ProcedureName, "PROCEDURE", x => x.PackageName != null ? new[] { x.PackageName, x.ProcedureName } : new[] { x.ProcedureName }, context, x => HandleCommentNested(x.ProcedureParameters.OrderBy(y => y.ParameterNumber), other.MetadataProcedures.ProcedureParameters, (a, b) => new ProcedureParameterKey(a, b), x.ProcedureName, y => y.ParameterName, "PARAMETER", y => new[] { y.ParameterName }, context)));
-            if (!result.IsEmpty)
-            {
-                yield return result;
-            }
+            return FilterSystemFlagUser(NonPackageProceduresByName.Values)
+                .Where(p => !other.MetadataProcedures.ProceduresByName.ContainsKey(p.ProcedureName));
         }
     }
 }

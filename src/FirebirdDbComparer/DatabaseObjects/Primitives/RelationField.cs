@@ -193,7 +193,7 @@ namespace FirebirdDbComparer.DatabaseObjects.Primitives
                     BaseField = values["RDB$BASE_FIELD"].DbValueToString(),
                     ViewContext = values["RDB$VIEW_CONTEXT"].DbValueToInt32(),
                     Description = values["RDB$DESCRIPTION"].DbValueToString(),
-                    Nullable = values["RDB$NULL_FLAG"].DbValueToNullable(),
+                    Nullable = values["RDB$NULL_FLAG"].DbValueToNullableFlag(),
                     DefaultSource = values["RDB$DEFAULT_SOURCE"].DbValueToString(),
                     CollationId = values["RDB$COLLATION_ID"].DbValueToInt32(),
                     SystemFlag = (SystemFlagType)values["RDB$SYSTEM_FLAG"].DbValueToInt32().GetValueOrDefault()
