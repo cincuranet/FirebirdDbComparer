@@ -64,11 +64,11 @@ select trim(P.RDB$PACKAGE_NAME) as RDB$PACKAGE_NAME,
 
         public IEnumerable<CommandGroup> DropPackages(IMetadata other, IComparerContext context)
         {
-            var full = FilterPackagesToBeDropped(other)
+            var complete = FilterCompletePackagesToBeDropped(other)
                 .Select(package => new CommandGroup().Append(WrapActionWithEmptyBody(package.Drop)(Metadata, other, context)));
             var bodies = FilterPackagesBodiesToBeDropped(other)
                 .Select(package => new CommandGroup().Append(package.Drop(Metadata, other, context)));
-            return bodies.Concat(full);
+            return bodies.Concat(complete);
         }
 
         protected virtual IEnumerable<Package> FilterNewPackages(IMetadata other)
@@ -77,7 +77,7 @@ select trim(P.RDB$PACKAGE_NAME) as RDB$PACKAGE_NAME,
                 .Where(p => !other.MetadataPackages.PackagesByName.ContainsKey(p.PackageName));
         }
 
-        protected virtual IEnumerable<Package> FilterPackagesToBeDropped(IMetadata other)
+        protected virtual IEnumerable<Package> FilterCompletePackagesToBeDropped(IMetadata other)
         {
             return FilterSystemFlagUser(other.MetadataPackages.PackagesByName.Values)
                 .Where(p => !PackagesByName.ContainsKey(p.PackageName));
