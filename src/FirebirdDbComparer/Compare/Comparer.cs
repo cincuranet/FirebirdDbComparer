@@ -85,6 +85,7 @@ namespace FirebirdDbComparer.Compare
                     Tuple.Create(Handle<IMetadataRelations>(x => x.DropViews), "VIEWS (drop)"),
                     Tuple.Create(Handle<IMetadataProcedures>(x => x.DropProcedures), "PROCEDURES (drop)"),
                     Tuple.Create(Handle<IMetadataFunctions>(x => x.DropNewFunctions), "FUNCTIONS (drop)"),
+                    Tuple.Create(Handle<IMetadataPackages>(x => x.DropFullPackages), "PACKAGES (drop)"),
                     Tuple.Create(Handle<IMetadataExceptions>(x => x.DropExceptions), "EXCEPTIONS (drop)"),
                     Tuple.Create(Handle<IMetadataGenerators>(x => x.DropGenerators), "SEQUENCES (drop)"),
                     Tuple.Create(Handle<IMetadataFields>(x => x.DropDomains), "DOMAINS (drop)"),

@@ -14,7 +14,7 @@
         <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="FirebirdSql.Data.FirebirdClient" Version="6.1.0" />
+        <PackageReference Include="FirebirdSql.Data.FirebirdClient" Version="6.2.0.1" />
         <PackageReference Include="Castle.Windsor" Version="4.1.0" />
     </ItemGroup>
     <ItemGroup>

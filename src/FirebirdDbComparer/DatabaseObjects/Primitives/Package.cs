@@ -62,7 +62,8 @@ namespace FirebirdDbComparer.DatabaseObjects.Primitives
 
         protected override IEnumerable<Command> OnDrop(IMetadata sourceMetadata, IMetadata targetMetadata, IComparerContext context)
         {
-            throw new NotImplementedException();
+            yield return new Command()
+                .Append($"DROP PACKAGE {PackageName.AsSqlIndentifier()}");
         }
 
         protected override IEnumerable<Command> OnAlter(IMetadata sourceMetadata, IMetadata targetMetadata, IComparerContext context)

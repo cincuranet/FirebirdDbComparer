@@ -93,7 +93,13 @@ select trim(PP.RDB$PARAMETER_NAME) as RDB$PARAMETER_NAME,
         protected override IEnumerable<Procedure> FilterNewProcedures(IMetadata other)
         {
             return FilterSystemFlagUser(NonPackageProceduresByName.Values)
-                .Where(p => !other.MetadataProcedures.ProceduresByName.ContainsKey(p.ProcedureName));
+                .Where(p => !other.MetadataProcedures.NonPackageProceduresByName.ContainsKey(p.ProcedureName));
+        }
+
+        protected override IEnumerable<Procedure> FilterProceduresToBeDropped(IMetadata other)
+        {
+            return FilterSystemFlagUser(other.MetadataProcedures.NonPackageProceduresByName.Values)
+                .Where(p => !NonPackageProceduresByName.ContainsKey(p.ProcedureName));
         }
     }
 }
