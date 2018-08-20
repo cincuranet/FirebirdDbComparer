@@ -27,13 +27,12 @@ namespace FirebirdDbComparer.DatabaseObjects.Primitives
         public DatabaseStringOrdinal PackageBodySource { get; private set; }
         public bool ValidBodyFlag { get; private set; }
         public Identifier OwnerName { get; private set; }
+        public SystemFlagType SystemFlag { get; private set; }
+        public DatabaseStringOrdinal Description { get; private set; }
 
         protected override Package Self => this;
 
         protected override EquatableProperty<Package>[] EquatableProperties => s_EquatableProperties;
-        public DatabaseStringOrdinal Description { get; private set; }
-
-        public SystemFlagType SystemFlag { get; private set; }
 
         protected override IEnumerable<Command> OnCreate(IMetadata sourceMetadata, IMetadata targetMetadata, IComparerContext context)
         {
