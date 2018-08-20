@@ -67,7 +67,7 @@ select trim(P.RDB$PACKAGE_NAME) as RDB$PACKAGE_NAME,
                 .Select(package => new CommandGroup().Append(package.Drop(Metadata, other, context)));
         }
 
-        private IEnumerable<Package> FilterNewPackages(IMetadata other)
+        protected virtual IEnumerable<Package> FilterNewPackages(IMetadata other)
         {
             return FilterSystemFlagUser(PackagesByName.Values)
                 .Where(p => !other.MetadataPackages.PackagesByName.ContainsKey(p.PackageName));
