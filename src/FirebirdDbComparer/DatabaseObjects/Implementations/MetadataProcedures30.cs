@@ -88,7 +88,7 @@ select trim(PP.RDB$PARAMETER_NAME) as RDB$PARAMETER_NAME,
             }
         }
 
-        // CrossTypesOfSameObjectTypesException and packages
+        // TODO: CrossTypesOfSameObjectTypesException and packages
 
         protected override IEnumerable<Procedure> FilterNewProcedures(IMetadata other)
         {
@@ -100,6 +100,12 @@ select trim(PP.RDB$PARAMETER_NAME) as RDB$PARAMETER_NAME,
         {
             return FilterSystemFlagUser(other.MetadataProcedures.NonPackageProceduresByName.Values)
                 .Where(p => !NonPackageProceduresByName.ContainsKey(p.ProcedureName));
+        }
+
+        protected override IEnumerable<Procedure> FilterProceduresToBeAltered(IMetadata other)
+        {
+            return FilterSystemFlagUser(NonPackageProceduresByName.Values)
+                .Where(p => other.MetadataProcedures.NonPackageProceduresByName.TryGetValue(p.ProcedureName, out var otherProcedure) && otherProcedure != p);
         }
     }
 }

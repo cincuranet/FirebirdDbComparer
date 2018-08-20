@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -61,10 +62,13 @@ select trim(P.RDB$PACKAGE_NAME) as RDB$PACKAGE_NAME,
                 .Select(package => new CommandGroup().Append(package.Create(Metadata, other, context)));
         }
 
-        public IEnumerable<CommandGroup> DropFullPackages(IMetadata other, IComparerContext context)
+        public IEnumerable<CommandGroup> DropPackages(IMetadata other, IComparerContext context)
         {
-            return FilterPackagesToBeDropped(other)
+            var full = FilterPackagesToBeDropped(other)
+                .Select(package => new CommandGroup().Append(WrapActionWithEmptyBody(package.Drop)(Metadata, other, context)));
+            var bodies = FilterPackagesBodiesToBeDropped(other)
                 .Select(package => new CommandGroup().Append(package.Drop(Metadata, other, context)));
+            return bodies.Concat(full);
         }
 
         protected virtual IEnumerable<Package> FilterNewPackages(IMetadata other)
@@ -77,6 +81,12 @@ select trim(P.RDB$PACKAGE_NAME) as RDB$PACKAGE_NAME,
         {
             return FilterSystemFlagUser(other.MetadataPackages.PackagesByName.Values)
                 .Where(p => !PackagesByName.ContainsKey(p.PackageName));
+        }
+
+        protected virtual IEnumerable<Package> FilterPackagesBodiesToBeDropped(IMetadata other)
+        {
+            return FilterSystemFlagUser(PackagesByName.Values)
+                .Where(p => other.MetadataPackages.PackagesByName.TryGetValue(p.PackageName, out var otherPackage) && !p.ValidBodyFlag && otherPackage.ValidBodyFlag);
         }
     }
 }
