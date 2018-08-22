@@ -74,6 +74,7 @@ select trim(FA.RDB$FUNCTION_NAME) as RDB$FUNCTION_NAME,
 
             m_NewFunctionsByName = FunctionsByName.Values
                 .Where(x => !x.IsLegacy)
+                .Where(x => x.PackageName == null)
                 .ToDictionary(x => x.FunctionNameKey, x => x);
 
             foreach (var functionArgument in FunctionArguments.Values)
@@ -128,6 +129,8 @@ select trim(FA.RDB$FUNCTION_NAME) as RDB$FUNCTION_NAME,
                 }
             }
         }
+
+        // TODO: CrossTypesOfSameObjectTypesException and packages
 
         public override IEnumerable<CommandGroup> CreateEmptyNewFunctions(IMetadata other, IComparerContext context)
         {

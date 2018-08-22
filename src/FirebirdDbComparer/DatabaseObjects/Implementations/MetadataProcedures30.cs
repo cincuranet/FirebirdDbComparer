@@ -9,8 +9,7 @@ namespace FirebirdDbComparer.DatabaseObjects.Implementations
 {
     public class MetadataProcedures30 : MetadataProcedures25, ISupportsComment
     {
-        private IDictionary<Identifier, Procedure> m_NonPackageProceduresByName;
-        private IDictionary<Identifier, Procedure> m_PackageProceduresByName;
+        private IDictionary<Identifier, Procedure> m_ProceduresByName;
 
         public MetadataProcedures30(IMetadata metadata, ISqlHelper sqlHelper)
             : base(metadata, sqlHelper)
@@ -49,20 +48,14 @@ select trim(PP.RDB$PARAMETER_NAME) as RDB$PARAMETER_NAME,
        trim(PP.RDB$PACKAGE_NAME) as RDB$PACKAGE_NAME
   from RDB$PROCEDURE_PARAMETERS PP";
 
-        public override IDictionary<Identifier, Procedure> NonPackageProceduresByName => m_NonPackageProceduresByName;
-
-        public override IDictionary<Identifier, Procedure> PackageProceduresByName => m_PackageProceduresByName;
+        public override IDictionary<Identifier, Procedure> ProceduresByName => m_ProceduresByName;
 
         public override void FinishInitialization()
         {
             base.FinishInitialization();
 
-            m_NonPackageProceduresByName = ProceduresByName.Values
-               .Where(x => x.PackageName == null)
-               .ToDictionary(x => x.ProcedureName, x => x);
-
-            m_PackageProceduresByName = ProceduresByName.Values
-                .Where(x => x.PackageName != null)
+            m_ProceduresByName = base.ProceduresByName.Values
+                .Where(x => x.PackageName == null)
                 .ToDictionary(x => x.ProcedureName, x => x);
 
             foreach (var procedureParameter in ProcedureParameters.Values)
@@ -92,20 +85,20 @@ select trim(PP.RDB$PARAMETER_NAME) as RDB$PARAMETER_NAME,
 
         protected override IEnumerable<Procedure> FilterNewProcedures(IMetadata other)
         {
-            return FilterSystemFlagUser(NonPackageProceduresByName.Values)
-                .Where(p => !other.MetadataProcedures.NonPackageProceduresByName.ContainsKey(p.ProcedureName));
+            return FilterSystemFlagUser(ProceduresByName.Values)
+                .Where(p => !other.MetadataProcedures.ProceduresByName.ContainsKey(p.ProcedureName));
         }
 
         protected override IEnumerable<Procedure> FilterProceduresToBeDropped(IMetadata other)
         {
-            return FilterSystemFlagUser(other.MetadataProcedures.NonPackageProceduresByName.Values)
-                .Where(p => !NonPackageProceduresByName.ContainsKey(p.ProcedureName));
+            return FilterSystemFlagUser(other.MetadataProcedures.ProceduresByName.Values)
+                .Where(p => !ProceduresByName.ContainsKey(p.ProcedureName));
         }
 
         protected override IEnumerable<Procedure> FilterProceduresToBeAltered(IMetadata other)
         {
-            return FilterSystemFlagUser(NonPackageProceduresByName.Values)
-                .Where(p => other.MetadataProcedures.NonPackageProceduresByName.TryGetValue(p.ProcedureName, out var otherProcedure) && otherProcedure != p);
+            return FilterSystemFlagUser(ProceduresByName.Values)
+                .Where(p => other.MetadataProcedures.ProceduresByName.TryGetValue(p.ProcedureName, out var otherProcedure) && otherProcedure != p);
         }
     }
 }
