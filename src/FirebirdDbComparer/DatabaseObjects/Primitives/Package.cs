@@ -10,6 +10,30 @@ namespace FirebirdDbComparer.DatabaseObjects.Primitives
 {
     public sealed class Package : Primitive<Package>, IHasSystemFlag, IHasDescription
     {
+        private sealed class PackageHeaderEqualityComparer : PropertiesEqualityComparerBase<Package>
+        {
+            private static readonly EquatableProperty<Package>[] s_EquatableProperties =
+            {
+                new EquatableProperty<Package>(x => x.PackageHeaderSource, nameof(PackageHeaderSource))
+            };
+
+            public PackageHeaderEqualityComparer()
+                : base(s_EquatableProperties)
+            { }
+        }
+
+        private sealed class PackageBodyEqualityComparer : PropertiesEqualityComparerBase<Package>
+        {
+            private static readonly EquatableProperty<Package>[] s_EquatableProperties =
+            {
+                new EquatableProperty<Package>(x => x.PackageBodySource, nameof(PackageBodySource))
+            };
+
+            public PackageBodyEqualityComparer()
+                : base(s_EquatableProperties)
+            { }
+        }
+
         private static readonly EquatableProperty<Package>[] s_EquatableProperties =
         {
             new EquatableProperty<Package>(x => x.PackageName, nameof(PackageName)),
@@ -21,6 +45,9 @@ namespace FirebirdDbComparer.DatabaseObjects.Primitives
         public Package(ISqlHelper sqlHelper)
             : base(sqlHelper)
         { }
+
+        public static IEqualityComparer<Package> PackageHeaderComparer { get; } = new PackageHeaderEqualityComparer();
+        public static IEqualityComparer<Package> PackageBodyComparer { get; } = new PackageBodyEqualityComparer();
 
         public Identifier PackageName { get; private set; }
         public DatabaseStringOrdinal PackageHeaderSource { get; private set; }

@@ -12,5 +12,7 @@ namespace FirebirdDbComparer.Interfaces
         IEnumerable<CommandGroup> CreateNewPackagesHeaders(IMetadata other, IComparerContext context);
         IEnumerable<CommandGroup> CreateNewPackagesBodies(IMetadata other, IComparerContext context);
         IEnumerable<CommandGroup> DropPackages(IMetadata other, IComparerContext context);
+        IEnumerable<CommandGroup> AlterPackagesHeaders(IMetadata other, IComparerContext context);
+        IEnumerable<CommandGroup> AlterPackagesBodies(IMetadata other, IComparerContext context);
     }
 }

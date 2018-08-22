@@ -71,6 +71,20 @@ select trim(P.RDB$PACKAGE_NAME) as RDB$PACKAGE_NAME,
             return bodies.Concat(complete);
         }
 
+        public IEnumerable<CommandGroup> AlterPackagesHeaders(IMetadata other, IComparerContext context)
+        {
+            return FilterPackagesHeadersToBeAltered(other)
+                .Where(package => package.ValidBodyFlag)
+                .Select(package => new CommandGroup().Append(WrapActionWithEmptyBody(package.Alter)(Metadata, other, context)));
+        }
+
+        public IEnumerable<CommandGroup> AlterPackagesBodies(IMetadata other, IComparerContext context)
+        {
+            return FilterPackagesBodiesToBeAltered(other)
+                .Where(package => package.ValidBodyFlag)
+                .Select(package => new CommandGroup().Append(package.Alter(Metadata, other, context)));
+        }
+
         protected virtual IEnumerable<Package> FilterNewPackages(IMetadata other)
         {
             return FilterSystemFlagUser(PackagesByName.Values)
@@ -86,7 +100,27 @@ select trim(P.RDB$PACKAGE_NAME) as RDB$PACKAGE_NAME,
         protected virtual IEnumerable<Package> FilterPackagesBodiesToBeDropped(IMetadata other)
         {
             return FilterSystemFlagUser(PackagesByName.Values)
-                .Where(p => other.MetadataPackages.PackagesByName.TryGetValue(p.PackageName, out var otherPackage) && !p.ValidBodyFlag && otherPackage.ValidBodyFlag);
+                .Where(p => other.MetadataPackages.PackagesByName.TryGetValue(p.PackageName, out var otherPackage)
+                    && otherPackage.PackageBodySource != null
+                    && p.PackageBodySource == null);
+        }
+
+        protected virtual IEnumerable<Package> FilterPackagesHeadersToBeAltered(IMetadata other)
+        {
+            return FilterSystemFlagUser(PackagesByName.Values)
+                .Where(p => other.MetadataPackages.PackagesByName.TryGetValue(p.PackageName, out var otherPackage) && otherPackage != p
+                    && p.PackageHeaderSource != null
+                    && otherPackage.PackageHeaderSource != null
+                    && !Package.PackageHeaderComparer.Equals(p, otherPackage));
+        }
+
+        protected virtual IEnumerable<Package> FilterPackagesBodiesToBeAltered(IMetadata other)
+        {
+            return FilterSystemFlagUser(PackagesByName.Values)
+                .Where(p => other.MetadataPackages.PackagesByName.TryGetValue(p.PackageName, out var otherPackage) && otherPackage != p
+                    && p.PackageBodySource != null
+                    && otherPackage.PackageBodySource != null
+                    && !Package.PackageBodyComparer.Equals(p, otherPackage));
         }
     }
 }
