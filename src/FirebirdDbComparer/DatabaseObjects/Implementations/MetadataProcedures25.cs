@@ -25,6 +25,8 @@ namespace FirebirdDbComparer.DatabaseObjects.Implementations
 
         public virtual IDictionary<Identifier, Procedure> ProceduresByName => m_ProceduresByName;
 
+        public virtual IDictionary<Identifier, Procedure> NonPackageProceduresByName => ProceduresByName;
+
         protected virtual string ProcedureCommandText => @"
 select trim(P.RDB$PROCEDURE_NAME) as RDB$PROCEDURE_NAME,
        P.RDB$PROCEDURE_ID,
