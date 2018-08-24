@@ -110,7 +110,7 @@ select trim(VR.RDB$VIEW_NAME) as RDB$VIEW_NAME,
 
         public override void FinishInitialization()
         {
-            var lookup = ViewRelations.ToDictionary(vr => new Tuple<Identifier, int>(vr.ViewName, vr.ViewContext));
+            var lookup = ViewRelations.ToDictionary(vr => (viewName: vr.ViewName, viewContext: vr.ViewContext));
             foreach (var relationField in RelationFields.Values)
             {
                 relationField.Relation = Relations[relationField.RelationName];
@@ -118,7 +118,7 @@ select trim(VR.RDB$VIEW_NAME) as RDB$VIEW_NAME,
                 if (relationField.Relation.MetadataRelationType == MetadataRelationType.VIEW && relationField.BaseField != null)
                 {
                     // ReSharper disable once PossibleInvalidOperationException
-                    relationField.ViewRelation = lookup[new Tuple<Identifier, int>(relationField.RelationName, (int)relationField.ViewContext)];
+                    relationField.ViewRelation = lookup[(relationField.RelationName, (int)relationField.ViewContext)];
                 }
                 if (relationField.CollationId != null && relationField.Field.CharacterSetId != null)
                 {
@@ -301,8 +301,8 @@ select trim(VR.RDB$VIEW_NAME) as RDB$VIEW_NAME,
         {
             var actions = new[]
                           {
-                              Tuple.Create<Func<Relation, bool>, string>(x => x.MetadataRelationType != MetadataRelationType.VIEW, "TABLE"),
-                              Tuple.Create<Func<Relation, bool>, string>(x => x.MetadataRelationType == MetadataRelationType.VIEW, "VIEW")
+                              (predicate: (Func<Relation, bool>)(x => x.MetadataRelationType != MetadataRelationType.VIEW), name: "TABLE"),
+                              (predicate: (Func<Relation, bool>)(x => x.MetadataRelationType == MetadataRelationType.VIEW), name: "VIEW"),
                           };
             foreach (var item in actions)
             {
@@ -313,10 +313,10 @@ select trim(VR.RDB$VIEW_NAME) as RDB$VIEW_NAME,
                                 Relations,
                                 other.MetadataRelations.Relations,
                                 x => x.RelationName,
-                                item.Item2,
+                                item.name,
                                 x => new[] { x.RelationName },
                                 context,
-                                primitivesFilter: item.Item1,
+                                primitivesFilter: item.predicate,
                                 nestedFactory: x => HandleCommentNested(
                                                    x.Fields.OrderBy(y => y.FieldPosition),
                                                    other.MetadataRelations.RelationFields,
