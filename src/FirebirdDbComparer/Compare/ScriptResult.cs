@@ -41,9 +41,9 @@ namespace FirebirdDbComparer.Compare
             m_Items = items;
         }
 
-        internal static ScriptResult Create(IEnumerable<Tuple<string, IEnumerable<IEnumerable<string>>>> data)
+        internal static ScriptResult Create(IEnumerable<(string name, IEnumerable<IEnumerable<string>> commands)> data)
         {
-            return new ScriptResult(data.Select(x => new Section(x.Item1, x.Item2.Select(y => y.ToList().AsReadOnly()).ToList().AsReadOnly())).ToList().AsReadOnly());
+            return new ScriptResult(data.Select(x => new Section(x.name, x.commands.Select(y => y.ToList().AsReadOnly()).ToList().AsReadOnly())).ToList().AsReadOnly());
         }
 
         public Section this[int index] => m_Items[index];
