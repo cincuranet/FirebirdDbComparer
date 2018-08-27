@@ -154,7 +154,6 @@ namespace FirebirdDbComparer.DatabaseObjects.Implementations
                 case ObjectType.VIEW:
                     primitiveType = typeof(Relation);
                     break;
-                // TODO: Danny, if it is a procedure within a package, don't calculate the primitive type
                 case ObjectType.PROCEDURE:
                     primitiveType = typeof(Procedure);
                     break;
