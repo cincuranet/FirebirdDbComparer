@@ -81,8 +81,6 @@ select trim(PP.RDB$PARAMETER_NAME) as RDB$PARAMETER_NAME,
             }
         }
 
-        // TODO: CrossTypesOfSameObjectTypesException and packages
-
         protected override IEnumerable<Procedure> FilterNewProcedures(IMetadata other)
         {
             return FilterSystemFlagUser(NonPackageProceduresByName.Values)

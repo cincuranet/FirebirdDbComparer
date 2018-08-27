@@ -130,8 +130,6 @@ select trim(FA.RDB$FUNCTION_NAME) as RDB$FUNCTION_NAME,
             }
         }
 
-        // TODO: CrossTypesOfSameObjectTypesException and packages
-
         public override IEnumerable<CommandGroup> CreateEmptyNewFunctions(IMetadata other, IComparerContext context)
         {
             return FilterNewNewFunctions(other)
