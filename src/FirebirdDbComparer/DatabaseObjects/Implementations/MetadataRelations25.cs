@@ -304,7 +304,7 @@ select trim(VR.RDB$VIEW_NAME) as RDB$VIEW_NAME,
                               (predicate: (Func<Relation, bool>)(x => x.MetadataRelationType != MetadataRelationType.VIEW), name: "TABLE"),
                               (predicate: (Func<Relation, bool>)(x => x.MetadataRelationType == MetadataRelationType.VIEW), name: "VIEW"),
                           };
-            foreach (var item in actions)
+            foreach (var (predicate, name) in actions)
             {
                 var result =
                     new CommandGroup()
@@ -313,10 +313,10 @@ select trim(VR.RDB$VIEW_NAME) as RDB$VIEW_NAME,
                                 Relations,
                                 other.MetadataRelations.Relations,
                                 x => x.RelationName,
-                                item.name,
+                                name,
                                 x => new[] { x.RelationName },
                                 context,
-                                primitivesFilter: item.predicate,
+                                primitivesFilter: predicate,
                                 nestedFactory: x => HandleCommentNested(
                                                    x.Fields.OrderBy(y => y.FieldPosition),
                                                    other.MetadataRelations.RelationFields,
