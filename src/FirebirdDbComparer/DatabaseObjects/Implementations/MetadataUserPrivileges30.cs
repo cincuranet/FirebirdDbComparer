@@ -147,27 +147,27 @@ namespace FirebirdDbComparer.DatabaseObjects.Implementations
 
         protected override bool CanCreateRevoke(UserPrivilege privilege, IComparerContext context)
         {
-            Type primitiveType;
+            ITypeObjectNameKey primitiveType;
             switch (privilege.ObjectType)
             {
                 case ObjectType.RELATION:
                 case ObjectType.VIEW:
-                    primitiveType = typeof(Relation);
+                    primitiveType = privilege.Relation;
                     break;
                 case ObjectType.PROCEDURE:
-                    primitiveType = typeof(Procedure);
+                    primitiveType = privilege.Procedure;
                     break;
                 case ObjectType.PACKAGE:
-                    primitiveType = typeof(Package);
+                    primitiveType = privilege.Package;
                     break;
                 case ObjectType.UDF:
-                    primitiveType = !(privilege.Function?.IsLegacy ?? true) ? typeof(Function) : null;
+                    primitiveType = !(privilege.Function?.IsLegacy ?? true) ? privilege.Function : null;
                     break;
                 default:
                     primitiveType = null;
                     break;
             }
-            return primitiveType == null || !context.DroppedObjects.Contains(privilege.TypeObjectNameKey);
+            return primitiveType == null || !context.DroppedObjects.Contains(primitiveType.TypeObjectNameKey);
         }
     }
 }

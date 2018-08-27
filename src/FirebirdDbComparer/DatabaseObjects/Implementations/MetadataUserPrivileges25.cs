@@ -92,7 +92,7 @@ select trim(UP.RDB$USER) as RDB$USER,
                         userPrivilege.Function =
                             Metadata
                                 .MetadataFunctions
-                                .FunctionsByName[userPrivilege.FunctionNameKey];
+                                .FunctionsByName[userPrivilege.LegacyFunctionNameKey];
                         break;
                     case ObjectType.COLLATION:
                         userPrivilege.Collation =
@@ -202,21 +202,21 @@ select trim(UP.RDB$USER) as RDB$USER,
 
         protected virtual bool CanCreateRevoke(UserPrivilege privilege, IComparerContext context)
         {
-            Type primitiveType;
+            ITypeObjectNameKey primitiveType;
             switch (privilege.ObjectType)
             {
                 case ObjectType.RELATION:
                 case ObjectType.VIEW:
-                    primitiveType = typeof(Relation);
+                    primitiveType = privilege.Relation;
                     break;
                 case ObjectType.PROCEDURE:
-                    primitiveType = typeof(Procedure);
+                    primitiveType = privilege.Procedure;
                     break;
                 default:
                     primitiveType = null;
                     break;
             }
-            return primitiveType == null || !context.DroppedObjects.Contains(privilege.TypeObjectNameKey);
+            return primitiveType == null || !context.DroppedObjects.Contains(primitiveType.TypeObjectNameKey);
         }
 
         protected virtual string CreatePrivilegeName(UserPrivilege userPrivilege)
