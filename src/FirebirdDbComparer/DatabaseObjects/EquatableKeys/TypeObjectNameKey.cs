@@ -6,7 +6,7 @@ using FirebirdDbComparer.Interfaces;
 
 namespace FirebirdDbComparer.DatabaseObjects.EquatableKeys
 {
-    [DebuggerDisplay("{PrimitiveType}.{ObjectName}")]
+    [DebuggerDisplay("{Type}.{ObjectName}")]
     public sealed class TypeObjectNameKey : BasicElement<TypeObjectNameKey>
     {
         public static readonly EquatableProperty<TypeObjectNameKey>[] s_EquatableProperties =
