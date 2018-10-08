@@ -74,7 +74,6 @@ select trim(P.RDB$PACKAGE_NAME) as RDB$PACKAGE_NAME,
         public IEnumerable<CommandGroup> AlterPackagesHeaders(IMetadata other, IComparerContext context)
         {
             return FilterPackagesHeadersToBeAltered(other)
-                .Where(package => package.ValidBodyFlag)
                 .Select(package => new CommandGroup().Append(WrapActionWithEmptyBody(package.Alter)(Metadata, other, context)));
         }
 
