@@ -60,7 +60,6 @@ namespace FirebirdDbComparer.Compare
                 yield return (Handle<IMetadataGenerators>(x => x.AlterGenerators), "SEQUENCES (alter)");
                 yield return (Handle<IMetadataExceptions>(x => x.CreateExceptions), "EXCEPTIONS (new)");
                 yield return (Handle<IMetadataExceptions>(x => x.AlterExceptions), "EXCEPTIONS (alter)");
-                yield return (Handle<IMetadataPackages>(x => x.CreateNewPackagesHeaders), "PACKAGES HEADERS (new)");
                 yield return (Handle<IMetadataFunctions>(x => x.CreateEmptyNewFunctions), "FUNCTIONS (shims for new)");
                 yield return (Handle<IMetadataProcedures>(x => x.CreateEmptyNewProcedures), "PROCEDURES (shims for new)");
                 yield return (Handle<IMetadataFunctions>(x => x.AlterNewFunctionsToEmptyBodyForAlteringOrDropping), "FUNCTIONS (shims for altering and dropping)");
@@ -69,6 +68,7 @@ namespace FirebirdDbComparer.Compare
                 yield return (Handle<IMetadataRelations>(x => x.AlterViewsToEmptyBodyForAlteringOrDropping), "VIEWS (shims for altering or dropping)");
                 yield return (Handle<IMetadataRelations>(x => x.CreateTablesWithEmpty), "TABLES (new, computed fields as shims)");
                 yield return (Handle<IMetadataRelations>(x => x.AlterTablesAndToEmptyForAlteringOrDropping), "TABLES (alter, computed fields as shims for altering or dropping)");
+                yield return (Handle<IMetadataPackages>(x => x.CreateNewPackagesHeaders), "PACKAGES HEADERS (new)");
                 yield return (Handle<IMetadataPackages>(x => x.AlterPackagesHeaders), "PACKAGES HEADERS (alter)");
                 yield return (Handle<IMetadataRelations>(x => x.AlterCreatedOrAlteredTablesToFull), "TABLES (full)");
                 yield return (Handle<IMetadataTriggers>(x => x.HandleTriggers), "TRIGGERS");
