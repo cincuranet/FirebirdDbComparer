@@ -1,0 +1,1 @@
+﻿create sequence new_generator increment by 2;

@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-
+using System.Diagnostics;
 using FirebirdDbComparer.Common;
 using FirebirdDbComparer.Common.Equatable;
 using FirebirdDbComparer.Compare;
@@ -45,6 +45,10 @@ namespace FirebirdDbComparer.DatabaseObjects.Primitives
                 if (InitialValue != 0)
                 {
                     command.Append($" START WITH {InitialValue}");
+                }
+                if (GeneratorIncrement != 1)
+                {
+                    command.Append($" INCREMENT BY {GeneratorIncrement}");
                 }
             }
             yield return command;
