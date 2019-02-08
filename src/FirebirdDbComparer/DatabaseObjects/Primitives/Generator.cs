@@ -16,7 +16,7 @@ namespace FirebirdDbComparer.DatabaseObjects.Primitives
             new EquatableProperty<Generator>(x => x.GeneratorName, nameof(GeneratorName)),
             new EquatableProperty<Generator>(x => x.SystemFlag, nameof(SystemFlag)),
             new EquatableProperty<Generator>(x => x.OwnerName, nameof(OwnerName)),
-            new EquatableProperty<Generator>(x => x.InitialValue, nameof(InitialValue)),
+            //new EquatableProperty<Generator>(x => x.InitialValue, nameof(InitialValue)),
             new EquatableProperty<Generator>(x => x.GeneratorIncrement, nameof(GeneratorIncrement))
         };
 
