@@ -142,8 +142,7 @@ select trim(I.RDB$INDEX_NAME) as RDB$INDEX_NAME,
 
         private static bool IndicesToBeCreatedPredicate(Index index, IMetadata metadata, IComparerContext context)
         {
-            return !(metadata.MetadataIndices.Indices.TryGetValue(index.IndexName, out var otherIndex)
-                && otherIndex.IsUserCreatedIndex);
+            return !(metadata.MetadataIndices.Indices.TryGetValue(index.IndexName, out var otherIndex) && otherIndex.IsUserCreatedIndex);
         }
 
         private static bool IndicesToBeAlteredPredicate(Index index, IMetadata metadata, IComparerContext context)
@@ -169,8 +168,8 @@ select trim(I.RDB$INDEX_NAME) as RDB$INDEX_NAME,
 
         private static bool IndicesToBeDroppedPredicate(Index index, IMetadata metadata, IComparerContext context)
         {
-            return !(metadata.MetadataIndices.Indices.TryGetValue(index.IndexName, out var otherIndex)
-                && otherIndex.IsUserCreatedIndex);
+            return !context.DroppedObjects.Contains(index.TypeObjectNameKey)
+                && !(metadata.MetadataIndices.Indices.TryGetValue(index.IndexName, out var otherIndex) && otherIndex.IsUserCreatedIndex);
         }
     }
 }
