@@ -75,9 +75,13 @@ namespace FirebirdDbComparer.SqlGeneration
 
         public override string GetDataType(IDataType dataType, IDictionary<int, CharacterSet> characterSets, int defaultCharacterSetId)
         {
-            return dataType.FieldType == FieldType.BOOLEAN
-                       ? "BOOLEAN"
-                       : base.GetDataType(dataType, characterSets, defaultCharacterSetId);
+            switch (dataType.FieldType)
+            {
+                case FieldType.BOOLEAN:
+                    return "BOOLEAN";
+                default:
+                    return base.GetDataType(dataType, characterSets, defaultCharacterSetId);
+            }
         }
     }
 }
