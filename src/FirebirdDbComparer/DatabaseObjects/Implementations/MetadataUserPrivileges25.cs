@@ -213,10 +213,9 @@ select trim(UP.RDB$USER) as RDB$USER,
                     primitiveType = privilege.Procedure;
                     break;
                 default:
-                    primitiveType = null;
-                    break;
+                    return true;
             }
-            return primitiveType == null || !context.DroppedObjects.Contains(primitiveType.TypeObjectNameKey);
+            return !context.DroppedObjects.Contains(primitiveType.TypeObjectNameKey);
         }
 
         protected virtual string CreatePrivilegeName(UserPrivilege userPrivilege)

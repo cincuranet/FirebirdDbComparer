@@ -161,7 +161,7 @@ namespace FirebirdDbComparer.DatabaseObjects.Implementations
                     primitiveType = privilege.Package;
                     break;
                 case ObjectType.UDF:
-                    primitiveType = !(privilege.Function?.IsLegacy ?? true) ? privilege.Function : null;
+                    primitiveType = privilege.Function;
                     break;
                 case ObjectType.EXCEPTION:
                     primitiveType = privilege.DbException;
@@ -170,10 +170,9 @@ namespace FirebirdDbComparer.DatabaseObjects.Implementations
                     primitiveType = privilege.Generator;
                     break;
                 default:
-                    primitiveType = null;
-                    break;
+                    return true;
             }
-            return primitiveType == null || !context.DroppedObjects.Contains(primitiveType.TypeObjectNameKey);
+            return !context.DroppedObjects.Contains(primitiveType.TypeObjectNameKey);
         }
     }
 }
