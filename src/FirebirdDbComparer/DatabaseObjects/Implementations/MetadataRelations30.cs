@@ -39,6 +39,14 @@ select trim(VR.RDB$VIEW_NAME) as RDB$VIEW_NAME,
         {
             base.FinishInitialization();
 
+            foreach (var relationField in RelationFields.Values)
+            {
+                if (relationField.GeneratorName != null)
+                {
+                    relationField.Generator = Metadata.MetadataGenerators.GeneratorsByName[relationField.GeneratorName];
+                }
+            }
+
             foreach (var viewRelation in ViewRelations)
             {
                 viewRelation.View = Views[viewRelation.ViewName];
