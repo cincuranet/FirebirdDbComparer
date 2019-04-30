@@ -166,6 +166,9 @@ namespace FirebirdDbComparer.DatabaseObjects.Implementations
                 case ObjectType.EXCEPTION:
                     primitiveType = privilege.DbException;
                     break;
+                case ObjectType.GENERATOR:
+                    primitiveType = privilege.Generator;
+                    break;
                 default:
                     primitiveType = null;
                     break;
