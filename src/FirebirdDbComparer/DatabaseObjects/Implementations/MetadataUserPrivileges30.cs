@@ -163,6 +163,9 @@ namespace FirebirdDbComparer.DatabaseObjects.Implementations
                 case ObjectType.UDF:
                     primitiveType = !(privilege.Function?.IsLegacy ?? true) ? privilege.Function : null;
                     break;
+                case ObjectType.EXCEPTION:
+                    primitiveType = privilege.DbException;
+                    break;
                 default:
                     primitiveType = null;
                     break;
