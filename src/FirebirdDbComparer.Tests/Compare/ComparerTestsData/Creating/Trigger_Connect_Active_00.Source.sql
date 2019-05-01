@@ -2,7 +2,7 @@ set term ^;
 
 create trigger trig
 active
-on disconnect
+on connect
 as
 begin
 end^
