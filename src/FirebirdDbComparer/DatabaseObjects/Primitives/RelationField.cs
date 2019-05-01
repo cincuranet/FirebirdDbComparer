@@ -56,7 +56,7 @@ namespace FirebirdDbComparer.DatabaseObjects.Primitives
         public SystemFlagType SystemFlag { get; private set; }
         internal Identifier _EqualityGeneratorName => GeneratorName == null || SqlHelper.HasSystemPrefix(GeneratorName) ? null : GeneratorName;
         public Identifier GeneratorName { get; private set; }
-        public IdentityTypeType IdentityType { get; private set; }
+        public IdentityTypeType? IdentityType { get; private set; }
         public Field Field { get; set; }
         public ViewRelation ViewRelation { get; set; }
         public Relation Relation { get; set; }
@@ -145,6 +145,10 @@ namespace FirebirdDbComparer.DatabaseObjects.Primitives
             {
                 throw new NotSupportedOnFirebirdException($"Altering from computed to normal field or visa versa is not supported ({RelationName}.{FieldName}).");
             }
+            if (IdentityType != otherField.IdentityType)
+            {
+                throw new NotSupportedOnFirebirdException($"Altering identity definition on a field is not supported ({RelationName}.{FieldName}).");
+            }
 
             if (Field.ComputedSource != null)
             {
@@ -213,7 +217,7 @@ namespace FirebirdDbComparer.DatabaseObjects.Primitives
             if (sqlHelper.TargetVersion.AtLeast30())
             {
                 result.GeneratorName = new Identifier(sqlHelper, values["RDB$GENERATOR_NAME"].DbValueToString());
-                result.IdentityType = (IdentityTypeType)values["RDB$IDENTITY_TYPE"].DbValueToInt32().GetValueOrDefault();
+                result.IdentityType = (IdentityTypeType?)values["RDB$IDENTITY_TYPE"].DbValueToInt32();
             }
             return result;
         }
