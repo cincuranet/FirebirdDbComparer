@@ -1,1 +1,1 @@
-﻿
+﻿create domain d_test as int;
