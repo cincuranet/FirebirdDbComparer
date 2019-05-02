@@ -38,6 +38,11 @@ namespace FirebirdDbComparer.Common
             return DbValueToHelper(value, (long?)null, x => Convert.ToInt64(x, CultureInfo.InvariantCulture));
         }
 
+        public static ulong? DbValueToUInt64(this object value)
+        {
+            return DbValueToHelper(value, (ulong?)null, x => Convert.ToUInt64(x, CultureInfo.InvariantCulture));
+        }
+
         public static bool? DbValueToBool(this object value)
         {
             return DbValueToHelper(value, (bool?)null, x => Convert.ToBoolean(x, CultureInfo.InvariantCulture));

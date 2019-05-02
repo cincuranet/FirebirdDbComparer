@@ -80,22 +80,16 @@ select trim(T.RDB$TRIGGER_NAME) as RDB$TRIGGER_NAME,
         {
             var result = new CommandGroup()
                 .Append(DropTriggersNotExistingInSource(other, context))
-                .Append(CreateOrAlterDmlTriggers(other, context))
-                .Append(CreateOrAlterDbTriggers(other, context));
+                .Append(CreateOrAlterTriggers(other, context));
             if (!result.IsEmpty)
             {
                 yield return result;
             }
         }
 
-        private IEnumerable<Command> CreateOrAlterDbTriggers(IMetadata other, IComparerContext context)
+        private IEnumerable<Command> CreateOrAlterTriggers(IMetadata other, IComparerContext context)
         {
-            return CreateOrAlterHelper(t => t.TriggerClass == TriggerClassType.DB, other, context);
-        }
-
-        private IEnumerable<Command> CreateOrAlterDmlTriggers(IMetadata other, IComparerContext context)
-        {
-            return CreateOrAlterHelper(t => t.TriggerClass == TriggerClassType.DML, other, context);
+            return CreateOrAlterHelper(other, context);
         }
 
         // even triggers on tables to be dropped need to be explicitly dropped because of possible cyclic dependencies between triggers
@@ -108,10 +102,9 @@ select trim(T.RDB$TRIGGER_NAME) as RDB$TRIGGER_NAME,
             return triggers.SelectMany(t => t.Drop(Metadata, other, context));
         }
 
-        private IEnumerable<Command> CreateOrAlterHelper(Func<Trigger, bool> predicate, IMetadata other, IComparerContext context)
+        private IEnumerable<Command> CreateOrAlterHelper(IMetadata other, IComparerContext context)
         {
             var triggers = FilterSystemFlagUser(TriggersByName.Values)
-                .Where(predicate)
                 .Select(t =>
                         {
                             other.MetadataTriggers.TriggersByName.TryGetValue(t.TriggerName, out var otherTrigger);
