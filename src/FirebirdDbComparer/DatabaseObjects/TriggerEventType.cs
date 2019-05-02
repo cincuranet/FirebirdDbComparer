@@ -28,7 +28,7 @@ namespace FirebirdDbComparer.DatabaseObjects
         [Description("TRANSACTION ROLLBACK")]
         TransactionRollback,
 
-        [Description("ANY")]
+        [Description("ANY DDL STATEMENT")]
         Any,
 
         [Description("CREATE TABLE")]
