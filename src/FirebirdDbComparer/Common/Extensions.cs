@@ -93,5 +93,10 @@ namespace FirebirdDbComparer.Common
         {
             return source.Contains(value, comparer);
         }
+
+        public static void Push<T>(this IList<T> source, T item)
+        {
+            source.Insert(0, item);
+        }
     }
 }

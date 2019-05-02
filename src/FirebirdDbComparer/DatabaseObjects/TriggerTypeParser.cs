@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using FirebirdDbComparer.Common;
 
 namespace FirebirdDbComparer.DatabaseObjects
 {
@@ -163,7 +164,7 @@ namespace FirebirdDbComparer.DatabaseObjects
                     while (value > 0)
                     {
                         var x = (ulong)Math.Floor(Math.Log(value, 2));
-                        events.Add(TriggerEventTypeHelper(x) ?? throw UnknownTriggerTypeException(type));
+                        events.Push(TriggerEventTypeHelper(x) ?? throw UnknownTriggerTypeException(type));
                         value -= (ulong)Math.Pow(2, x);
                     }
                     return (beforeAfter, events);
