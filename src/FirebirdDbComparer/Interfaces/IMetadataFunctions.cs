@@ -15,6 +15,7 @@ namespace FirebirdDbComparer.Interfaces
         IDictionary<Identifier, Function> LegacyFunctionsByName { get; }
         IDictionary<Identifier, Function> NewFunctionsByName { get; }
         IEnumerable<CommandGroup> CreateLegacyFunctions(IMetadata other, IComparerContext context);
+        IEnumerable<CommandGroup> AlterLegacyFunctions(IMetadata other, IComparerContext context);
         IEnumerable<CommandGroup> DropLegacyFunctions(IMetadata other, IComparerContext context);
         IEnumerable<CommandGroup> CreateEmptyNewFunctions(IMetadata other, IComparerContext context);
         IEnumerable<CommandGroup> AlterNewFunctionsToFullBody(IMetadata other, IComparerContext context);

@@ -88,6 +88,13 @@ from RDB$FUNCTION_ARGUMENTS FA";
                 .Select(f => new CommandGroup().Append(f.Create(Metadata, other, context)));
         }
 
+        public IEnumerable<CommandGroup> AlterLegacyFunctions(IMetadata other, IComparerContext context)
+        {
+            return FilterSystemFlagUser(LegacyFunctionsByName.Values)
+                .Where(f => other.MetadataFunctions.LegacyFunctionsByName.TryGetValue(f.FunctionNameKey, out var otherFunction) && otherFunction != f)
+                .Select(f => new CommandGroup().Append(f.Alter(Metadata, other, context)));
+        }
+
         public IEnumerable<CommandGroup> DropLegacyFunctions(IMetadata other, IComparerContext context)
         {
             return FilterSystemFlagUser(other.MetadataFunctions.LegacyFunctionsByName.Values)

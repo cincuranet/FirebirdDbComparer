@@ -5,10 +5,11 @@ using NUnit.Framework;
 
 namespace FirebirdDbComparer.Tests.Compare.ComparerTestsData.Changing
 {
-    public class CHKsMultiple_AlterWithoutName_00 : ComparerTests.ITestCaseScriptSpecificAsserts
+    public class CHKsMultiple_AlterWithoutName_00 : ComparerTests.TestCaseSpecificAsserts
     {
-        public void Execute(ScriptResult compareResult)
+        public override void AssertScript(ScriptResult compareResult)
         {
+            base.AssertScript(compareResult);
             var commands = compareResult.AllStatements.ToArray();
             var dropCommands = commands.Where(x => x.Contains(" DROP ")).Count();
             var addCommands = commands.Where(x => x.Contains(" ADD ")).Count();

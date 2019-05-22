@@ -68,6 +68,7 @@ namespace FirebirdDbComparer.Compare
                 yield return (Handle<IMetadataRelations>(x => x.AlterViewsToEmptyBodyForAlteringOrDropping), "VIEWS (shims for altering or dropping)");
                 yield return (Handle<IMetadataRelations>(x => x.CreateTablesWithEmpty), "TABLES (new, computed fields as shims)");
                 yield return (Handle<IMetadataRelations>(x => x.AlterTablesAndToEmptyForAlteringOrDropping), "TABLES (alter, computed fields as shims for altering or dropping)");
+                yield return (Handle<IMetadataFunctions>(x => x.AlterLegacyFunctions), "UDFS (alter)");
                 yield return (Handle<IMetadataPackages>(x => x.CreateNewPackagesHeaders), "PACKAGES HEADERS (new)");
                 yield return (Handle<IMetadataPackages>(x => x.AlterPackagesHeaders), "PACKAGES HEADERS (alter)");
                 yield return (Handle<IMetadataRelations>(x => x.AlterCreatedOrAlteredTablesToFull), "TABLES (full)");

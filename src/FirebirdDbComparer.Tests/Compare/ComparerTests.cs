@@ -36,22 +36,25 @@ namespace FirebirdDbComparer.Tests.Compare
                 () => Helpers.Database.DropDatabase(m_Version, Helpers.Database.DatabaseLocation.Source));
         }
 
-        public interface ITestCaseScriptSpecificAsserts
+        public class TestCaseSpecificAsserts
         {
-            void Execute(ScriptResult compareResult);
+            public virtual Type ExpectedCompareException => null;
+            public virtual void AssertScript(ScriptResult compareResult) { }
         }
-        private static void ExecuteSpecificAsserts(string dataName, ScriptResult compareResult)
+        private static TestCaseSpecificAsserts GetSpecificAssertsInstance(string dataName)
         {
             var typeName = $"{typeof(ComparerTests).Assembly.GetName().Name}.{dataName}";
             var type = Type.GetType(typeName);
-            if (type != null)
+            if (type == null)
+                return null;
+            return (TestCaseSpecificAsserts)Activator.CreateInstance(type);
+        }
+        private static void ExecuteSpecificAsserts(TestCaseSpecificAsserts specificAsserts, ScriptResult compareResult)
+        {
+            if (specificAsserts != null)
             {
-                ((ITestCaseScriptSpecificAsserts)Activator.CreateInstance(type)).Execute(compareResult);
-                TestContext.WriteLine("Specific asserts executed.");
-            }
-            else
-            {
-                TestContext.WriteLine("No specific asserts found.");
+                specificAsserts.AssertScript(compareResult);
+                TestContext.WriteLine("Specific asserts for script executed.");
             }
         }
 
@@ -106,10 +109,25 @@ namespace FirebirdDbComparer.Tests.Compare
             }
         }
 
-        private ScriptResult UpdateDatabase(IComparerSettings settings)
+        private ScriptResult UpdateDatabase(IComparerSettings settings, TestCaseSpecificAsserts specificAsserts)
         {
             var comparer = CreateComparer(settings);
-            var compareResult = comparer.Compare().Script;
+            var compareResult = default(ScriptResult);
+            try
+            {
+                compareResult = comparer.Compare().Script;
+            }
+            catch (Exception ex) when (specificAsserts?.ExpectedCompareException?.IsAssignableFrom(ex.GetType()) ?? false)
+            {
+                TestContext.WriteLine("Pass on expected exception.");
+                Assert.Pass();
+                return default;
+            }
+            if (specificAsserts?.ExpectedCompareException != null)
+            {
+                Assert.Fail("Expected exception but nothing happened.");
+                return default;
+            }
             TestContext.WriteLine("Change script:");
             var commands = compareResult.AllStatements.ToArray();
             foreach (var item in commands)
@@ -124,7 +142,6 @@ namespace FirebirdDbComparer.Tests.Compare
         internal abstract class CompareSource : IEnumerable<TestCaseData>
         {
             private const string Base = "Compare.ComparerTestsData";
-            private const string IgnoreSuffix = "ignore";
             private const string DefaultVersion = "00";
 
             private TargetVersion m_Version;
@@ -141,10 +158,6 @@ namespace FirebirdDbComparer.Tests.Compare
                     {
                         var result = new TestCaseData($"{Base}.{x.name}");
                         result.SetName(x.name);
-                        if (x.ignore)
-                        {
-                            result.Ignore(string.Empty);
-                        }
                         return result;
                     });
 
@@ -156,27 +169,31 @@ namespace FirebirdDbComparer.Tests.Compare
 
             System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => GetEnumerator();
 
-            private static IEnumerable<(string name, string version, bool ignore)> TestCaseScripts()
+            private static IEnumerable<(string name, string version)> TestCaseScripts()
             {
                 return typeof(ComparerTests).Assembly.GetManifestResourceNames()
-                    .Select(resourceName => Regex.Match(resourceName, $@"\.{Regex.Escape(Base)}\.(?<name>.+?\..+?_(?<version>\d+)(_(?<ignore>{IgnoreSuffix}))?)(\.[Source|Target]+)?\.sql$", RegexOptions.CultureInvariant))
+                    .Select(resourceName => Regex.Match(resourceName, $@"\.{Regex.Escape(Base)}\.(?<name>.+?\..+?_(?<version>\d+))(\.[Source|Target]+)?\.sql$", RegexOptions.CultureInvariant))
                     .Where(match => match.Success)
-                    .Select(match => (name: match.Groups["name"].Value, version: match.Groups["version"].Value, ignore: match.Groups["ignore"].Value))
+                    .Select(match => (name: match.Groups["name"].Value, version: match.Groups["version"].Value))
                     .Distinct()
                     .OrderBy(x => x.name)
-                    .Select(x => (x.name, x.version == DefaultVersion ? null : x.version, x.ignore != string.Empty));
+                    .Select(x => (x.name, x.version == DefaultVersion ? null : x.version));
             }
         }
         public virtual void Compare(string dataName)
         {
+            var specificAsserts = GetSpecificAssertsInstance(dataName);
             Parallel.Invoke(
                 () => Helpers.Database.ExecuteScript(m_Version, Helpers.Database.DatabaseLocation.Source, $"{dataName}.Source.sql"),
                 () => Helpers.Database.ExecuteScript(m_Version, Helpers.Database.DatabaseLocation.Target, $"{dataName}.Target.sql"));
             var settings = new ComparerSettings(m_Version);
-            var compareResult = UpdateDatabase(settings);
-            AssertNoDifferenceBetweenSourceAndTarget();
-            AssertComparerSeesNoDifference(settings);
-            ExecuteSpecificAsserts(dataName, compareResult);
+            var compareResult = UpdateDatabase(settings, specificAsserts);
+            if (compareResult != null)
+            {
+                AssertNoDifferenceBetweenSourceAndTarget();
+                AssertComparerSeesNoDifference(settings);
+                ExecuteSpecificAsserts(specificAsserts, compareResult);
+            }
         }
 
         [Test]
@@ -186,7 +203,7 @@ namespace FirebirdDbComparer.Tests.Compare
                 () => Helpers.Database.ExecuteScript(m_Version, Helpers.Database.DatabaseLocation.Source, new[] { "create table test(c int);", "grant all on test to someuser;" }),
                 () => Helpers.Database.ExecuteScript(m_Version, Helpers.Database.DatabaseLocation.Target, new[] { "create table test(c int);" }));
             var settings = new ComparerSettings(m_Version) { IgnorePermissions = true };
-            var compareResult = UpdateDatabase(settings);
+            var compareResult = UpdateDatabase(settings, null);
             Assert.That(compareResult.AllStatements, Is.Empty);
             AssertComparerSeesNoDifference(settings);
         }
@@ -198,7 +215,7 @@ namespace FirebirdDbComparer.Tests.Compare
                 () => Helpers.Database.ExecuteScript(m_Version, Helpers.Database.DatabaseLocation.Source, new[] { "create table test(c int);", "grant all on test to someuser;" }),
                 () => Helpers.Database.ExecuteScript(m_Version, Helpers.Database.DatabaseLocation.Target, new[] { "create table test(c int);" }));
             var settings = new ComparerSettings(m_Version) { IgnorePermissions = false };
-            var compareResult = UpdateDatabase(settings);
+            var compareResult = UpdateDatabase(settings, null);
             Assert.That(compareResult.AllStatements.Count(), Is.GreaterThanOrEqualTo(1));
             Assert.That(compareResult.AllStatements.First(), Does.StartWith("GRANT "));
             AssertComparerSeesNoDifference(settings);
