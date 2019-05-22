@@ -11,7 +11,6 @@
         <PackageProjectUrl>https://github.com/cincuranet/FirebirdDbComparer</PackageProjectUrl>
         <Description>https://www.tabsoverspaces.com/tools/firebird-db-comparer</Description>
         <PackageTags>firebird, compare, comparare, metadata, structure</PackageTags>
-        <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="FirebirdSql.Data.FirebirdClient" Version="6.2.0.1" />
