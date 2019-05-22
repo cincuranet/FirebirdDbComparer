@@ -5,6 +5,7 @@ using System.Linq;
 using FirebirdDbComparer.Common;
 using FirebirdDbComparer.Common.Equatable;
 using FirebirdDbComparer.Compare;
+using FirebirdDbComparer.Exceptions;
 using FirebirdDbComparer.Interfaces;
 using FirebirdDbComparer.SqlGeneration;
 
@@ -96,7 +97,17 @@ namespace FirebirdDbComparer.DatabaseObjects.Primitives
 
         protected override IEnumerable<Command> OnAlter(IMetadata sourceMetadata, IMetadata targetMetadata, IComparerContext context)
         {
-            return OnCreate(sourceMetadata, targetMetadata, context);
+            var otherTrigger = FindOtherChecked(targetMetadata.MetadataTriggers.TriggersByName, TriggerName, "trigger");
+            if ((TriggerClass != otherTrigger.TriggerClass)
+                || (TriggerClass == TriggerClassType.DB && TriggerType != otherTrigger.TriggerType)
+                || (TriggerClass == TriggerClassType.DDL && TriggerType != otherTrigger.TriggerType))
+            {
+                throw new NotSupportedOnFirebirdException($"Altering DB and DDL trigger type is not supported ({TriggerName}).");
+            }
+            else
+            {
+                return OnCreate(sourceMetadata, targetMetadata, context);
+            }
         }
 
         protected override Identifier OnPrimitiveTypeKeyObjectName() => TriggerName;
