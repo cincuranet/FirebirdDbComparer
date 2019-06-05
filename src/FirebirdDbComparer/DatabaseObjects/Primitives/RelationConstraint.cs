@@ -74,16 +74,16 @@ namespace FirebirdDbComparer.DatabaseObjects.Primitives
 
             switch (RelationConstraintType)
             {
-                case RelationConstraintType.CHECK:
+                case RelationConstraintType.Check:
                     command.Append($" {Triggers[0].TriggerSource}");
                     break;
 
-                case RelationConstraintType.NOT_NULL:
+                case RelationConstraintType.NotNull:
                     break;
 
-                case RelationConstraintType.FOREIGN_KEY:
-                case RelationConstraintType.PRIMARY_KEY:
-                case RelationConstraintType.UNIQUE:
+                case RelationConstraintType.ForeignKey:
+                case RelationConstraintType.PrimaryKey:
+                case RelationConstraintType.Unique:
                     {
                         var fields =
                             Index
@@ -93,7 +93,7 @@ namespace FirebirdDbComparer.DatabaseObjects.Primitives
 
                         command.Append($" {RelationConstraintType.ToDescription()} ({string.Join(", ", fields)})");
 
-                        if (RelationConstraintType == RelationConstraintType.FOREIGN_KEY)
+                        if (RelationConstraintType == RelationConstraintType.ForeignKey)
                         {
                             var referenceConstraint = sourceMetadata.MetadataConstraints.ReferenceConstraintsByName[ConstraintName];
                             var referenceRelationConstraint = referenceConstraint.RelationConstraintUq;
@@ -107,19 +107,19 @@ namespace FirebirdDbComparer.DatabaseObjects.Primitives
                             command
                                 .AppendLine()
                                 .Append($"  REFERENCES {referenceRelationConstraint.RelationName} ({string.Join(", ", primaryKeyFields)})");
-                            if (referenceConstraint.UpdateRule != ConstraintRule.RESTRICT)
+                            if (referenceConstraint.UpdateRule != ConstraintRule.Restrict)
                             {
                                 command
                                     .AppendLine()
                                     .Append($"  ON UPDATE {referenceConstraint.UpdateRule.ToDescription()}");
                             }
-                            if (referenceConstraint.DeleteRule != ConstraintRule.RESTRICT)
+                            if (referenceConstraint.DeleteRule != ConstraintRule.Restrict)
                             {
                                 command
                                     .AppendLine()
                                     .Append($"  ON DELETE {referenceConstraint.DeleteRule.ToDescription()}");
                             }
-                            if (referenceConstraint.UpdateRule != ConstraintRule.RESTRICT || referenceConstraint.DeleteRule != ConstraintRule.RESTRICT)
+                            if (referenceConstraint.UpdateRule != ConstraintRule.Restrict || referenceConstraint.DeleteRule != ConstraintRule.Restrict)
                             {
                                 command.AppendLine();
                             }
@@ -170,19 +170,19 @@ namespace FirebirdDbComparer.DatabaseObjects.Primitives
             switch (constraintType)
             {
                 case "CHECK":
-                    result = RelationConstraintType.CHECK;
+                    result = RelationConstraintType.Check;
                     break;
                 case "FOREIGN KEY":
-                    result = RelationConstraintType.FOREIGN_KEY;
+                    result = RelationConstraintType.ForeignKey;
                     break;
                 case "NOT NULL":
-                    result = RelationConstraintType.NOT_NULL;
+                    result = RelationConstraintType.NotNull;
                     break;
                 case "PRIMARY KEY":
-                    result = RelationConstraintType.PRIMARY_KEY;
+                    result = RelationConstraintType.PrimaryKey;
                     break;
                 case "UNIQUE":
-                    result = RelationConstraintType.UNIQUE;
+                    result = RelationConstraintType.Unique;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException($"Unknown constraint type: {constraintType}.");
@@ -193,7 +193,7 @@ namespace FirebirdDbComparer.DatabaseObjects.Primitives
         private string AddConstraintUsingIndex(IMetadata sourceMetadata, IMetadata targetMetadata, IComparerContext context)
         {
             var builder = new StringBuilder();
-            if (RelationConstraintType == RelationConstraintType.PRIMARY_KEY || RelationConstraintType == RelationConstraintType.FOREIGN_KEY || RelationConstraintType == RelationConstraintType.UNIQUE)
+            if (RelationConstraintType == RelationConstraintType.PrimaryKey || RelationConstraintType == RelationConstraintType.ForeignKey || RelationConstraintType == RelationConstraintType.Unique)
             {
                 if (ConstraintName != IndexName && !SqlHelper.HasSystemPrefix(IndexName) || Index.Descending)
                 {

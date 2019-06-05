@@ -61,7 +61,7 @@ namespace FirebirdDbComparer.DatabaseObjects.Primitives
 
         // CORE-4934 and changing collation directly means modifying system table currently
         // system generated domains are sometimes explicit and sometimes relying on collation stored for the column/parameter directly
-        internal Collation _EqualityCollation => ComputedSource != null || MetadataFieldType == MetadataFieldType.SYSTEM_GENERATED ? null : Collation;
+        internal Collation _EqualityCollation => ComputedSource != null || MetadataFieldType == MetadataFieldType.SystemGenerated ? null : Collation;
 
         public Collation Collation { get; set; }
 
@@ -160,9 +160,9 @@ namespace FirebirdDbComparer.DatabaseObjects.Primitives
                 };
             result.FieldPrecision = AdjustFieldPrecision(values["RDB$FIELD_PRECISION"].DbValueToInt32(), result.FieldType);
             result.MetadataFieldType =
-                result.SystemFlag == SystemFlagType.USER && sqlHelper.HasSystemPrefix(result.FieldName)
-                    ? MetadataFieldType.SYSTEM_GENERATED
-                    : MetadataFieldType.DOMAIN;
+                result.SystemFlag == SystemFlagType.User && sqlHelper.HasSystemPrefix(result.FieldName)
+                    ? MetadataFieldType.SystemGenerated
+                    : MetadataFieldType.Domain;
 
             if (sqlHelper.TargetVersion.AtLeast30())
             {
@@ -178,10 +178,10 @@ namespace FirebirdDbComparer.DatabaseObjects.Primitives
             {
                 switch (fieldType)
                 {
-                    case FieldType.LONG:
+                    case FieldType.Long:
                         result = 9;
                         break;
-                    case FieldType.DOUBLE:
+                    case FieldType.Double:
                         result = 15;
                         break;
                     default:

@@ -20,7 +20,7 @@ namespace FirebirdDbComparer.DatabaseObjects.Implementations
 
             foreach (var userPrivilege in UserPrivileges.Where(p => !p.IsSystemGeneratedObject))
             {
-                if (userPrivilege.ObjectType == ObjectType.PACKAGE)
+                if (userPrivilege.ObjectType == ObjectType.Package)
                 {
                     userPrivilege.Package =
                         Metadata
@@ -35,7 +35,7 @@ namespace FirebirdDbComparer.DatabaseObjects.Implementations
             Command command;
             switch (privilege.Privilege)
             {
-                case Privilege.USAGE:
+                case Privilege.Usage:
                 {
                     // Syntax:
                     //   GRANT USAGE ON < object type > < name > TO < grantee list > [< grant option > < granted by clause >]
@@ -51,7 +51,7 @@ namespace FirebirdDbComparer.DatabaseObjects.Implementations
                         // see \src\dsql\parse.y line 840 (release 3.0.2)
                         // only EXECEPTION, GENERATOR is parsed for the moment, but not clearly in the documentation
                         // reported 
-                        if (privilege.ObjectType != ObjectType.EXCEPTION && privilege.ObjectType != ObjectType.GENERATOR)
+                        if (privilege.ObjectType != ObjectType.Exception && privilege.ObjectType != ObjectType.Generator)
                         {
                             command = null;
                         }
@@ -62,9 +62,9 @@ namespace FirebirdDbComparer.DatabaseObjects.Implementations
                     }
                     break;
                 }
-                case Privilege.CREATE:
-                case Privilege.ALTER:
-                case Privilege.DROP:
+                case Privilege.Create:
+                case Privilege.Alter:
+                case Privilege.Drop:
                 {
                     // Syntax:
                     //   GRANT CREATE <object-type >
@@ -76,7 +76,7 @@ namespace FirebirdDbComparer.DatabaseObjects.Implementations
 
                     command = new Command();
                     command.Append(
-                        privilege.Privilege == Privilege.CREATE
+                        privilege.Privilege == Privilege.Create
                             ? $"GRANT {privilege.Privilege.ToDescription()} {privilege.ObjectType.ToDescription()} TO {privilege.UserType.ToDescription()} {privilege.User}"
                             : $"GRANT {privilege.Privilege.ToDescription()} ANY {privilege.ObjectType.ToDescription()} TO {privilege.UserType.ToDescription()} {privilege.User}");
                     AddWithOption(privilege, command);
@@ -94,7 +94,7 @@ namespace FirebirdDbComparer.DatabaseObjects.Implementations
             Command command;
             switch (privilege.Privilege)
             {
-                case Privilege.USAGE:
+                case Privilege.Usage:
                 {
                     // Syntax:
                     //   REVOKE USAGE ON < object type > < name > FROM < grantee list > [< granted by clause >]
@@ -108,7 +108,7 @@ namespace FirebirdDbComparer.DatabaseObjects.Implementations
                         // see \src\dsql\parse.y line 840 (release 3.0.2)
                         // only EXECEPTION, GENERATOR is parsed for the moment, but not clearly in the documentation
                         // reported 
-                        if (privilege.ObjectType != ObjectType.EXCEPTION && privilege.ObjectType != ObjectType.GENERATOR)
+                        if (privilege.ObjectType != ObjectType.Exception && privilege.ObjectType != ObjectType.Generator)
                         {
                             command = null;
                         }
@@ -119,9 +119,9 @@ namespace FirebirdDbComparer.DatabaseObjects.Implementations
                     }
                     break;
                 }
-                case Privilege.CREATE:
-                case Privilege.ALTER:
-                case Privilege.DROP:
+                case Privilege.Create:
+                case Privilege.Alter:
+                case Privilege.Drop:
                 {
                     // Syntax:
                     //   REVOKE[GRANT OPTION FOR] CREATE < object - type >
@@ -133,7 +133,7 @@ namespace FirebirdDbComparer.DatabaseObjects.Implementations
 
                     command = new Command();
                     command.Append(
-                        privilege.Privilege == Privilege.CREATE
+                        privilege.Privilege == Privilege.Create
                             ? $"REVOKE {privilege.Privilege.ToDescription()} {privilege.ObjectType.ToDescription()} FROM {privilege.UserType.ToDescription()} {privilege.User}"
                             : $"REVOKE {privilege.Privilege.ToDescription()} ANY {privilege.ObjectType.ToDescription()} FROM {privilege.UserType.ToDescription()} {privilege.User}");
                     break;
@@ -150,23 +150,23 @@ namespace FirebirdDbComparer.DatabaseObjects.Implementations
             ITypeObjectNameKey primitiveType;
             switch (privilege.ObjectType)
             {
-                case ObjectType.RELATION:
-                case ObjectType.VIEW:
+                case ObjectType.Relation:
+                case ObjectType.View:
                     primitiveType = privilege.Relation;
                     break;
-                case ObjectType.PROCEDURE:
+                case ObjectType.Procedure:
                     primitiveType = privilege.Procedure;
                     break;
-                case ObjectType.PACKAGE:
+                case ObjectType.Package:
                     primitiveType = privilege.Package;
                     break;
                 case ObjectType.UDF:
                     primitiveType = privilege.Function;
                     break;
-                case ObjectType.EXCEPTION:
+                case ObjectType.Exception:
                     primitiveType = privilege.DbException;
                     break;
-                case ObjectType.GENERATOR:
+                case ObjectType.Generator:
                     primitiveType = privilege.Generator;
                     break;
                 default:

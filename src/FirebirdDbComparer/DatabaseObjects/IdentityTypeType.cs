@@ -2,7 +2,7 @@ namespace FirebirdDbComparer.DatabaseObjects
 {
     public enum IdentityTypeType
     {
-        ALWAYS = 0,
-        BY_DEFAULT = 1
+        Always = 0,
+        ByDefault = 1,
     }
 }

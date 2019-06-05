@@ -5,18 +5,18 @@ namespace FirebirdDbComparer.DatabaseObjects
     public enum RelationConstraintType
     {
         [Description("CHECK")]
-        CHECK,
+        Check,
 
         [Description("FOREIGN KEY")]
-        FOREIGN_KEY,
+        ForeignKey,
 
         [Description("NOT NULL")]
-        NOT_NULL,
+        NotNull,
 
         [Description("PRIMARY KEY")]
-        PRIMARY_KEY,
+        PrimaryKey,
 
         [Description("UNIQUE")]
-        UNIQUE
+        Unique,
     }
 }

@@ -71,28 +71,28 @@ namespace FirebirdDbComparer.SqlGeneration
         {
             switch (dataType.FieldType)
             {
-                case FieldType.SHORT:
+                case FieldType.Short:
                     return ScalableNumber("SMALLINT", dataType);
-                case FieldType.LONG:
+                case FieldType.Long:
                     return ScalableNumber("INT", dataType);
-                case FieldType.FLOAT:
+                case FieldType.Float:
                     return "FLOAT";
-                case FieldType.DATE:
+                case FieldType.Date:
                     return "DATE";
-                case FieldType.TIME:
+                case FieldType.Time:
                     return "TIME";
-                case FieldType.INT64:
+                case FieldType.Int64:
                     return ScalableNumber("BIGINT", dataType);
-                case FieldType.DOUBLE:
+                case FieldType.Double:
                     return "DOUBLE PRECISION";
-                case FieldType.TIMESTAMP:
+                case FieldType.Timestamp:
                     return "TIMESTAMP";
-                case FieldType.VARYING:
-                case FieldType.TEXT:
+                case FieldType.Varying:
+                case FieldType.Text:
                     return VarcharChar(dataType, characterSets, defaultCharacterSetId);
-                case FieldType.CSTRING:
+                case FieldType.CString:
                     return $"CSTRING({dataType.CharacterLength ?? dataType.FieldLength})";
-                case FieldType.BLOB:
+                case FieldType.Blob:
                     var segmentSize = dataType.SegmentSize != null
                         ? $" SEGMENT SIZE {dataType.SegmentSize}"
                         : string.Empty;
@@ -113,11 +113,11 @@ namespace FirebirdDbComparer.SqlGeneration
             {
                 switch (procedureParameter.Field.MetadataFieldType)
                 {
-                    case MetadataFieldType.SYSTEM_GENERATED:
+                    case MetadataFieldType.SystemGenerated:
                         builder.Append(GetDataType(procedureParameter.Field, characterSets, defaultCharacterSetId));
                         break;
-                    case MetadataFieldType.DOMAIN:
-                        if (procedureParameter.ParameterMechanism == ProcedureParameterMechanism.TYPE_OF)
+                    case MetadataFieldType.Domain:
+                        if (procedureParameter.ParameterMechanism == ProcedureParameterMechanism.TypeOf)
                         {
                             builder.Append("TYPE OF ");
                         }
@@ -139,9 +139,9 @@ namespace FirebirdDbComparer.SqlGeneration
         {
             switch (relationField.Field.MetadataFieldType)
             {
-                case MetadataFieldType.SYSTEM_GENERATED:
+                case MetadataFieldType.SystemGenerated:
                     return GetDataType(relationField.Field, characterSets, defaultCharacterSetId);
-                case MetadataFieldType.DOMAIN:
+                case MetadataFieldType.Domain:
                     return relationField.FieldSource.AsSqlIndentifier();
                 default:
                     throw new NotSupportedException($"Unknown field type: {relationField.Field.MetadataFieldType}.");
@@ -262,11 +262,11 @@ namespace FirebirdDbComparer.SqlGeneration
         {
             switch (item.Field.MetadataFieldType)
             {
-                case MetadataFieldType.SYSTEM_GENERATED:
+                case MetadataFieldType.SystemGenerated:
                     return item.CollationId != null
                                ? Collate(collations, (int)item.Field.CharacterSetId, (int)item.CollationId)
                                : HandleCollate(item.Field, collations);
-                case MetadataFieldType.DOMAIN:
+                case MetadataFieldType.Domain:
                     return item.CollationId != null
                                ? Collate(collations, (int)item.Field.CharacterSetId, (int)item.CollationId)
                                : null;
@@ -324,10 +324,10 @@ namespace FirebirdDbComparer.SqlGeneration
             var builder = new StringBuilder();
             switch (dataType.FieldType)
             {
-                case FieldType.VARYING:
+                case FieldType.Varying:
                     builder.Append("VARCHAR");
                     break;
-                case FieldType.TEXT:
+                case FieldType.Text:
                     builder.Append("CHAR");
                     break;
                 default:

@@ -2,21 +2,21 @@ namespace FirebirdDbComparer.DatabaseObjects
 {
     public enum FieldType
     {
-        UNKNOWN = 0,
-        SHORT = 7,
-        LONG = 8,
-        QUAD = 9,
-        FLOAT = 10,
-        DATE = 12,
-        TIME = 13,
-        TEXT = 14,
-        INT64 = 16,
-        BOOLEAN = 23,
-        DOUBLE = 27,
-        TIMESTAMP = 35,
-        VARYING = 37,
-        CSTRING = 40,
-        BLOB_ID = 45,
-        BLOB = 261
+        Unknown = 0,
+        Short = 7,
+        Long = 8,
+        Quad = 9,
+        Float = 10,
+        Date = 12,
+        Time = 13,
+        Text = 14,
+        Int64 = 16,
+        Boolean = 23,
+        Double = 27,
+        Timestamp = 35,
+        Varying = 37,
+        CString = 40,
+        BlobId = 45,
+        Blob = 261,
     }
 }

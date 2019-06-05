@@ -74,15 +74,15 @@ namespace FirebirdDbComparer.DatabaseObjects.Primitives
             switch (rule)
             {
                 case "CASCADE":
-                    return ConstraintRule.CASCADE;
+                    return ConstraintRule.Cascade;
                 case "RESTRICT":
-                    return ConstraintRule.RESTRICT;
+                    return ConstraintRule.Restrict;
                 case "SET DEFAULT":
-                    return ConstraintRule.SET_DEFAULT;
+                    return ConstraintRule.SetDefault;
                 case "SET NULL":
-                    return ConstraintRule.SET_NULL;
+                    return ConstraintRule.SetNull;
                 case "NO ACTION":
-                    return ConstraintRule.NO_ACTION;
+                    return ConstraintRule.NoAction;
                 default:
                     throw new ArgumentOutOfRangeException($"Unknown constraint rule: {rule}.");
             }

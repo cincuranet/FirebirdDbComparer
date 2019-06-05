@@ -8,72 +8,72 @@ namespace FirebirdDbComparer.DatabaseObjects
     public enum ObjectType
     {
         [Description("TABLE")]
-        RELATION = 0,
-        VIEW = 1,
-        TRIGGER = 2,
-        COMPUTED_FIELD = 3,
-        VALIDATION = 4,
-        PROCEDURE = 5,
-        EXPRESSION_INDEX = 6,
-        EXCEPTION = 7,
-        USER = 8,
+        Relation = 0,
+        View = 1,
+        Trigger = 2,
+        ComputedField = 3,
+        Validation = 4,
+        Procedure = 5,
+        ExpressionIndex = 6,
+        Exception = 7,
+        User = 8,
 
         [Description("DOMAIN")]
-        FIELD = 9,
-        INDEX = 10,
+        Field = 9,
+        Index = 10,
 
         [Description("CHARACTER SET")]
-        CHARACTER_SET = 11,
-        USER_GROUP = 12,
-        ROLE = 13,
+        CharacterSet = 11,
+        UserGroup = 12,
+        Role = 13,
 
         [Description("SEQUENCE")]
-        GENERATOR = 14,
+        Generator = 14,
 
         [Description("FUNCTION")]
         UDF = 15,
-        BLOB_FILTER = 16,
-        COLLATION = 17,
-        PACKAGE = 18,
-        PACKAGE_BODY = 19,
+        BlobFilter = 16,
+        Collation = 17,
+        Package = 18,
+        PackageBody = 19,
 
         [Description("DATABASE")]
-        DDL_DATABASE = 20,
+        DDLDatabase = 20,
         
         [Description("TABLE")]
-        DDL_RELATIONS = 21,
+        DDLRelations = 21,
 
         [Description("VIEW")]
-        DDL_VIEWS = 22,
+        DDLViews = 22,
 
         [Description("PROCEDURE")]
-        DDL_PROCEDURE = 23,
+        DDLProcedure = 23,
 
         [Description("FUNCTION")]
-        DDL_FUNCTIONS = 24,
+        DDLFunctions = 24,
 
         [Description("PACKAGE")]
-        DDL_PACKAGES = 25,
+        DDLPackages = 25,
 
         [Description("SEQUENCE")]
-        DDL_GENERATORS = 26,
+        DDLGenerators = 26,
 
         [Description("DOMAIN")]
-        DDL_DOMAINS = 27,
+        DDLDomains = 27,
 
         [Description("EXCEPTION")]
-        DDL_EXCEPTIONS = 28,
+        DDLExceptions = 28,
 
         [Description("ROLE")]
-        DDL_ROLES = 29,
+        DDLRoles = 29,
 
         [Description("CHARACTER SET")]
-        DDL_CHARACTER_SET = 30,
+        DDLCharacterSet = 30,
 
         [Description("COLLATION")]
-        DDL_COLLATIONS = 31,
+        DDLCollations = 31,
 
         [Description("FILTER")]
-        DDL_FILTERS = 32
+        DDLFilters = 32,
     }
 }

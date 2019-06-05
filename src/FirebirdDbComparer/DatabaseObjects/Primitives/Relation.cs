@@ -53,7 +53,7 @@ namespace FirebirdDbComparer.DatabaseObjects.Primitives
         protected override IEnumerable<Command> OnCreate(IMetadata sourceMetadata, IMetadata targetMetadata, IComparerContext context)
         {
             var command =
-                MetadataRelationType == MetadataRelationType.VIEW
+                MetadataRelationType == MetadataRelationType.View
                     ? OnCreateView(sourceMetadata, targetMetadata, context)
                     : OnCreateTable(sourceMetadata, targetMetadata, context);
             yield return command;
@@ -62,8 +62,8 @@ namespace FirebirdDbComparer.DatabaseObjects.Primitives
         protected virtual Command OnCreateTable(IMetadata sourceMetadata, IMetadata targetMetadata, IComparerContext context)
         {
             var command = new Command();
-            var isGtt = MetadataRelationType == MetadataRelationType.GLOBAL_TEMPORARY_PRESERVE || MetadataRelationType == MetadataRelationType.GLOBAL_TEMPORARY_DELETE;
-            var isExternal = MetadataRelationType == MetadataRelationType.EXTERNAL;
+            var isGtt = MetadataRelationType == MetadataRelationType.GlobalTemporaryPreserve || MetadataRelationType == MetadataRelationType.GlobalTemporaryDelete;
+            var isExternal = MetadataRelationType == MetadataRelationType.External;
             command.Append("CREATE ");
             if (isGtt)
             {
@@ -116,13 +116,13 @@ namespace FirebirdDbComparer.DatabaseObjects.Primitives
         protected override IEnumerable<Command> OnDrop(IMetadata sourceMetadata, IMetadata targetMetadata, IComparerContext context)
         {
             yield return new Command()
-                .Append($"DROP {(MetadataRelationType == MetadataRelationType.VIEW ? "VIEW" : "TABLE")} {RelationName.AsSqlIndentifier()}");
+                .Append($"DROP {(MetadataRelationType == MetadataRelationType.View ? "VIEW" : "TABLE")} {RelationName.AsSqlIndentifier()}");
         }
 
         protected override IEnumerable<Command> OnAlter(IMetadata sourceMetadata, IMetadata targetMetadata, IComparerContext context)
         {
             var commands =
-                MetadataRelationType == MetadataRelationType.VIEW
+                MetadataRelationType == MetadataRelationType.View
                     ? OnAlterView(sourceMetadata, targetMetadata, context)
                     : OnAlterTable(sourceMetadata, targetMetadata, context);
             return commands;

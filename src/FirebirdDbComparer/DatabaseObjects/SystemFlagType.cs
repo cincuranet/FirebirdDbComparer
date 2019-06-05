@@ -2,11 +2,11 @@ namespace FirebirdDbComparer.DatabaseObjects
 {
     public enum SystemFlagType
     {
-        USER = 0,
-        SYSTEM = 1,
+        User = 0,
+        System = 1,
         QLI = 2,
-        CHECK_CONSTRAINT = 3,
-        REFERENTIAL_CONSTRAINT = 4,
-        VIEW_CHECK = 5
+        CheckConstraint = 3,
+        ReferentialConstraint = 4,
+        ViewCheck = 5,
     }
 }

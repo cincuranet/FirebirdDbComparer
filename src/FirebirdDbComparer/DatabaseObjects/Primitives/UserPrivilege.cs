@@ -99,37 +99,37 @@ namespace FirebirdDbComparer.DatabaseObjects.Primitives
             switch (privilege)
             {
                 case "S":
-                    result = Privilege.SELECT;
+                    result = Privilege.Select;
                     break;
                 case "U":
-                    result = Privilege.UPDATE;
+                    result = Privilege.Update;
                     break;
                 case "D":
-                    result = Privilege.DELETE;
+                    result = Privilege.Delete;
                     break;
                 case "I":
-                    result = Privilege.INSERT;
+                    result = Privilege.Insert;
                     break;
                 case "X":
-                    result = Privilege.EXECUTE;
+                    result = Privilege.Execute;
                     break;
                 case "R":
-                    result = Privilege.REFERENCE;
+                    result = Privilege.Reference;
                     break;
                 case "M":
-                    result = Privilege.MEMBER;
+                    result = Privilege.Member;
                     break;
                 case "G":
-                    result = Privilege.USAGE;
+                    result = Privilege.Usage;
                     break;
                 case "C":
-                    result = Privilege.CREATE;
+                    result = Privilege.Create;
                     break;
                 case "L":
-                    result = Privilege.ALTER;
+                    result = Privilege.Alter;
                     break;
                 case "O":
-                    result = Privilege.DROP;
+                    result = Privilege.Drop;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException($"Unknown privilege: {privilege}.");

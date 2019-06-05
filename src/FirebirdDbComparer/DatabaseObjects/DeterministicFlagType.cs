@@ -2,6 +2,6 @@ namespace FirebirdDbComparer.DatabaseObjects
 {
     public enum DeterministicFlagType
     {
-        DETERMINISTIC = 1
+        Deterministic = 1,
     }
 }

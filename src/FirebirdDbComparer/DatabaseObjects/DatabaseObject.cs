@@ -136,7 +136,7 @@ namespace FirebirdDbComparer.DatabaseObjects
 
         protected static bool FilterSystemFlagUserPredicate<T>(T item) where T : IHasSystemFlag
         {
-            return item.SystemFlag == SystemFlagType.USER;
+            return item.SystemFlag == SystemFlagType.User;
         }
 
         protected static IEnumerable<T> FilterSystemFlagUser<T>(IEnumerable<T> source) where T : IHasSystemFlag

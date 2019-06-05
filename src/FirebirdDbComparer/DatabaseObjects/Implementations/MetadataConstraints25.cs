@@ -90,14 +90,14 @@ select trim(RC.RDB$CONSTRAINT_NAME) as RDB$CONSTRAINT_NAME,
 
             foreach (var constraint in RelationConstraintsByName.Values)
             {
-                if (constraint.RelationConstraintType == RelationConstraintType.NOT_NULL)
+                if (constraint.RelationConstraintType == RelationConstraintType.NotNull)
                 {
                     constraint.FieldName =
                         checkConstraintsByName[constraint.ConstraintName]
                             .Select(c => c.TriggerName)
                             .Single();
                 }
-                else if (constraint.RelationConstraintType == RelationConstraintType.CHECK)
+                else if (constraint.RelationConstraintType == RelationConstraintType.Check)
                 {
                     constraint.Triggers =
                         checkConstraintsByName[constraint.ConstraintName]
@@ -158,16 +158,16 @@ select trim(RC.RDB$CONSTRAINT_NAME) as RDB$CONSTRAINT_NAME,
                     .MetadataConstraints
                     .RelationConstraintsByName
                     .Values
-                    .Where(c => (c.RelationConstraintType == RelationConstraintType.PRIMARY_KEY
-                                 || c.RelationConstraintType == RelationConstraintType.UNIQUE
-                                 || c.RelationConstraintType == RelationConstraintType.FOREIGN_KEY)
+                    .Where(c => (c.RelationConstraintType == RelationConstraintType.PrimaryKey
+                                 || c.RelationConstraintType == RelationConstraintType.Unique
+                                 || c.RelationConstraintType == RelationConstraintType.ForeignKey)
                                 && c.Index.Segments.Any(selector))
                     .Where(c => !context.DroppedObjects.Contains(c.TypeObjectNameKey))
-                    .OrderBy(c => c.RelationConstraintType == RelationConstraintType.PRIMARY_KEY
-                                  || c.RelationConstraintType == RelationConstraintType.UNIQUE);
+                    .OrderBy(c => c.RelationConstraintType == RelationConstraintType.PrimaryKey
+                                  || c.RelationConstraintType == RelationConstraintType.Unique);
             foreach (var relationConstraint in relationConstraints)
             {
-                if (relationConstraint.RelationConstraintType == RelationConstraintType.PRIMARY_KEY || relationConstraint.RelationConstraintType == RelationConstraintType.UNIQUE)
+                if (relationConstraint.RelationConstraintType == RelationConstraintType.PrimaryKey || relationConstraint.RelationConstraintType == RelationConstraintType.Unique)
                 {
                     if (other.MetadataConstraints.ReferenceConstraintsByNameUq.TryGetValue(relationConstraint.ConstraintName, out var referenceConstraints))
                     {
@@ -202,7 +202,7 @@ select trim(RC.RDB$CONSTRAINT_NAME) as RDB$CONSTRAINT_NAME,
             {
                 return false;
             }
-            if (relationConstraintType != RelationConstraintType.FOREIGN_KEY && !Metadata.MetadataRelations.Relations.ContainsKey(c.RelationName))
+            if (relationConstraintType != RelationConstraintType.ForeignKey && !Metadata.MetadataRelations.Relations.ContainsKey(c.RelationName))
             {
                 return false;
             }
@@ -231,7 +231,7 @@ select trim(RC.RDB$CONSTRAINT_NAME) as RDB$CONSTRAINT_NAME,
                     .ThenBy(rc => rc.ConstraintName);
             foreach (var constraint in constraintsToBeDropped)
             {
-                if (constraint.RelationConstraintType == RelationConstraintType.PRIMARY_KEY || constraint.RelationConstraintType == RelationConstraintType.UNIQUE)
+                if (constraint.RelationConstraintType == RelationConstraintType.PrimaryKey || constraint.RelationConstraintType == RelationConstraintType.Unique)
                 {
                     if (ReferenceConstraintsByNameUq.TryGetValue(constraint.ConstraintName, out var referenceConstraints))
                     {
@@ -284,9 +284,9 @@ select trim(RC.RDB$CONSTRAINT_NAME) as RDB$CONSTRAINT_NAME,
                         {
                             other.MetadataConstraints.RelationConstraintsByName.TryGetValue(rc.ConstraintName, out var otherRelationConstraint);
                             return
-                                (rc.RelationConstraintType == RelationConstraintType.FOREIGN_KEY
-                                 || rc.RelationConstraintType == RelationConstraintType.PRIMARY_KEY
-                                 || rc.RelationConstraintType == RelationConstraintType.UNIQUE)
+                                (rc.RelationConstraintType == RelationConstraintType.ForeignKey
+                                 || rc.RelationConstraintType == RelationConstraintType.PrimaryKey
+                                 || rc.RelationConstraintType == RelationConstraintType.Unique)
                                 && context.DroppedObjects.Contains(rc.TypeObjectNameKey)
                                 && otherRelationConstraint != null
                                 && otherRelationConstraint == rc;
@@ -295,9 +295,9 @@ select trim(RC.RDB$CONSTRAINT_NAME) as RDB$CONSTRAINT_NAME,
                              {
                                  switch (rc.RelationConstraintType)
                                  {
-                                     case RelationConstraintType.PRIMARY_KEY:
+                                     case RelationConstraintType.PrimaryKey:
                                          return 1;
-                                     case RelationConstraintType.UNIQUE:
+                                     case RelationConstraintType.Unique:
                                          return 2;
                                      default:
                                          return 3;
@@ -320,7 +320,7 @@ select trim(RC.RDB$CONSTRAINT_NAME) as RDB$CONSTRAINT_NAME,
 
         private bool ForeignKeyConstraintPredicate(IMetadataConstraints constraints, IMetadataConstraints otherConstraints, RelationConstraint c)
         {
-            return ConstraintPredicate(otherConstraints, c, RelationConstraintType.FOREIGN_KEY,
+            return ConstraintPredicate(otherConstraints, c, RelationConstraintType.ForeignKey,
                                        otherConstraint =>
                                            !otherConstraints.RelationConstraintsByName.Values.Contains(c)
                                            || !otherConstraints.ReferenceConstraintsByName.Values.Contains(constraints.ReferenceConstraintsByName[c.ConstraintName]));
@@ -328,12 +328,12 @@ select trim(RC.RDB$CONSTRAINT_NAME) as RDB$CONSTRAINT_NAME,
 
         private bool PrimaryKeyConstraintPredicate(IMetadataConstraints constraints, IMetadataConstraints otherConstraints, RelationConstraint c)
         {
-            return ConstraintPredicate(otherConstraints, c, RelationConstraintType.PRIMARY_KEY, null);
+            return ConstraintPredicate(otherConstraints, c, RelationConstraintType.PrimaryKey, null);
         }
 
         private bool UniqueConstraintPredicate(IMetadataConstraints constraints, IMetadataConstraints otherConstraints, RelationConstraint c)
         {
-            return ConstraintPredicate(otherConstraints, c, RelationConstraintType.UNIQUE, null);
+            return ConstraintPredicate(otherConstraints, c, RelationConstraintType.Unique, null);
         }
 
         private static IEnumerable<Command> DoCheckConstraints(IMetadata left, IMetadata right, Func<RelationConstraint, Func<IMetadata, IMetadata, IComparerContext, IEnumerable<Command>>> doAction, IComparerContext context)
@@ -360,7 +360,7 @@ select trim(RC.RDB$CONSTRAINT_NAME) as RDB$CONSTRAINT_NAME,
         private static IEnumerable<RelationConstraint> FilterCheckRelationConstraintsConstraints(IMetadataConstraints metadataConstraints)
         {
             return metadataConstraints.RelationConstraintsByName.Values
-                .Where(x => x.RelationConstraintType == RelationConstraintType.CHECK);
+                .Where(x => x.RelationConstraintType == RelationConstraintType.Check);
         }
     }
 }

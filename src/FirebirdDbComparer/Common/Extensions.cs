@@ -67,7 +67,7 @@ namespace FirebirdDbComparer.Common
         {
             var memberInfo = value.GetType().GetMember(value.ToString());
             var attribute = (DescriptionAttribute)memberInfo[0].GetCustomAttributes(typeof(DescriptionAttribute), false).SingleOrDefault();
-            return attribute == null ? value.ToString() : attribute.Description;
+            return attribute == null ? value.ToString().ToUpperInvariant() : attribute.Description;
         }
 
         public static HashSet<T> AddRange<T>(this HashSet<T> source, IEnumerable<T> items)

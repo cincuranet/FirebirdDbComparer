@@ -52,13 +52,13 @@ select trim(VR.RDB$VIEW_NAME) as RDB$VIEW_NAME,
                 viewRelation.View = Views[viewRelation.ViewName];
                 switch (viewRelation.ContextType)
                 {
-                    case ContextTypeType.TABLE:
+                    case ContextTypeType.Table:
                         viewRelation.ContextRelation = Relations[viewRelation.ViewContextName];
                         break;
-                    case ContextTypeType.VIEW:
+                    case ContextTypeType.View:
                         viewRelation.ContextView = Views[viewRelation.ViewContextName];
                         break;
-                    case ContextTypeType.PROCEDURE:
+                    case ContextTypeType.Procedure:
                         viewRelation.ContextProcedure = Metadata.MetadataProcedures.ProceduresByName[viewRelation.ViewContextName];
                         break;
                     default:

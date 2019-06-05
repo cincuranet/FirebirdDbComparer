@@ -39,7 +39,7 @@ namespace FirebirdDbComparer.DatabaseObjects.Primitives
         {
             yield return new Command()
                 .Append($"CREATE ROLE {RoleName.AsSqlIndentifier()}");
-            if (RoleFlag.HasFlag(RoleFlagType.ROLE_FLAG_MAY_TRUST))
+            if (RoleFlag.HasFlag(RoleFlagType.RoleFlagMayTrust))
             {
                 yield return new Command()
                     .Append($"ALTER ROLE {RoleName.AsSqlIndentifier()} SET AUTO ADMIN MAPPING");
@@ -58,7 +58,7 @@ namespace FirebirdDbComparer.DatabaseObjects.Primitives
             if (EquatableHelper.PropertiesEqual(this, otherRole, EquatableProperties, nameof(RoleFlag)))
             {
                 yield return new Command()
-                    .Append($"ALTER ROLE {RoleName.AsSqlIndentifier()} {(RoleFlag.HasFlag(RoleFlagType.ROLE_FLAG_MAY_TRUST) ? "SET" : "DROP")} AUTO ADMIN MAPPING");
+                    .Append($"ALTER ROLE {RoleName.AsSqlIndentifier()} {(RoleFlag.HasFlag(RoleFlagType.RoleFlagMayTrust) ? "SET" : "DROP")} AUTO ADMIN MAPPING");
             }
             else
             {

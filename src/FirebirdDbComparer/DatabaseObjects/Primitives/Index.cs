@@ -47,7 +47,7 @@ namespace FirebirdDbComparer.DatabaseObjects.Primitives
         public RelationConstraint RelationConstraint { get; set; }
         public Relation Relation { get; set; }
 
-        public bool IsUserCreatedIndex => RelationConstraint == null && SystemFlag == SystemFlagType.USER;
+        public bool IsUserCreatedIndex => RelationConstraint == null && SystemFlag == SystemFlagType.User;
 
         public bool CanAlter(Index other) => EquatableHelper.PropertiesEqual(this, other, EquatableProperties, nameof(Inactive));
 

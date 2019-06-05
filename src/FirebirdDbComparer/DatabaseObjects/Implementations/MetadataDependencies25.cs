@@ -48,39 +48,39 @@ select trim(D.RDB$DEPENDENT_NAME) as RDB$DEPENDENT_NAME,
             {
                 switch (dependency.DependentType)
                 {
-                    case ObjectType.RELATION:
-                    case ObjectType.VIEW:
+                    case ObjectType.Relation:
+                    case ObjectType.View:
                         dependency.DependentRelation =
                             Metadata
                                 .MetadataRelations
                                 .Relations[dependency.DependentName];
                         break;
-                    case ObjectType.TRIGGER:
+                    case ObjectType.Trigger:
                         dependency.DependentTrigger =
                             Metadata
                                 .MetadataTriggers
                                 .TriggersByName[dependency.DependentName];
                         break;
-                    case ObjectType.FIELD:
-                    case ObjectType.COMPUTED_FIELD:
+                    case ObjectType.Field:
+                    case ObjectType.ComputedField:
                         dependency.DependentField =
                             Metadata
                                 .MetadataFields
                                 .Fields[dependency.DependentName];
                         break;
-                    case ObjectType.PROCEDURE:
+                    case ObjectType.Procedure:
                         dependency.DependentProcedure =
                             Metadata
                                 .MetadataProcedures
                                 .ProceduresByName[dependency.DependentName];
                         break;
-                    case ObjectType.EXCEPTION:
+                    case ObjectType.Exception:
                         dependency.DependentException =
                             Metadata
                                 .MetadataExceptions
                                 .ExceptionsByName[dependency.DependentName];
                         break;
-                    case ObjectType.ROLE:
+                    case ObjectType.Role:
                         dependency.DependentRole =
                             Metadata
                                 .MetadataRoles
@@ -92,7 +92,7 @@ select trim(D.RDB$DEPENDENT_NAME) as RDB$DEPENDENT_NAME,
                                 .MetadataFunctions
                                 .FunctionsByName[dependency.DependentNameKey];
                         break;
-                    case ObjectType.EXPRESSION_INDEX:
+                    case ObjectType.ExpressionIndex:
                         dependency.DependentIndex =
                             Metadata
                                 .MetadataIndices
@@ -102,39 +102,39 @@ select trim(D.RDB$DEPENDENT_NAME) as RDB$DEPENDENT_NAME,
 
                 switch (dependency.DependedOnType)
                 {
-                    case ObjectType.RELATION:
-                    case ObjectType.VIEW:
+                    case ObjectType.Relation:
+                    case ObjectType.View:
                         dependency.DependedOnRelation =
                             Metadata
                                 .MetadataRelations
                                 .Relations[dependency.DependedOnName];
                         break;
-                    case ObjectType.TRIGGER:
+                    case ObjectType.Trigger:
                         dependency.DependedOnTrigger =
                             Metadata
                                 .MetadataTriggers
                                 .TriggersByName[dependency.DependedOnName];
                         break;
-                    case ObjectType.FIELD:
-                    case ObjectType.COMPUTED_FIELD:
+                    case ObjectType.Field:
+                    case ObjectType.ComputedField:
                         dependency.DependedOnField =
                             Metadata
                                 .MetadataFields
                                 .Fields[dependency.DependedOnName];
                         break;
-                    case ObjectType.PROCEDURE:
+                    case ObjectType.Procedure:
                         dependency.DependedOnProcedure =
                             Metadata
                                 .MetadataProcedures
                                 .ProceduresByName[dependency.DependedOnName];
                         break;
-                    case ObjectType.EXCEPTION:
+                    case ObjectType.Exception:
                         dependency.DependedOnException =
                             Metadata
                                 .MetadataExceptions
                                 .ExceptionsByName[dependency.DependedOnName];
                         break;
-                    case ObjectType.ROLE:
+                    case ObjectType.Role:
                         dependency.DependedOnRole =
                             Metadata
                                 .MetadataRoles
@@ -146,7 +146,7 @@ select trim(D.RDB$DEPENDENT_NAME) as RDB$DEPENDENT_NAME,
                                 .MetadataFunctions
                                 .FunctionsByName[dependency.DependedOnNameKey];
                         break;
-                    case ObjectType.EXPRESSION_INDEX:
+                    case ObjectType.ExpressionIndex:
                         dependency.DependendOnIndex =
                             Metadata
                                 .MetadataIndices
@@ -235,27 +235,27 @@ select trim(D.RDB$DEPENDENT_NAME) as RDB$DEPENDENT_NAME,
 
                     switch (dependency.DependentType)
                     {
-                        case ObjectType.RELATION:
-                        case ObjectType.VIEW:
+                        case ObjectType.Relation:
+                        case ObjectType.View:
                             yield return dependency.DependentRelation;
                             break;
-                        case ObjectType.TRIGGER:
-                            if (dependency.DependentTrigger.SystemFlag == SystemFlagType.USER)
+                        case ObjectType.Trigger:
+                            if (dependency.DependentTrigger.SystemFlag == SystemFlagType.User)
                             {
                                 yield return dependency.DependentTrigger;
                             }
                             break;
-                        case ObjectType.FIELD:
-                        case ObjectType.COMPUTED_FIELD:
+                        case ObjectType.Field:
+                        case ObjectType.ComputedField:
                             yield return dependency.DependentField;
                             break;
-                        case ObjectType.PROCEDURE:
+                        case ObjectType.Procedure:
                             yield return dependency.DependentProcedure;
                             break;
-                        case ObjectType.EXPRESSION_INDEX:
+                        case ObjectType.ExpressionIndex:
                             yield return dependency.DependentIndex;
                             break;
-                        case ObjectType.EXCEPTION:
+                        case ObjectType.Exception:
                             yield return dependency.DependentException;
                             break;
                         case ObjectType.UDF:
@@ -298,9 +298,9 @@ select trim(D.RDB$DEPENDENT_NAME) as RDB$DEPENDENT_NAME,
                     .MetadataConstraints
                     .RelationConstraintsByName
                     .Values
-                    .Where(c => (c.RelationConstraintType == RelationConstraintType.FOREIGN_KEY
-                                 || c.RelationConstraintType == RelationConstraintType.PRIMARY_KEY
-                                 || c.RelationConstraintType == RelationConstraintType.UNIQUE)
+                    .Where(c => (c.RelationConstraintType == RelationConstraintType.ForeignKey
+                                 || c.RelationConstraintType == RelationConstraintType.PrimaryKey
+                                 || c.RelationConstraintType == RelationConstraintType.Unique)
                                 && c.Index != null && c.Index.Segments.Any(s => s.RelationField.Field == field));
             foreach (var relationConstraint in relationContraints)
             {

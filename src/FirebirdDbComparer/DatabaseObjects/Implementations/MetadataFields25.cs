@@ -49,7 +49,7 @@ select trim(F.RDB$FIELD_NAME) as RDB$FIELD_NAME,
                 .Select(o => Field.CreateFrom(SqlHelper, o))
                 .ToDictionary(x => x.FieldName);
             m_Domains = m_Fields.Values
-                .Where(x => x.MetadataFieldType == MetadataFieldType.DOMAIN)
+                .Where(x => x.MetadataFieldType == MetadataFieldType.Domain)
                 .ToDictionary(x => x.FieldName);
         }
 

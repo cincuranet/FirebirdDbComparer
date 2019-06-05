@@ -55,7 +55,7 @@ namespace FirebirdDbComparer.DatabaseObjects.Primitives
         public SystemFlagType SystemFlag { get; private set; }
         public Package Package { get; set; }
 
-        internal bool IsLegacy => LegacyFlag == null || LegacyFlag == LegacyFlagType.LEGACY_STYLE;
+        internal bool IsLegacy => LegacyFlag == null || LegacyFlag == LegacyFlagType.LegacyStyle;
 
         protected override Function Self => this;
 
@@ -169,16 +169,16 @@ namespace FirebirdDbComparer.DatabaseObjects.Primitives
             builder.Append(SqlHelper.GetDataType(argument, default, default));
             switch (argument.MechanismMechanism)
             {
-                case FunctionArgumentMechanism.BY_VALUE:
+                case FunctionArgumentMechanism.ByValue:
                     builder.Append(" BY VALUE");
                     break;
-                case FunctionArgumentMechanism.BY_REFERENCE:
+                case FunctionArgumentMechanism.ByReference:
                     break;
-                case FunctionArgumentMechanism.BY_REFERENCE_WITH_NULL:
+                case FunctionArgumentMechanism.ByReferenceWithNull:
                     builder.Append(" NULL");
                     break;
-                case FunctionArgumentMechanism.BY_VMS_DESCRIPTOR:
-                case FunctionArgumentMechanism.BY_ISC_DESCRIPTOR:
+                case FunctionArgumentMechanism.ByVMSDescriptor:
+                case FunctionArgumentMechanism.ByISCDescriptor:
                     builder.Append(" BY DESCRIPTOR");
                     break;
             }

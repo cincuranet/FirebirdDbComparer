@@ -59,7 +59,7 @@ namespace FirebirdDbComparer.DatabaseObjects.Primitives
 
         protected override IEnumerable<Command> OnCreate(IMetadata sourceMetadata, IMetadata targetMetadata, IComparerContext context)
         {
-            if (ProcedureType == ProcedureProcedureType.LEGACY)
+            if (ProcedureType == ProcedureProcedureType.Legacy)
             {
                 throw new NotSupportedException("Legacy type stored procedures are not supported.");
             }
@@ -69,7 +69,7 @@ namespace FirebirdDbComparer.DatabaseObjects.Primitives
             if (ProcedureInputs > 0)
             {
                 var inputs = ProcedureParameters
-                    .Where(o => o.ParameterType == ProcedureParameterType.IN)
+                    .Where(o => o.ParameterType == ProcedureParameterType.In)
                     .OrderBy(o => o.ParameterNumber);
                 command.Append(" (");
                 command.AppendLine();
@@ -80,7 +80,7 @@ namespace FirebirdDbComparer.DatabaseObjects.Primitives
             if (ProcedureOutputs > 0)
             {
                 var outputs = ProcedureParameters
-                    .Where(o => o.ParameterType == ProcedureParameterType.OUT)
+                    .Where(o => o.ParameterType == ProcedureParameterType.Out)
                     .OrderBy(o => o.ParameterNumber);
                 command.Append("RETURNS (");
                 command.AppendLine();
@@ -94,7 +94,7 @@ namespace FirebirdDbComparer.DatabaseObjects.Primitives
             {
                 command.Append("BEGIN");
                 command.AppendLine();
-                if (ProcedureType == ProcedureProcedureType.SELECTABLE)
+                if (ProcedureType == ProcedureProcedureType.Selectable)
                 {
                     command.Append($"  SUSPEND{SqlHelper.Terminator}");
                     command.AppendLine();

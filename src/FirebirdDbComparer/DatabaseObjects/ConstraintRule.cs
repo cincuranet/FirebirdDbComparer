@@ -4,18 +4,18 @@ namespace FirebirdDbComparer.DatabaseObjects
 {
     public enum ConstraintRule
     {
-        RESTRICT,
+        Restrict,
 
         [Description("CASCADE")]
-        CASCADE,
+        Cascade,
 
         [Description("SET DEFAULT")]
-        SET_DEFAULT,
+        SetDefault,
 
         [Description("SET NULL")]
-        SET_NULL,
+        SetNull,
 
         [Description("NO ACTION")]
-        NO_ACTION
+        NoAction,
     }
 }

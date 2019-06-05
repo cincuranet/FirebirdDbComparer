@@ -63,15 +63,15 @@ namespace FirebirdDbComparer.DatabaseObjects.Primitives
             if (CollationAttributes != null)
             {
                 var collationAttributes = (CollationAttributes)CollationAttributes;
-                command.Append(collationAttributes.HasFlag(DatabaseObjects.CollationAttributes.TEXTTYPE_ATTR_PAD_SPACE)
+                command.Append(collationAttributes.HasFlag(DatabaseObjects.CollationAttributes.PadSpace)
                                    ? "PAD SPACE"
                                    : "NO PAD");
                 command.AppendLine();
-                command.Append(collationAttributes.HasFlag(DatabaseObjects.CollationAttributes.TEXTTYPE_ATTR_CASE_INSENSITIVE)
+                command.Append(collationAttributes.HasFlag(DatabaseObjects.CollationAttributes.CaseInsensitive)
                                    ? "CASE INSENSITIVE"
                                    : "CASE SENSITIVE");
                 command.AppendLine();
-                command.Append(collationAttributes.HasFlag(DatabaseObjects.CollationAttributes.TEXTTYPE_ATTR_ACCENT_INSENSITIVE)
+                command.Append(collationAttributes.HasFlag(DatabaseObjects.CollationAttributes.AccentInsensitive)
                                    ? "ACCENT INSENSITIVE"
                                    : "ACCENT SENSITIVE");
                 command.AppendLine();

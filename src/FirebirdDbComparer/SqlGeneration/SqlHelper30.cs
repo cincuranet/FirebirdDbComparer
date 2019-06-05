@@ -55,11 +55,11 @@ namespace FirebirdDbComparer.SqlGeneration
             {
                 switch (functionArgument.Field.MetadataFieldType)
                 {
-                    case MetadataFieldType.SYSTEM_GENERATED:
+                    case MetadataFieldType.SystemGenerated:
                         builder.Append(GetDataType(functionArgument.Field, characterSets, defaultCharacterSetId));
                         break;
-                    case MetadataFieldType.DOMAIN:
-                        if (functionArgument.ArgumentMechanismNewStyle == ProcedureParameterMechanism.TYPE_OF)
+                    case MetadataFieldType.Domain:
+                        if (functionArgument.ArgumentMechanismNewStyle == ProcedureParameterMechanism.TypeOf)
                         {
                             builder.Append("TYPE OF ");
                         }
@@ -77,7 +77,7 @@ namespace FirebirdDbComparer.SqlGeneration
         {
             switch (dataType.FieldType)
             {
-                case FieldType.BOOLEAN:
+                case FieldType.Boolean:
                     return "BOOLEAN";
                 default:
                     return base.GetDataType(dataType, characterSets, defaultCharacterSetId);

@@ -92,19 +92,19 @@ select trim(VR.RDB$VIEW_NAME) as RDB$VIEW_NAME,
                     .ToList();
             m_Tables =
                 m_Relations.Values
-                    .Where(x => x.MetadataRelationType == MetadataRelationType.PERSISTENT)
+                    .Where(x => x.MetadataRelationType == MetadataRelationType.Persistent)
                     .ToDictionary(x => x.RelationName);
             m_Views =
                 m_Relations.Values
-                    .Where(x => x.MetadataRelationType == MetadataRelationType.VIEW)
+                    .Where(x => x.MetadataRelationType == MetadataRelationType.View)
                     .ToDictionary(x => x.RelationName);
             m_ExternalTables =
                 m_Relations.Values
-                    .Where(x => x.MetadataRelationType == MetadataRelationType.EXTERNAL)
+                    .Where(x => x.MetadataRelationType == MetadataRelationType.External)
                     .ToDictionary(x => x.RelationName);
             m_GttTables =
                 m_Relations.Values
-                    .Where(x => x.MetadataRelationType == MetadataRelationType.GLOBAL_TEMPORARY_PRESERVE || x.MetadataRelationType == MetadataRelationType.GLOBAL_TEMPORARY_DELETE)
+                    .Where(x => x.MetadataRelationType == MetadataRelationType.GlobalTemporaryPreserve || x.MetadataRelationType == MetadataRelationType.GlobalTemporaryDelete)
                     .ToDictionary(x => x.RelationName);
         }
 
@@ -115,7 +115,7 @@ select trim(VR.RDB$VIEW_NAME) as RDB$VIEW_NAME,
             {
                 relationField.Relation = Relations[relationField.RelationName];
                 relationField.Field = Metadata.MetadataFields.Fields[relationField.FieldSource];
-                if (relationField.Relation.MetadataRelationType == MetadataRelationType.VIEW && relationField.BaseField != null)
+                if (relationField.Relation.MetadataRelationType == MetadataRelationType.View && relationField.BaseField != null)
                 {
                     // ReSharper disable once PossibleInvalidOperationException
                     relationField.ViewRelation = lookup[(relationField.RelationName, (int)relationField.ViewContext)];
@@ -301,8 +301,8 @@ select trim(VR.RDB$VIEW_NAME) as RDB$VIEW_NAME,
         {
             var actions = new[]
                           {
-                              (predicate: (Func<Relation, bool>)(x => x.MetadataRelationType != MetadataRelationType.VIEW), name: "TABLE"),
-                              (predicate: (Func<Relation, bool>)(x => x.MetadataRelationType == MetadataRelationType.VIEW), name: "VIEW"),
+                              (predicate: (Func<Relation, bool>)(x => x.MetadataRelationType != MetadataRelationType.View), name: "TABLE"),
+                              (predicate: (Func<Relation, bool>)(x => x.MetadataRelationType == MetadataRelationType.View), name: "VIEW"),
                           };
             foreach (var (predicate, name) in actions)
             {

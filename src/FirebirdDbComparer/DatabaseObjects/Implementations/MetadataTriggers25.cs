@@ -49,7 +49,7 @@ select trim(T.RDB$TRIGGER_NAME) as RDB$TRIGGER_NAME,
 
             foreach (var trigger in TriggersByName.Values)
             {
-                if (trigger.SystemFlag == SystemFlagType.CHECK_CONSTRAINT)
+                if (trigger.SystemFlag == SystemFlagType.CheckConstraint)
                 {
                     trigger.Constraint =
                         checkConstraintsByTriggerName[trigger.TriggerName]

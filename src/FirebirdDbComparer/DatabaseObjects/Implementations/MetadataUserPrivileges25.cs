@@ -45,44 +45,44 @@ select trim(UP.RDB$USER) as RDB$USER,
             {
                 switch (userPrivilege.ObjectType)
                 {
-                    case ObjectType.RELATION:
-                    case ObjectType.VIEW:
+                    case ObjectType.Relation:
+                    case ObjectType.View:
                         userPrivilege.Relation =
                             Metadata
                                 .MetadataRelations
                                 .Relations[userPrivilege.ObjectName];
                         break;
-                    case ObjectType.PROCEDURE:
+                    case ObjectType.Procedure:
                         userPrivilege.Procedure =
                             Metadata
                                 .MetadataProcedures
                                 .ProceduresByName[userPrivilege.ObjectName];
                         break;
-                    case ObjectType.EXCEPTION:
+                    case ObjectType.Exception:
                         userPrivilege.DbException =
                             Metadata
                                 .MetadataExceptions
                                 .ExceptionsByName[userPrivilege.ObjectName];
                         break;
-                    case ObjectType.FIELD:
+                    case ObjectType.Field:
                         userPrivilege.Field =
                             Metadata
                                 .MetadataFields
                                 .Fields[userPrivilege.ObjectName];
                         break;
-                    case ObjectType.CHARACTER_SET:
+                    case ObjectType.CharacterSet:
                         userPrivilege.CharacterSet =
                             Metadata
                                 .MetadataCharacterSets
                                 .CharacterSetsByName[userPrivilege.ObjectName];
                         break;
-                    case ObjectType.ROLE:
+                    case ObjectType.Role:
                         userPrivilege.Role =
                             Metadata
                                 .MetadataRoles
                                 .Roles[userPrivilege.ObjectName];
                         break;
-                    case ObjectType.GENERATOR:
+                    case ObjectType.Generator:
                         userPrivilege.Generator =
                             Metadata
                                 .MetadataGenerators
@@ -94,7 +94,7 @@ select trim(UP.RDB$USER) as RDB$USER,
                                 .MetadataFunctions
                                 .FunctionsByName[userPrivilege.LegacyFunctionNameKey];
                         break;
-                    case ObjectType.COLLATION:
+                    case ObjectType.Collation:
                         userPrivilege.Collation =
                             Metadata
                                 .MetadataCollations
@@ -161,7 +161,7 @@ select trim(UP.RDB$USER) as RDB$USER,
             {
                 command.AppendLine();
                 command.Append(
-                    privilege.Privilege == Privilege.MEMBER
+                    privilege.Privilege == Privilege.Member
                         ? "  WITH ADMIN OPTION"
                         : "  WITH GRANT OPTION");
             }
@@ -180,7 +180,7 @@ select trim(UP.RDB$USER) as RDB$USER,
         {
             var command = new Command();
             command.Append(
-                privilege.Privilege == Privilege.MEMBER
+                privilege.Privilege == Privilege.Member
                     ? $"GRANT {privilege.ObjectName.AsSqlIndentifier()} TO {privilege.User.AsSqlIndentifier()}"
                     : $"GRANT {CreatePrivilegeName(privilege)} ON {privilege.ObjectType.ToDescription()} {privilege.ObjectName.AsSqlIndentifier()} TO {CreateToObjectName(privilege)}");
             AddWithOption(privilege, command);
@@ -192,7 +192,7 @@ select trim(UP.RDB$USER) as RDB$USER,
         {
             var command = new Command();
             command.Append(
-                privilege.Privilege == Privilege.MEMBER
+                privilege.Privilege == Privilege.Member
                     ? $"REVOKE {privilege.ObjectName.AsSqlIndentifier()} FROM {privilege.User.AsSqlIndentifier()}"
                     : $"REVOKE {CreatePrivilegeName(privilege)} ON {privilege.ObjectType.ToDescription()} {privilege.ObjectName.AsSqlIndentifier()} FROM {CreateToObjectName(privilege)}");
             return command;
@@ -205,11 +205,11 @@ select trim(UP.RDB$USER) as RDB$USER,
             ITypeObjectNameKey primitiveType;
             switch (privilege.ObjectType)
             {
-                case ObjectType.RELATION:
-                case ObjectType.VIEW:
+                case ObjectType.Relation:
+                case ObjectType.View:
                     primitiveType = privilege.Relation;
                     break;
-                case ObjectType.PROCEDURE:
+                case ObjectType.Procedure:
                     primitiveType = privilege.Procedure;
                     break;
                 default:
@@ -232,7 +232,7 @@ select trim(UP.RDB$USER) as RDB$USER,
         protected virtual string CreateToObjectName(UserPrivilege userPrivilege)
         {
             var builder = new StringBuilder();
-            if (!(userPrivilege.UserType == ObjectType.USER || userPrivilege.UserType == ObjectType.ROLE))
+            if (!(userPrivilege.UserType == ObjectType.User || userPrivilege.UserType == ObjectType.Role))
             {
                 builder.Append(userPrivilege.UserType.ToDescription());
                 builder.Append(" ");

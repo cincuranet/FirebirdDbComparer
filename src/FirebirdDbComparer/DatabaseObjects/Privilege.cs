@@ -4,18 +4,18 @@ namespace FirebirdDbComparer.DatabaseObjects
 {
     public enum Privilege
     {
-        SELECT,
-        UPDATE,
-        DELETE,
-        INSERT,
-        EXECUTE,
+        Select,
+        Update,
+        Delete,
+        Insert,
+        Execute,
 
         [Description("REFERENCES")]
-        REFERENCE,
-        MEMBER,
-        USAGE,
-        CREATE,
-        ALTER,
-        DROP
+        Reference,
+        Member,
+        Usage,
+        Create,
+        Alter,
+        Drop,
     }
 }
