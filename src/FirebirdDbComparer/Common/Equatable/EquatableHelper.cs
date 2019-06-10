@@ -59,7 +59,6 @@ namespace FirebirdDbComparer.Common
                     {
                         if (currentThisProperty is IEnumerable)
                         {
-                            var test = Extensions.SetEquals((dynamic)currentThisProperty, (dynamic)currentOtherProperty);
                             return Extensions.SetEquals((dynamic)currentThisProperty, (dynamic)currentOtherProperty);
                         }
 
