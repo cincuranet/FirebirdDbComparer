@@ -23,17 +23,15 @@ namespace FirebirdDbComparer.Tests.Compare
         [SetUp]
         public void Setup()
         {
-            Parallel.Invoke(
-                () => Helpers.Database.CreateDatabase(m_Version, Helpers.Database.DatabaseLocation.Source),
-                () => Helpers.Database.CreateDatabase(m_Version, Helpers.Database.DatabaseLocation.Target));
+            Helpers.Database.CreateDatabase(m_Version, Helpers.Database.DatabaseLocation.Source);
+            Helpers.Database.CreateDatabase(m_Version, Helpers.Database.DatabaseLocation.Target);
         }
 
         [TearDown]
         public void TearDown()
         {
-            Parallel.Invoke(
-                () => Helpers.Database.DropDatabase(m_Version, Helpers.Database.DatabaseLocation.Target),
-                () => Helpers.Database.DropDatabase(m_Version, Helpers.Database.DatabaseLocation.Source));
+            Helpers.Database.DropDatabase(m_Version, Helpers.Database.DatabaseLocation.Target);
+            Helpers.Database.DropDatabase(m_Version, Helpers.Database.DatabaseLocation.Source);
         }
 
         public class TestCaseSpecificAsserts

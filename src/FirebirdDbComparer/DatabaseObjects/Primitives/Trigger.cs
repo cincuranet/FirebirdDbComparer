@@ -12,7 +12,7 @@ using FirebirdDbComparer.SqlGeneration;
 namespace FirebirdDbComparer.DatabaseObjects.Primitives
 {
     [DebuggerDisplay("{RelationName}.{TriggerName}")]
-    public sealed class Trigger : Primitive<Trigger>, IHasSystemFlag, IHasDescription
+    public sealed class Trigger : Primitive<Trigger>, IHasSystemFlag, IHasDescription, IHasExternalEngine
     {
         private static readonly EquatableProperty<Trigger>[] s_EquatableProperties =
         {
@@ -58,7 +58,6 @@ namespace FirebirdDbComparer.DatabaseObjects.Primitives
                 .Append($"CREATE OR ALTER TRIGGER {TriggerName.AsSqlIndentifier()}")
                 .AppendLine()
                 .Append($"{(Inactive ? "INACTIVE" : "ACTIVE")} ");
-
             switch (TriggerClass)
             {
                 case TriggerClassType.DML:
@@ -73,19 +72,25 @@ namespace FirebirdDbComparer.DatabaseObjects.Primitives
                     command.Append($"ON {TriggerEvents[0].ToDescription()} ");
                     break;
             }
-
             command
                 .Append($"POSITION {TriggerSequence}")
                 .AppendLine();
-
             if (TriggerClass == TriggerClassType.DML)
             {
                 command
                     .Append($"ON {RelationName.AsSqlIndentifier()}")
                     .AppendLine();
             }
-
-            command.Append(TriggerSource);
+            if (EntryPoint == null || EngineName == null)
+            {
+                command.Append(TriggerSource);
+            }
+            else
+            {
+                command.Append($"EXTERNAL NAME '{SqlHelper.DoubleSingleQuotes(EntryPoint)}'");
+                command.AppendLine();
+                command.Append($"ENGINE {EngineName.AsSqlIndentifier()}");
+            }
             yield return command;
         }
 
@@ -140,6 +145,6 @@ namespace FirebirdDbComparer.DatabaseObjects.Primitives
             }
 
             return result;
-        }        
+        }
     }
 }

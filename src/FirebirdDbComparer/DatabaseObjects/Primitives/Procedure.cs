@@ -14,7 +14,7 @@ using FirebirdDbComparer.SqlGeneration;
 namespace FirebirdDbComparer.DatabaseObjects.Primitives
 {
     [DebuggerDisplay("{ProcedureName}")]
-    public sealed class Procedure : Primitive<Procedure>, IHasSystemFlag, IHasDescription, IHasPackage
+    public sealed class Procedure : Primitive<Procedure>, IHasSystemFlag, IHasDescription, IHasPackage, IHasExternalEngine
     {
         private static readonly EquatableProperty<Procedure>[] s_EquatableProperties =
         {
@@ -88,22 +88,35 @@ namespace FirebirdDbComparer.DatabaseObjects.Primitives
                 command.Append(")");
                 command.AppendLine();
             }
-            command.Append("AS");
-            command.AppendLine();
-            if (context.EmptyBodiesEnabled)
+            if (EntryPoint == null || EngineName == null)
             {
-                command.Append("BEGIN");
+                command.Append("AS");
                 command.AppendLine();
-                if (ProcedureType == ProcedureProcedureType.Selectable)
+                if (context.EmptyBodiesEnabled)
                 {
-                    command.Append($"  SUSPEND{SqlHelper.Terminator}");
+                    command.Append("BEGIN");
                     command.AppendLine();
+                    if (ProcedureType == ProcedureProcedureType.Selectable)
+                    {
+                        command.Append($"  SUSPEND{SqlHelper.Terminator}");
+                        command.AppendLine();
+                    }
+                    command.Append("END");
                 }
-                command.Append("END");
+                else
+                {
+                    command.Append(ProcedureSource);
+                }
             }
             else
             {
-                command.Append(ProcedureSource);
+                if (context.EmptyBodiesEnabled)
+                {
+                    yield break;
+                }
+                command.Append($"EXTERNAL NAME '{SqlHelper.DoubleSingleQuotes(EntryPoint)}'");
+                command.AppendLine();
+                command.Append($"ENGINE {EngineName.AsSqlIndentifier()}");
             }
             yield return command;
         }

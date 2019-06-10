@@ -15,7 +15,7 @@ using FirebirdDbComparer.SqlGeneration;
 namespace FirebirdDbComparer.DatabaseObjects.Primitives
 {
     [DebuggerDisplay("{FunctionName}")]
-    public sealed class Function : Primitive<Function>, IHasSystemFlag, IHasDescription, IHasPackage
+    public sealed class Function : Primitive<Function>, IHasSystemFlag, IHasDescription, IHasPackage, IHasExternalEngine
     {
         private static readonly EquatableProperty<Function>[] s_EquatableProperties =
         {
@@ -103,23 +103,26 @@ namespace FirebirdDbComparer.DatabaseObjects.Primitives
                 command.AppendLine();
                 command.Append("AS");
                 command.AppendLine();
-                if (context.EmptyBodiesEnabled)
+                if (EntryPoint == null || EngineName == null)
                 {
-                    command.Append("BEGIN");
-                    command.AppendLine();
-                    command.Append("END");
+                    if (context.EmptyBodiesEnabled)
+                    {
+                        command.Append("BEGIN");
+                        command.AppendLine();
+                        command.Append("END");
+                    }
+                    else
+                    {
+                        command.Append(FunctionSource);
+                    }
                 }
                 else
                 {
-                    command.Append(FunctionSource);
-                }
-                if (EntryPoint != null)
-                {
-                    command.AppendLine();
-                    command.Append($"EXTERNAL NAME '{EntryPoint}'");
-                }
-                if (EngineName != null)
-                {
+                    if (context.EmptyBodiesEnabled)
+                    {
+                        yield break;
+                    }
+                    command.Append($"EXTERNAL NAME '{SqlHelper.DoubleSingleQuotes(EntryPoint)}'");
                     command.AppendLine();
                     command.Append($"ENGINE {EngineName.AsSqlIndentifier()}");
                 }
