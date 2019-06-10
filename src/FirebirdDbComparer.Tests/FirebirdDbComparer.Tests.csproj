@@ -6,8 +6,8 @@
         <ProjectReference Include="..\FirebirdDbComparer\FirebirdDbComparer.csproj" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="FirebirdSql.Data.FirebirdClient" Version="6.2.0.1" />
-        <PackageReference Include="NUnit" Version="3.10.1" />
+        <PackageReference Include="FirebirdSql.Data.FirebirdClient" Version="6.6.0" />
+        <PackageReference Include="NUnit" Version="3.12.0" />
         <PackageReference Include="System.ValueTuple" Version="4.5.0" />
     </ItemGroup>
     <ItemGroup>
