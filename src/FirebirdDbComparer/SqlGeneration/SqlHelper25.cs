@@ -302,6 +302,11 @@ namespace FirebirdDbComparer.SqlGeneration
             return Regex.IsMatch(identifier.ToString(), @"^INTEG_\d+$", RegexOptions.CultureInvariant);
         }
 
+        public virtual bool IsValidExternalEngine(IHasExternalEngine item)
+        {
+            return false;
+        }
+
         protected virtual string ScalableNumber(string regularType, IDataType dataType)
         {
             if (dataType.FieldSubType == 2 || dataType.FieldSubType == 0 && dataType.FieldScale < 0)

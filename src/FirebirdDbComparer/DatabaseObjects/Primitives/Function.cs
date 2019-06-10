@@ -82,7 +82,7 @@ namespace FirebirdDbComparer.DatabaseObjects.Primitives
             }
             else
             {
-                var command = new PSqlCommand();
+                var command = SqlHelper.IsValidExternalEngine(this) ? new Command() : new PSqlCommand();
                 command.Append("CREATE OR ALTER FUNCTION");
                 if (PackageName != null)
                 {
@@ -103,7 +103,17 @@ namespace FirebirdDbComparer.DatabaseObjects.Primitives
                 command.AppendLine();
                 command.Append("AS");
                 command.AppendLine();
-                if (EntryPoint == null || EngineName == null)
+                if (SqlHelper.IsValidExternalEngine(this))
+                {
+                    if (context.EmptyBodiesEnabled)
+                    {
+                        yield break;
+                    }
+                    command.Append($"EXTERNAL NAME '{SqlHelper.DoubleSingleQuotes(EntryPoint)}'");
+                    command.AppendLine();
+                    command.Append($"ENGINE {EngineName.AsSqlIndentifier()}");
+                }
+                else
                 {
                     if (context.EmptyBodiesEnabled)
                     {
@@ -115,16 +125,6 @@ namespace FirebirdDbComparer.DatabaseObjects.Primitives
                     {
                         command.Append(FunctionSource);
                     }
-                }
-                else
-                {
-                    if (context.EmptyBodiesEnabled)
-                    {
-                        yield break;
-                    }
-                    command.Append($"EXTERNAL NAME '{SqlHelper.DoubleSingleQuotes(EntryPoint)}'");
-                    command.AppendLine();
-                    command.Append($"ENGINE {EngineName.AsSqlIndentifier()}");
                 }
                 yield return command;
             }

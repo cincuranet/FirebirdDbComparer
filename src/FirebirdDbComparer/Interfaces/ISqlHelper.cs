@@ -37,5 +37,6 @@ namespace FirebirdDbComparer.Interfaces
         string HandleValidation(IHasValidationSource item);
         bool HasSystemPrefix(Identifier identifier);
         bool IsImplicitIntegrityConstraintName(Identifier identifier);
+        bool IsValidExternalEngine(IHasExternalEngine item);
     }
 }

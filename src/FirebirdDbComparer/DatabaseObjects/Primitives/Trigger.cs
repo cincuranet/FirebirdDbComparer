@@ -53,7 +53,7 @@ namespace FirebirdDbComparer.DatabaseObjects.Primitives
 
         protected override IEnumerable<Command> OnCreate(IMetadata sourceMetadata, IMetadata targetMetadata, IComparerContext context)
         {
-            var command = new PSqlCommand();
+            var command = SqlHelper.IsValidExternalEngine(this) ? new Command() : new PSqlCommand();
             command
                 .Append($"CREATE OR ALTER TRIGGER {TriggerName.AsSqlIndentifier()}")
                 .AppendLine()
@@ -81,15 +81,15 @@ namespace FirebirdDbComparer.DatabaseObjects.Primitives
                     .Append($"ON {RelationName.AsSqlIndentifier()}")
                     .AppendLine();
             }
-            if (EntryPoint == null || EngineName == null)
-            {
-                command.Append(TriggerSource);
-            }
-            else
+            if (SqlHelper.IsValidExternalEngine(this))
             {
                 command.Append($"EXTERNAL NAME '{SqlHelper.DoubleSingleQuotes(EntryPoint)}'");
                 command.AppendLine();
                 command.Append($"ENGINE {EngineName.AsSqlIndentifier()}");
+            }
+            else
+            {
+                command.Append(TriggerSource);
             }
             yield return command;
         }

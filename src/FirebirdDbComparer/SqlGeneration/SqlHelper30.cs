@@ -83,5 +83,10 @@ namespace FirebirdDbComparer.SqlGeneration
                     return base.GetDataType(dataType, characterSets, defaultCharacterSetId);
             }
         }
+
+        public override bool IsValidExternalEngine(IHasExternalEngine item)
+        {
+            return item.EngineName != null && item.EntryPoint != null;
+        }
     }
 }

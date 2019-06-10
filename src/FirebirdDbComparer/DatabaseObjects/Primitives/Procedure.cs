@@ -64,7 +64,7 @@ namespace FirebirdDbComparer.DatabaseObjects.Primitives
                 throw new NotSupportedException("Legacy type stored procedures are not supported.");
             }
 
-            var command = new PSqlCommand();
+            var command = SqlHelper.IsValidExternalEngine(this) ? new Command() : new PSqlCommand();
             command.Append($"CREATE OR ALTER PROCEDURE {ProcedureName.AsSqlIndentifier()}");
             if (ProcedureInputs > 0)
             {
@@ -88,7 +88,17 @@ namespace FirebirdDbComparer.DatabaseObjects.Primitives
                 command.Append(")");
                 command.AppendLine();
             }
-            if (EntryPoint == null || EngineName == null)
+            if (SqlHelper.IsValidExternalEngine(this))
+            {
+                if (context.EmptyBodiesEnabled)
+                {
+                    yield break;
+                }
+                command.Append($"EXTERNAL NAME '{SqlHelper.DoubleSingleQuotes(EntryPoint)}'");
+                command.AppendLine();
+                command.Append($"ENGINE {EngineName.AsSqlIndentifier()}");
+            }
+            else
             {
                 command.Append("AS");
                 command.AppendLine();
@@ -107,16 +117,6 @@ namespace FirebirdDbComparer.DatabaseObjects.Primitives
                 {
                     command.Append(ProcedureSource);
                 }
-            }
-            else
-            {
-                if (context.EmptyBodiesEnabled)
-                {
-                    yield break;
-                }
-                command.Append($"EXTERNAL NAME '{SqlHelper.DoubleSingleQuotes(EntryPoint)}'");
-                command.AppendLine();
-                command.Append($"ENGINE {EngineName.AsSqlIndentifier()}");
             }
             yield return command;
         }
