@@ -26,7 +26,7 @@ namespace FirebirdDbComparer.DatabaseObjects.Primitives
             new EquatableProperty<RelationField>(x => x.ViewContext, nameof(ViewContext)),
             new EquatableProperty<RelationField>(x => x.Nullable, nameof(Nullable)),
             new EquatableProperty<RelationField>(x => x.DefaultSource, nameof(DefaultSource)),
-            new EquatableProperty<RelationField>(x => x._EqualityCollation, nameof(Collation)),
+            new EquatableProperty<RelationField>(x => x._EqualityCollationId, nameof(Collation)),
             new EquatableProperty<RelationField>(x => x.SystemFlag, nameof(SystemFlag)),
             new EquatableProperty<RelationField>(x => x._EqualityGeneratorName, nameof(GeneratorName)),
             new EquatableProperty<RelationField>(x => x.IdentityType, nameof(IdentityType))
@@ -45,13 +45,10 @@ namespace FirebirdDbComparer.DatabaseObjects.Primitives
         public DatabaseStringOrdinal Description { get; private set; }
         public bool Nullable { get; private set; }
         public DatabaseStringOrdinal DefaultSource { get; private set; }
-
-        public int? CollationId { get; private set; }
-
         // CORE-4934 and changing collation directly means modifying system table currently
         // Sometimes even for same resulting structure (different combination of DDLs though) the collation is propagated and sometimes not
-        internal Collation _EqualityCollation => Field?.ComputedSource != null ? null : Collation ?? Field._EqualityCollation;
-
+        internal int? _EqualityCollationId => Field?.ComputedSource != null ? null : CollationId ?? Field._EqualityCollationId;
+        public int? CollationId { get; private set; }
         public Collation Collation { get; set; }
         public SystemFlagType SystemFlag { get; private set; }
         internal Identifier _EqualityGeneratorName => GeneratorName == null || SqlHelper.HasSystemPrefix(GeneratorName) ? null : GeneratorName;

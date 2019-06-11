@@ -26,7 +26,7 @@ namespace FirebirdDbComparer.DatabaseObjects.Elements
             new EquatableProperty<FunctionArgument>(x => x.ArgumentName, nameof(ArgumentName)),
             new EquatableProperty<FunctionArgument>(x => x.Field, nameof(Field)),
             new EquatableProperty<FunctionArgument>(x => x.DefaultSource, nameof(DefaultSource)),
-            new EquatableProperty<FunctionArgument>(x => x.CollationId, nameof(CollationId)),
+            new EquatableProperty<FunctionArgument>(x => x._EqualityCollationId, nameof(CollationId)),
             new EquatableProperty<FunctionArgument>(x => x.Nullable, nameof(Nullable)),
             new EquatableProperty<FunctionArgument>(x => x.ArgumentMechanismLegacyStyle, nameof(ArgumentMechanismLegacyStyle)),
             new EquatableProperty<FunctionArgument>(x => x.FieldName, nameof(FieldName)),
@@ -59,6 +59,8 @@ namespace FirebirdDbComparer.DatabaseObjects.Elements
         public int? CharacterSetId { get; private set; }
         public int? FieldPrecision { get; private set; }
         public int? CharacterLength { get; private set; }
+        // should not matter, but CORE-6081
+        internal int? _EqualityCollationId => !Function.IsLegacy ? CollationId : null;
         public int? CollationId { get; private set; }
         public int? SegmentSize => null;
         public DatabaseStringOrdinal DefaultSource { get; private set; }

@@ -30,7 +30,7 @@ namespace FirebirdDbComparer.DatabaseObjects.Primitives
             new EquatableProperty<Field>(x => x.FieldScale, nameof(FieldScale)),
             new EquatableProperty<Field>(x => x.FieldPrecision, nameof(FieldPrecision)),
             new EquatableProperty<Field>(x => x.SegmentSize, nameof(SegmentSize)),
-            new EquatableProperty<Field>(x => x._EqualityCollation, nameof(Collation)),
+            new EquatableProperty<Field>(x => x._EqualityCollationId, nameof(CollationId)),
             new EquatableProperty<Field>(x => x.OwnerName, nameof(OwnerName))
         };
 
@@ -56,14 +56,12 @@ namespace FirebirdDbComparer.DatabaseObjects.Primitives
         public int? FieldPrecision { get; private set; }
         public int? SegmentSize { get; private set; }
         public int? CharacterLength { get; private set; }
-        public int? CollationId { get; private set; }
-        public Identifier OwnerName { get; private set; }
-
         // CORE-4934 and changing collation directly means modifying system table currently
         // system generated domains are sometimes explicit and sometimes relying on collation stored for the column/parameter directly
-        internal Collation _EqualityCollation => ComputedSource != null || MetadataFieldType == MetadataFieldType.SystemGenerated ? null : Collation;
-
+        internal int? _EqualityCollationId => ComputedSource != null || MetadataFieldType == MetadataFieldType.SystemGenerated ? null : CollationId;
+        public int? CollationId { get; private set; }
         public Collation Collation { get; set; }
+        public Identifier OwnerName { get; private set; }
 
         protected override Field Self => this;
 
