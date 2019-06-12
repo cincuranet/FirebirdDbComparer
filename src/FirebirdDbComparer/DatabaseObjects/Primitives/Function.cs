@@ -100,6 +100,10 @@ namespace FirebirdDbComparer.DatabaseObjects.Primitives
                 var @return = FunctionArguments.First(x => x.ArgumentPosition == ReturnArgument);
                 var output = CreateNewArgumentDefinition(@return, sourceMetadata, targetMetadata, context);
                 command.Append($" ({string.Join(", ", inputs)}) RETURNS {output}");
+                if (DeterministicFlag == DeterministicFlagType.Deterministic)
+                {
+                    command.Append(" DETERMINISTIC");
+                }
                 command.AppendLine();
                 command.Append("AS");
                 command.AppendLine();
