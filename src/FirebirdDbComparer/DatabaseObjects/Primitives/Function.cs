@@ -105,8 +105,6 @@ namespace FirebirdDbComparer.DatabaseObjects.Primitives
                     command.Append(" DETERMINISTIC");
                 }
                 command.AppendLine();
-                command.Append("AS");
-                command.AppendLine();
                 if (SqlHelper.IsValidExternalEngine(this))
                 {
                     if (context.EmptyBodiesEnabled)
@@ -119,6 +117,8 @@ namespace FirebirdDbComparer.DatabaseObjects.Primitives
                 }
                 else
                 {
+                    command.Append("AS");
+                    command.AppendLine();
                     if (context.EmptyBodiesEnabled)
                     {
                         command.Append("BEGIN");
