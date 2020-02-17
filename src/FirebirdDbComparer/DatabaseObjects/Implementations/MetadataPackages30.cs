@@ -81,7 +81,10 @@ select trim(P.RDB$PACKAGE_NAME) as RDB$PACKAGE_NAME,
         {
             return FilterPackagesBodiesToBeAltered(other)
                 .Where(package => package.ValidBodyFlag)
-                .Select(package => new CommandGroup().Append(package.Alter(Metadata, other, context)));
+                .Select(package => new CommandGroup()
+                    // force header re-sync header as "sometimes" the body fails with signature mismatch
+                    .Append(WrapActionWithEmptyBody(package.Alter)(Metadata, other, context))
+                    .Append(package.Alter(Metadata, other, context)));
         }
 
         protected virtual IEnumerable<Package> FilterNewPackages(IMetadata other)
