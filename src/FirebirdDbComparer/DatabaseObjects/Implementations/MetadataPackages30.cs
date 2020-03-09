@@ -82,7 +82,7 @@ select trim(P.RDB$PACKAGE_NAME) as RDB$PACKAGE_NAME,
             return FilterPackagesBodiesToBeAltered(other)
                 .Where(package => package.ValidBodyFlag)
                 .Select(package => new CommandGroup()
-                    // force header re-sync header as "sometimes" the body fails with signature mismatch
+                    // force header re-sync header as "sometimes" the body fails with signature mismatch (CORE-6250)
                     .Append(WrapActionWithEmptyBody(package.Alter)(Metadata, other, context))
                     .Append(package.Alter(Metadata, other, context)));
         }
