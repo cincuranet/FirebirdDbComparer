@@ -39,7 +39,5 @@ namespace FirebirdDbComparer.DatabaseObjects
         private static int CompareImpl(DatabaseStringOrdinal x, DatabaseStringOrdinal y) => string.CompareOrdinal(x?.Value, y?.Value);
 
         public char this[int index] => Value?[index] ?? throw new IndexOutOfRangeException();
-
-        public int Length => Value?.Length ?? 0;
     }
 }
