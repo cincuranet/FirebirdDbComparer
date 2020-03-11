@@ -37,7 +37,6 @@ namespace FirebirdDbComparer.DatabaseObjects.Primitives
         public ObjectType ObjectType { get; private set; }
 
         public bool IsSystemGeneratedObject { get; private set; }
-        public Identifier LegacyFunctionNameKey { get; private set; }
 
         public Relation Relation { get; set; }
         public Procedure Procedure { get; set; }
@@ -69,7 +68,7 @@ namespace FirebirdDbComparer.DatabaseObjects.Primitives
             throw new InvalidOperationException();
         }
 
-        protected override Identifier OnPrimitiveTypeKeyObjectName() => TypeObjectNameKey.BuildObjectName(SqlHelper, LegacyFunctionNameKey ?? ObjectName, FieldName);
+        protected override Identifier OnPrimitiveTypeKeyObjectName() => TypeObjectNameKey.BuildObjectName(SqlHelper, ObjectName, FieldName);
 
         internal static UserPrivilege CreateFrom(ISqlHelper sqlHelper, IDictionary<string, object> values)
         {
@@ -86,10 +85,6 @@ namespace FirebirdDbComparer.DatabaseObjects.Primitives
                     ObjectType = (ObjectType)values["RDB$OBJECT_TYPE"].DbValueToInt32().GetValueOrDefault()
                 };
             result.IsSystemGeneratedObject = sqlHelper.HasSystemPrefix(result.ObjectName);
-            if (result.ObjectType == ObjectType.UDF)
-            {
-                result.LegacyFunctionNameKey = new Identifier(sqlHelper, $".{result.ObjectName}");
-            }
             return result;
         }
 

@@ -92,7 +92,7 @@ select trim(UP.RDB$USER) as RDB$USER,
                         userPrivilege.Function =
                             Metadata
                                 .MetadataFunctions
-                                .FunctionsByName[userPrivilege.LegacyFunctionNameKey];
+                                .FunctionsByName[userPrivilege.ObjectName];
                         break;
                     case ObjectType.Collation:
                         userPrivilege.Collation =
