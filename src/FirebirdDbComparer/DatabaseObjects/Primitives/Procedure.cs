@@ -13,7 +13,7 @@ using FirebirdDbComparer.SqlGeneration;
 
 namespace FirebirdDbComparer.DatabaseObjects.Primitives
 {
-    [DebuggerDisplay("{ProcedureName}")]
+    [DebuggerDisplay("{FunctionNameKey}")]
     public sealed class Procedure : Primitive<Procedure>, IHasSystemFlag, IHasDescription, IHasPackage, IHasExternalEngine
     {
         private static readonly EquatableProperty<Procedure>[] s_EquatableProperties =
@@ -36,6 +36,7 @@ namespace FirebirdDbComparer.DatabaseObjects.Primitives
             : base(sqlHelper)
         { }
 
+        public Identifier ProcedureNameKey { get; private set; }
         public Identifier ProcedureName { get; private set; }
         public int ProcedureId { get; private set; }
         public int ProcedureInputs { get; private set; }
@@ -50,7 +51,6 @@ namespace FirebirdDbComparer.DatabaseObjects.Primitives
         public Identifier PackageName { get; private set; }
         public PrivateFlagType PrivateFlag { get; private set; }
         public IList<ProcedureParameter> ProcedureParameters { get; set; }
-
         public Package Package { get; set; }
 
         protected override Procedure Self => this;
@@ -193,6 +193,7 @@ namespace FirebirdDbComparer.DatabaseObjects.Primitives
                     SystemFlag = (SystemFlagType)values["RDB$SYSTEM_FLAG"].DbValueToInt32().GetValueOrDefault()
                 };
             result.ProcedureParameters = procedureParameters[result.ProcedureName].ToArray();
+            result.ProcedureNameKey = result.ProcedureName;
 
             if (sqlHelper.TargetVersion.AtLeast30())
             {
@@ -200,6 +201,8 @@ namespace FirebirdDbComparer.DatabaseObjects.Primitives
                 result.EntryPoint = values["RDB$ENTRYPOINT"].DbValueToString();
                 result.PackageName = new Identifier(sqlHelper, values["RDB$PACKAGE_NAME"].DbValueToString());
                 result.PrivateFlag = (PrivateFlagType)values["RDB$PRIVATE_FLAG"].DbValueToInt32().GetValueOrDefault();
+
+                result.ProcedureNameKey = new Identifier(sqlHelper, result.ProcedureName.ToString(), result.PackageName.ToString());
             }
             return result;
         }

@@ -8,9 +8,11 @@ namespace FirebirdDbComparer.DatabaseObjects
     [DebuggerDisplay("{ToString()}")]
     public class DatabaseStringOrdinal : IComparable<DatabaseStringOrdinal>, IEquatable<DatabaseStringOrdinal>
     {
+        protected readonly string m_Value;
+
         public DatabaseStringOrdinal(string value)
         {
-            Value = value;
+            m_Value = value;
         }
 
         public static implicit operator DatabaseStringOrdinal(string value)
@@ -18,11 +20,9 @@ namespace FirebirdDbComparer.DatabaseObjects
             return new DatabaseStringOrdinal(value);
         }
 
-        public string Value { get; }
+        public override string ToString() => m_Value;
 
-        public override string ToString() => Value;
-
-        public override int GetHashCode() => Value?.GetHashCode() ?? 0;
+        public override int GetHashCode() => m_Value?.GetHashCode() ?? 0;
 
         public override bool Equals(object obj) => EquatableHelper.ElementaryEqualsThenEquatableEquals(this, obj);
 
@@ -36,8 +36,8 @@ namespace FirebirdDbComparer.DatabaseObjects
 
         public bool Equals(DatabaseStringOrdinal other) => CompareImpl(this, other) == 0;
 
-        private static int CompareImpl(DatabaseStringOrdinal x, DatabaseStringOrdinal y) => string.CompareOrdinal(x?.Value, y?.Value);
+        private static int CompareImpl(DatabaseStringOrdinal x, DatabaseStringOrdinal y) => string.CompareOrdinal(x?.m_Value, y?.m_Value);
 
-        public char this[int index] => Value?[index] ?? throw new IndexOutOfRangeException();
+        public char this[int index] => m_Value?[index] ?? throw new IndexOutOfRangeException();
     }
 }

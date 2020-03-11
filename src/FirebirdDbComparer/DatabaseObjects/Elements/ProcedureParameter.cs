@@ -36,6 +36,7 @@ namespace FirebirdDbComparer.DatabaseObjects.Elements
         { }
 
         public Identifier ParameterName { get; private set; }
+        public Identifier ProcedureNameKey { get; private set; }
         public Identifier ProcedureName { get; private set; }
         public int ParameterNumber { get; private set; }
         public ProcedureParameterType ParameterType { get; private set; }
@@ -80,10 +81,13 @@ namespace FirebirdDbComparer.DatabaseObjects.Elements
                     FieldName = new Identifier(sqlHelper, values["RDB$FIELD_NAME"].DbValueToString()),
                     RelationName = new Identifier(sqlHelper, values["RDB$RELATION_NAME"].DbValueToString())
                 };
+            result.ProcedureNameKey = result.ProcedureName;
 
             if (sqlHelper.TargetVersion.AtLeast30())
             {
                 result.PackageName = new Identifier(sqlHelper, values["RDB$PACKAGE_NAME"].DbValueToString());
+
+                result.ProcedureNameKey = new Identifier(sqlHelper, result.ProcedureName.ToString(), result.PackageName.ToString());
             }
             return result;
         }

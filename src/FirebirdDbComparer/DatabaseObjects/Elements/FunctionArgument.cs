@@ -112,7 +112,7 @@ namespace FirebirdDbComparer.DatabaseObjects.Elements
                 result.SystemFlag = (SystemFlagType)values["RDB$SYSTEM_FLAG"].DbValueToInt32().GetValueOrDefault();
                 result.Description = values["RDB$DESCRIPTION"].DbValueToString();
 
-                result.FunctionNameKey = new Identifier(sqlHelper, $"{result.PackageName}.{result.FunctionName}");
+                result.FunctionNameKey = new Identifier(sqlHelper, result.FunctionName.ToString(), result.PackageName.ToString());
             }
 
             return result;

@@ -11,12 +11,15 @@ namespace FirebirdDbComparer.DatabaseObjects
 
         public ISqlHelper SqlHelper { get; }
 
-        public Identifier(ISqlHelper sqlHelper, string identifier)
-            : base(identifier)
+        public Identifier(ISqlHelper sqlHelper, string identifier, string package = null)
+            : base(BuildIdentifier(package, identifier))
         {
             SqlHelper = sqlHelper ?? throw new ArgumentNullException(nameof(sqlHelper));
         }
 
-        public string AsSqlIndentifier() => SqlHelper.QuoteIdentifierIfNeeded(Value);
+#warning Proper handle PackageName
+        public string AsSqlIndentifier() => SqlHelper.QuoteIdentifierIfNeeded(m_Value);
+
+        private static string BuildIdentifier(string package, string identifier) => package != null ? $"{package}.{identifier}" : identifier;
     }
 }

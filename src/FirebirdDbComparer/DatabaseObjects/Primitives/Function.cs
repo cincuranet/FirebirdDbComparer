@@ -14,7 +14,7 @@ using FirebirdDbComparer.SqlGeneration;
 
 namespace FirebirdDbComparer.DatabaseObjects.Primitives
 {
-    [DebuggerDisplay("{FunctionName}")]
+    [DebuggerDisplay("{FunctionNameKey}")]
     public sealed class Function : Primitive<Function>, IHasSystemFlag, IHasDescription, IHasPackage, IHasExternalEngine
     {
         private static readonly EquatableProperty<Function>[] s_EquatableProperties =
@@ -258,7 +258,7 @@ namespace FirebirdDbComparer.DatabaseObjects.Primitives
                 result.LegacyFlag = (LegacyFlagType)values["RDB$LEGACY_FLAG"].DbValueToInt32().GetValueOrDefault();
                 result.DeterministicFlag = (DeterministicFlagType)values["RDB$DETERMINISTIC_FLAG"].DbValueToInt32().GetValueOrDefault();
 
-                result.FunctionNameKey = new Identifier(sqlHelper, $"{result.PackageName}.{result.FunctionName}");
+                result.FunctionNameKey = new Identifier(sqlHelper, result.FunctionName.ToString(), result.PackageName.ToString());
             }
 
             return result;

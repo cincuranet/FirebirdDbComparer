@@ -1,9 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
-using FirebirdDbComparer.DatabaseObjects.EquatableKeys;
 using FirebirdDbComparer.DatabaseObjects.Primitives;
 using FirebirdDbComparer.Interfaces;
-using FirebirdDbComparer.SqlGeneration;
 
 namespace FirebirdDbComparer.DatabaseObjects.Implementations
 {
@@ -56,7 +54,7 @@ select trim(PP.RDB$PARAMETER_NAME) as RDB$PARAMETER_NAME,
 
             m_NonPackageProceduresByName = ProceduresById.Values
                 .Where(x => x.PackageName == null)
-                .ToDictionary(x => x.ProcedureName, x => x);
+                .ToDictionary(x => x.ProcedureNameKey, x => x);
 
             foreach (var procedureParameter in ProcedureParameters.Values)
             {
@@ -84,19 +82,19 @@ select trim(PP.RDB$PARAMETER_NAME) as RDB$PARAMETER_NAME,
         protected override IEnumerable<Procedure> FilterNewProcedures(IMetadata other)
         {
             return FilterSystemFlagUser(NonPackageProceduresByName.Values)
-                .Where(p => !other.MetadataProcedures.NonPackageProceduresByName.ContainsKey(p.ProcedureName));
+                .Where(p => !other.MetadataProcedures.NonPackageProceduresByName.ContainsKey(p.ProcedureNameKey));
         }
 
         protected override IEnumerable<Procedure> FilterProceduresToBeDropped(IMetadata other)
         {
             return FilterSystemFlagUser(other.MetadataProcedures.NonPackageProceduresByName.Values)
-                .Where(p => !NonPackageProceduresByName.ContainsKey(p.ProcedureName));
+                .Where(p => !NonPackageProceduresByName.ContainsKey(p.ProcedureNameKey));
         }
 
         protected override IEnumerable<Procedure> FilterProceduresToBeAltered(IMetadata other)
         {
             return FilterSystemFlagUser(NonPackageProceduresByName.Values)
-                .Where(p => other.MetadataProcedures.NonPackageProceduresByName.TryGetValue(p.ProcedureName, out var otherProcedure) && otherProcedure != p);
+                .Where(p => other.MetadataProcedures.NonPackageProceduresByName.TryGetValue(p.ProcedureNameKey, out var otherProcedure) && otherProcedure != p);
         }
     }
 }

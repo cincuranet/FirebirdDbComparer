@@ -6,17 +6,17 @@ namespace FirebirdDbComparer.DatabaseObjects.EquatableKeys
     {
         private static readonly EquatableProperty<FunctionArgumentKey>[] s_EquatableProperties =
         {
-            new EquatableProperty<FunctionArgumentKey>(x => x.FunctionName, nameof(FunctionName)),
+            new EquatableProperty<FunctionArgumentKey>(x => x.FunctionNameKey, nameof(FunctionNameKey)),
             new EquatableProperty<FunctionArgumentKey>(x => x.ArgumentPosition, nameof(ArgumentPosition))
         };
 
-        public FunctionArgumentKey(Identifier functionName, int argumentPosition)
+        public FunctionArgumentKey(Identifier functionNameKey, int argumentPosition)
         {
-            FunctionName = functionName;
+            FunctionNameKey = functionNameKey;
             ArgumentPosition = argumentPosition;
         }
 
-        public Identifier FunctionName { get; }
+        public Identifier FunctionNameKey { get; }
         public int ArgumentPosition { get; }
 
         protected override FunctionArgumentKey Self => this;

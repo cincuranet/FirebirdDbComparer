@@ -29,7 +29,7 @@ namespace FirebirdDbComparer.SqlGeneration
 
         public virtual string DoubleSingleQuotes(DatabaseStringOrdinal value)
         {
-            return DoubleSingleQuotes(value?.Value);
+            return DoubleSingleQuotes(value?.ToString());
         }
 
         public virtual string QuoteIdentifierIfNeeded(string value)
@@ -49,7 +49,7 @@ namespace FirebirdDbComparer.SqlGeneration
 
         public virtual string QuoteIdentifierIfNeeded(DatabaseStringOrdinal value)
         {
-            return QuoteIdentifierIfNeeded(value?.Value);
+            return QuoteIdentifierIfNeeded(value?.ToString());
         }
 
         public virtual string CreateComment(string objectTypeName, IEnumerable<Identifier> objectNames, DatabaseStringOrdinal description, DatabaseStringOrdinal otherDescription)

@@ -60,21 +60,21 @@ select trim(PP.RDB$PARAMETER_NAME) as RDB$PARAMETER_NAME,
             m_ProcedureParameters =
                 Execute(ProcedureParameterCommandText)
                     .Select(o => ProcedureParameter.CreateFrom(SqlHelper, o))
-                    .ToDictionary(x => new ProcedureParameterKey(x.ProcedureName, x.ParameterName));
-            var procedureParameters = m_ProcedureParameters.Values.ToLookup(x => x.ProcedureName);
+                    .ToDictionary(x => new ProcedureParameterKey(x.ProcedureNameKey, x.ParameterName));
+            var procedureParameters = m_ProcedureParameters.Values.ToLookup(x => x.ProcedureNameKey);
             var procedures =
                 Execute(ProcedureCommandText)
                     .Select(o => Procedure.CreateFrom(SqlHelper, o, procedureParameters))
                     .ToArray();
             m_ProceduresById = procedures.ToDictionary(x => x.ProcedureId);
-            m_ProceduresByName = procedures.ToDictionary(x => x.ProcedureName);
+            m_ProceduresByName = procedures.ToDictionary(x => x.ProcedureNameKey);
         }
 
         public override void FinishInitialization()
         {
             foreach (var procedureParameter in ProcedureParameters.Values)
             {
-                procedureParameter.Procedure = ProceduresByName[procedureParameter.ProcedureName];
+                procedureParameter.Procedure = ProceduresByName[procedureParameter.ProcedureNameKey];
                 if (procedureParameter.FieldSource != null)
                 {
                     procedureParameter.Field =
@@ -105,7 +105,7 @@ select trim(PP.RDB$PARAMETER_NAME) as RDB$PARAMETER_NAME,
 
         IEnumerable<CommandGroup> ISupportsComment.Handle(IMetadata other, IComparerContext context)
         {
-            var result = new CommandGroup().Append(HandleComment(ProceduresByName, other.MetadataProcedures.ProceduresByName, x => x.ProcedureName, "PROCEDURE", x => new[] { x.ProcedureName }, context, x => HandleCommentNested(x.ProcedureParameters.OrderBy(y => y.ParameterNumber), other.MetadataProcedures.ProcedureParameters, (a, b) => new ProcedureParameterKey(a, b), x.ProcedureName, y => y.ParameterName, "PARAMETER", y => new[] { y.ParameterName }, context)));
+            var result = new CommandGroup().Append(HandleComment(ProceduresByName, other.MetadataProcedures.ProceduresByName, x => x.ProcedureNameKey, "PROCEDURE", x => new[] { x.ProcedureNameKey }, context, x => HandleCommentNested(x.ProcedureParameters.OrderBy(y => y.ParameterNumber), other.MetadataProcedures.ProcedureParameters, (a, b) => new ProcedureParameterKey(a, b), x.ProcedureNameKey, y => y.ParameterName, "PARAMETER", y => new[] { y.ParameterName }, context)));
             if (!result.IsEmpty)
             {
                 yield return result;
@@ -141,19 +141,19 @@ select trim(PP.RDB$PARAMETER_NAME) as RDB$PARAMETER_NAME,
         protected virtual IEnumerable<Procedure> FilterNewProcedures(IMetadata other)
         {
             return FilterSystemFlagUser(ProceduresByName.Values)
-                .Where(p => !other.MetadataProcedures.ProceduresByName.ContainsKey(p.ProcedureName));
+                .Where(p => !other.MetadataProcedures.ProceduresByName.ContainsKey(p.ProcedureNameKey));
         }
 
         protected virtual IEnumerable<Procedure> FilterProceduresToBeDropped(IMetadata other)
         {
             return FilterSystemFlagUser(other.MetadataProcedures.ProceduresByName.Values)
-                .Where(p => !ProceduresByName.ContainsKey(p.ProcedureName));
+                .Where(p => !ProceduresByName.ContainsKey(p.ProcedureNameKey));
         }
 
         protected virtual IEnumerable<Procedure> FilterProceduresToBeAltered(IMetadata other)
         {
             return FilterSystemFlagUser(ProceduresByName.Values)
-                .Where(p => other.MetadataProcedures.ProceduresByName.TryGetValue(p.ProcedureName, out var otherProcedure) && otherProcedure != p);
+                .Where(p => other.MetadataProcedures.ProceduresByName.TryGetValue(p.ProcedureNameKey, out var otherProcedure) && otherProcedure != p);
         }
     }
 }
