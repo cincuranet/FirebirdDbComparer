@@ -38,8 +38,8 @@ select trim(D.RDB$DEPENDENT_NAME) as RDB$DEPENDENT_NAME,
             m_Dependencies = Execute(CommandText)
                 .Select(o => Dependency.CreateFrom(SqlHelper, o))
                 .ToList();
-            m_DependentNames = m_Dependencies.ToMultiDictionary(d => d.DependentName);
-            m_DependedOnNames = m_Dependencies.ToMultiDictionary(d => d.DependedOnName);
+            m_DependentNames = m_Dependencies.ToMultiDictionary(d => d.DependentNameKey);
+            m_DependedOnNames = m_Dependencies.ToMultiDictionary(d => d.DependentNameKey);
         }
 
         public override void FinishInitialization()
@@ -53,38 +53,38 @@ select trim(D.RDB$DEPENDENT_NAME) as RDB$DEPENDENT_NAME,
                         dependency.DependentRelation =
                             Metadata
                                 .MetadataRelations
-                                .Relations[dependency.DependentName];
+                                .Relations[dependency.DependentNameKey];
                         break;
                     case ObjectType.Trigger:
                         dependency.DependentTrigger =
                             Metadata
                                 .MetadataTriggers
-                                .TriggersByName[dependency.DependentName];
+                                .TriggersByName[dependency.DependentNameKey];
                         break;
                     case ObjectType.Field:
                     case ObjectType.ComputedField:
                         dependency.DependentField =
                             Metadata
                                 .MetadataFields
-                                .Fields[dependency.DependentName];
+                                .Fields[dependency.DependentNameKey];
                         break;
                     case ObjectType.Procedure:
                         dependency.DependentProcedure =
                             Metadata
                                 .MetadataProcedures
-                                .ProceduresByName[dependency.DependentName];
+                                .ProceduresByName[dependency.DependentNameKey];
                         break;
                     case ObjectType.Exception:
                         dependency.DependentException =
                             Metadata
                                 .MetadataExceptions
-                                .ExceptionsByName[dependency.DependentName];
+                                .ExceptionsByName[dependency.DependentNameKey];
                         break;
                     case ObjectType.Role:
                         dependency.DependentRole =
                             Metadata
                                 .MetadataRoles
-                                .Roles[dependency.DependentName];
+                                .Roles[dependency.DependentNameKey];
                         break;
                     case ObjectType.UDF:
                         dependency.DependentFunction =
@@ -96,7 +96,7 @@ select trim(D.RDB$DEPENDENT_NAME) as RDB$DEPENDENT_NAME,
                         dependency.DependentIndex =
                             Metadata
                                 .MetadataIndices
-                                .Indices[dependency.DependentName];
+                                .Indices[dependency.DependentNameKey];
                         break;
                 }
 
@@ -107,38 +107,38 @@ select trim(D.RDB$DEPENDENT_NAME) as RDB$DEPENDENT_NAME,
                         dependency.DependedOnRelation =
                             Metadata
                                 .MetadataRelations
-                                .Relations[dependency.DependedOnName];
+                                .Relations[dependency.DependedOnNameKey];
                         break;
                     case ObjectType.Trigger:
                         dependency.DependedOnTrigger =
                             Metadata
                                 .MetadataTriggers
-                                .TriggersByName[dependency.DependedOnName];
+                                .TriggersByName[dependency.DependedOnNameKey];
                         break;
                     case ObjectType.Field:
                     case ObjectType.ComputedField:
                         dependency.DependedOnField =
                             Metadata
                                 .MetadataFields
-                                .Fields[dependency.DependedOnName];
+                                .Fields[dependency.DependedOnNameKey];
                         break;
                     case ObjectType.Procedure:
                         dependency.DependedOnProcedure =
                             Metadata
                                 .MetadataProcedures
-                                .ProceduresByName[dependency.DependedOnName];
+                                .ProceduresByName[dependency.DependedOnNameKey];
                         break;
                     case ObjectType.Exception:
                         dependency.DependedOnException =
                             Metadata
                                 .MetadataExceptions
-                                .ExceptionsByName[dependency.DependedOnName];
+                                .ExceptionsByName[dependency.DependedOnNameKey];
                         break;
                     case ObjectType.Role:
                         dependency.DependedOnRole =
                             Metadata
                                 .MetadataRoles
-                                .Roles[dependency.DependedOnName];
+                                .Roles[dependency.DependedOnNameKey];
                         break;
                     case ObjectType.UDF:
                         dependency.DependedOnFunction =
@@ -150,7 +150,7 @@ select trim(D.RDB$DEPENDENT_NAME) as RDB$DEPENDENT_NAME,
                         dependency.DependendOnIndex =
                             Metadata
                                 .MetadataIndices
-                                .Indices[dependency.DependedOnName];
+                                .Indices[dependency.DependedOnNameKey];
                         break;
                 }
             }
@@ -363,7 +363,7 @@ select trim(D.RDB$DEPENDENT_NAME) as RDB$DEPENDENT_NAME,
 
         private IEnumerable<ITypeObjectNameKey> GetDependenciesFor(Procedure procedure)
         {
-            return GetDependencies(procedure.ProcedureName, _ => true);
+            return GetDependencies(procedure.ProcedureNameKey, _ => true);
         }
 
         private IEnumerable<ITypeObjectNameKey> GetDependenciesFor(Trigger trigger)
@@ -378,7 +378,7 @@ select trim(D.RDB$DEPENDENT_NAME) as RDB$DEPENDENT_NAME,
 
         private IEnumerable<ITypeObjectNameKey> GetDependenciesFor(Function function)
         {
-            return GetDependencies(function.FunctionName, _ => true);
+            return GetDependencies(function.FunctionNameKey, _ => true);
         }
 
         private IEnumerable<ITypeObjectNameKey> GetDependenciesFor(Generator generator)

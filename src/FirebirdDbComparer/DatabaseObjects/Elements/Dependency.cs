@@ -88,8 +88,8 @@ namespace FirebirdDbComparer.DatabaseObjects.Elements
             if (sqlHelper.TargetVersion.AtLeast30())
             {
                 result.PackageName = new Identifier(sqlHelper, values["RDB$PACKAGE_NAME"].DbValueToString());
-                result.DependentNameKey = new Identifier(sqlHelper, $".{result.DependentName}");
-                result.DependedOnNameKey = new Identifier(sqlHelper, $"{result.PackageName}.{result.DependedOnName}");
+                result.DependentNameKey = result.DependentName;
+                result.DependedOnNameKey = new Identifier(sqlHelper, result.DependedOnName.ToString(), result.PackageName.ToString());
             }
             return result;
         }
