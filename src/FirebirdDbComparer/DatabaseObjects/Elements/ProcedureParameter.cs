@@ -10,7 +10,7 @@ using FirebirdDbComparer.Interfaces;
 
 namespace FirebirdDbComparer.DatabaseObjects.Elements
 {
-    [DebuggerDisplay("{ProcedureName}.{ParameterName}")]
+    [DebuggerDisplay("{ProcedureNameKey}.{ParameterName}")]
     public sealed class ProcedureParameter : SqlElement<ProcedureParameter>, IHasDescription, IHasDefaultSource, IHasNullable, IHasCollation, IUsesField, ITypeObjectNameKey
     {
         private static readonly EquatableProperty<ProcedureParameter>[] s_EquatableProperties =

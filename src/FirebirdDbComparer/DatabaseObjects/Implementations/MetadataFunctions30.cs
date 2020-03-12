@@ -190,7 +190,8 @@ select trim(FA.RDB$FUNCTION_NAME) as RDB$FUNCTION_NAME,
         {
             var result = new CommandGroup()
                 .Append(HandleComment(LegacyFunctionsByName, other.MetadataFunctions.LegacyFunctionsByName, x => x.FunctionNameKey, "EXTERNAL FUNCTION", x => new[] { x.FunctionName }, context))
-                .Append(HandleComment(NewFunctionsByName, other.MetadataFunctions.NewFunctionsByName, x => x.FunctionNameKey, "FUNCTION", x => x.PackageName != null ? new[] { x.PackageName, x.FunctionName } : new[] { x.FunctionName }, context));
+                .Append(HandleComment(NewFunctionsByName, other.MetadataFunctions.NewFunctionsByName, x => x.FunctionNameKey, "FUNCTION", x => x.PackageName != null ? new[] { x.PackageName, x.FunctionName } : new[] { x.FunctionName }, context,
+                    x => HandleCommentNested(x.FunctionArguments.OrderBy(x => x.ArgumentPosition), other.MetadataFunctions.FunctionArguments, (a, b) => new FunctionArgumentKey(a, b.ArgumentPosition, b.ArgumentName), x.FunctionNameKey, "PARAMETER", y => new[] { y.ArgumentName }, context)));
             if (!result.IsEmpty)
             {
                 yield return result;

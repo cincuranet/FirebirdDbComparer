@@ -57,7 +57,7 @@ from RDB$FUNCTION_ARGUMENTS FA";
             m_FunctionArguments =
                 Execute(FunctionArgumentCommandText)
                     .Select(o => FunctionArgument.CreateFrom(SqlHelper, o))
-                    .ToDictionary(x => new FunctionArgumentKey(x.FunctionNameKey, x.ArgumentPosition));
+                    .ToDictionary(x => new FunctionArgumentKey(x.FunctionNameKey, x.ArgumentPosition, x.ArgumentName));
             var functionArguments = m_FunctionArguments.Values.ToLookup(x => x.FunctionNameKey);
 
             m_FunctionsByName =

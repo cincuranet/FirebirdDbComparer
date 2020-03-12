@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 using FirebirdDbComparer.Common;
 using FirebirdDbComparer.Common.Equatable;
@@ -9,6 +10,7 @@ using FirebirdDbComparer.Interfaces;
 
 namespace FirebirdDbComparer.DatabaseObjects.Elements
 {
+    [DebuggerDisplay("{FunctionNameKey}.{ArgumentName}")]
     public sealed class FunctionArgument : SqlElement<FunctionArgument>, IDataType, IHasCollation, IHasNullable, IHasSystemFlag, IHasDescription, IHasDefaultSource, IUsesField
     {
         private static readonly EquatableProperty<FunctionArgument>[] s_EquatableProperties =
@@ -31,8 +33,7 @@ namespace FirebirdDbComparer.DatabaseObjects.Elements
             new EquatableProperty<FunctionArgument>(x => x.ArgumentMechanismLegacyStyle, nameof(ArgumentMechanismLegacyStyle)),
             new EquatableProperty<FunctionArgument>(x => x.FieldName, nameof(FieldName)),
             new EquatableProperty<FunctionArgument>(x => x.RelationName, nameof(RelationName)),
-            new EquatableProperty<FunctionArgument>(x => x.SystemFlag, nameof(SystemFlag)),
-            new EquatableProperty<FunctionArgument>(x => x.Description, nameof(Description))
+            new EquatableProperty<FunctionArgument>(x => x.SystemFlag, nameof(SystemFlag))
         };
 
         public FunctionArgument(ISqlHelper sqlHelper)

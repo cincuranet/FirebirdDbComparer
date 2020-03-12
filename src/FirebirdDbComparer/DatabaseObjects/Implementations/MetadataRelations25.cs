@@ -320,9 +320,8 @@ select trim(VR.RDB$VIEW_NAME) as RDB$VIEW_NAME,
                                 nestedFactory: x => HandleCommentNested(
                                                    x.Fields.OrderBy(y => y.FieldPosition),
                                                    other.MetadataRelations.RelationFields,
-                                                   (a, b) => new RelationFieldKey(a, b),
+                                                   (a, b) => new RelationFieldKey(a, b.FieldName),
                                                    x.RelationName,
-                                                   y => y.FieldName,
                                                    "COLUMN",
                                                    y => new[] { y.FieldName },
                                                    context)));
