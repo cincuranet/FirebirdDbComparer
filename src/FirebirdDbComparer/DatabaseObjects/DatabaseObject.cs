@@ -105,7 +105,7 @@ namespace FirebirdDbComparer.DatabaseObjects
             IEnumerable<TNested> nesteds,
             IDictionary<TEquatable, TNested> otherNesteds,
             Func<TNested, TEquatable> equatableFactory,
-            Identifier parentName,
+            IEnumerable<Identifier> parentNames,
             string objectTypeName,
             Func<TNested, IEnumerable<Identifier>> nestedNameFactory,
             IComparerContext context)
@@ -118,7 +118,7 @@ namespace FirebirdDbComparer.DatabaseObjects
 
                 var comment = SqlHelper.CreateComment(
                     objectTypeName,
-                    new[] { parentName }.Concat(nestedNameFactory(nested)),
+                    parentNames.Concat(nestedNameFactory(nested)),
                     nested.Description,
                     other?.Description);
                 if (comment != null)

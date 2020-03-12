@@ -194,12 +194,13 @@ select trim(FA.RDB$FUNCTION_NAME) as RDB$FUNCTION_NAME,
 
         IEnumerable<CommandGroup> ISupportsComment.Handle(IMetadata other, IComparerContext context)
         {
-            IEnumerable<Command> Nested(Function x) => HandleCommentNested(x.FunctionArguments.OrderBy(x => x.ArgumentPosition), other.MetadataFunctions.FunctionArguments, y => new FunctionArgumentKey(x.FunctionNameKey, y.ArgumentPosition, y.ArgumentName), x.FunctionName, "PARAMETER", y => new[] { y.ArgumentName }, context);
+            static IEnumerable<Identifier> Name(Function x) => x.PackageName != null ? new[] { x.PackageName, x.FunctionName } : new[] { x.FunctionName };
+            IEnumerable<Command> Nested(Function x) => HandleCommentNested(x.FunctionArguments.OrderBy(x => x.ArgumentPosition), other.MetadataFunctions.FunctionArguments, y => new FunctionArgumentKey(x.FunctionNameKey, y.ArgumentPosition, y.ArgumentName), Name(x), "PARAMETER", y => new[] { y.ArgumentName }, context);
 
             var result = new CommandGroup()
                 .Append(HandleComment(LegacyFunctionsByName, other.MetadataFunctions.LegacyFunctionsByName, x => x.FunctionNameKey, "EXTERNAL FUNCTION", x => new[] { x.FunctionName }, context))
-                .Append(HandleComment(NewNonPackageFunctionsByName, other.MetadataFunctions.NewNonPackageFunctionsByName, x => x.FunctionNameKey, "FUNCTION", x => x.PackageName != null ? new[] { x.PackageName, x.FunctionName } : new[] { x.FunctionName }, context, Nested))
-                .Append(HandleComment(NewPackageFunctionsByName, other.MetadataFunctions.NewPackageFunctionsByName, x => x.FunctionNameKey, "FUNCTION", x => x.PackageName != null ? new[] { x.PackageName, x.FunctionName } : new[] { x.FunctionName }, context, Nested));
+                .Append(HandleComment(NewNonPackageFunctionsByName, other.MetadataFunctions.NewNonPackageFunctionsByName, x => x.FunctionNameKey, "FUNCTION", Name, context, Nested))
+                .Append(HandleComment(NewPackageFunctionsByName, other.MetadataFunctions.NewPackageFunctionsByName, x => x.FunctionNameKey, "FUNCTION", Name, context, Nested));
             if (!result.IsEmpty)
             {
                 yield return result;

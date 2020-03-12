@@ -321,7 +321,7 @@ select trim(VR.RDB$VIEW_NAME) as RDB$VIEW_NAME,
                                                    x.Fields.OrderBy(y => y.FieldPosition),
                                                    other.MetadataRelations.RelationFields,
                                                    y => new RelationFieldKey(x.RelationName, y.FieldName),
-                                                   x.RelationName,
+                                                   new[] { x.RelationName },
                                                    "COLUMN",
                                                    y => new[] { y.FieldName },
                                                    context)));
