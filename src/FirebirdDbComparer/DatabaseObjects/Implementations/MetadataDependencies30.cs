@@ -32,7 +32,7 @@ select trim(D.RDB$DEPENDENT_NAME) as RDB$DEPENDENT_NAME,
                     dependency.DependentPackage =
                         Metadata
                             .MetadataPackages
-                            .PackagesByName[dependency.DependentName];
+                            .PackagesByName[dependency.DependentNameKey];
                 }
 
                 if (dependency.DependedOnType == ObjectType.Package)
@@ -40,7 +40,7 @@ select trim(D.RDB$DEPENDENT_NAME) as RDB$DEPENDENT_NAME,
                     dependency.DependendOnPackage =
                         Metadata
                             .MetadataPackages
-                            .PackagesByName[dependency.DependedOnName];
+                            .PackagesByName[dependency.DependedOnNameKey];
                 }
             }
         }

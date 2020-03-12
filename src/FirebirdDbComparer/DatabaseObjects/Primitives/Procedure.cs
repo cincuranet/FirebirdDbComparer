@@ -192,8 +192,7 @@ namespace FirebirdDbComparer.DatabaseObjects.Primitives
                     ProcedureType = (ProcedureProcedureType)values["RDB$PROCEDURE_TYPE"].DbValueToInt32().GetValueOrDefault(),
                     SystemFlag = (SystemFlagType)values["RDB$SYSTEM_FLAG"].DbValueToInt32().GetValueOrDefault()
                 };
-            result.ProcedureParameters = procedureParameters[result.ProcedureName].ToArray();
-            result.ProcedureNameKey = result.ProcedureName;
+            result.ProcedureNameKey = new Identifier(sqlHelper, result.ProcedureName);
 
             if (sqlHelper.TargetVersion.AtLeast30())
             {
@@ -202,8 +201,11 @@ namespace FirebirdDbComparer.DatabaseObjects.Primitives
                 result.PackageName = new Identifier(sqlHelper, values["RDB$PACKAGE_NAME"].DbValueToString());
                 result.PrivateFlag = (PrivateFlagType)values["RDB$PRIVATE_FLAG"].DbValueToInt32().GetValueOrDefault();
 
-                result.ProcedureNameKey = new Identifier(sqlHelper, result.ProcedureName.ToString(), result.PackageName.ToString());
+                result.ProcedureNameKey = new Identifier(sqlHelper, result.PackageName, result.ProcedureName);
             }
+
+            result.ProcedureParameters = procedureParameters[result.ProcedureNameKey].ToArray();
+
             return result;
         }
     }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 using FirebirdDbComparer.Interfaces;
 
@@ -9,17 +10,25 @@ namespace FirebirdDbComparer.DatabaseObjects
     {
         public static IList<Identifier> EmptyIdentifierList = new List<Identifier>();
 
+        private readonly bool m_IsComposite;
+
         public ISqlHelper SqlHelper { get; }
 
-        public Identifier(ISqlHelper sqlHelper, string identifier, string package = null)
-            : base(BuildIdentifier(package, identifier))
+        public Identifier(ISqlHelper sqlHelper, string identifier)
+            : base(identifier)
         {
+            m_IsComposite = false;
             SqlHelper = sqlHelper ?? throw new ArgumentNullException(nameof(sqlHelper));
         }
 
-#warning Proper handle PackageName
-        public string AsSqlIndentifier() => SqlHelper.QuoteIdentifierIfNeeded(m_Value);
+        public Identifier(ISqlHelper sqlHelper, params Identifier[] identifiers)
+            : this(sqlHelper, BuildIdentifier(identifiers))
+        {
+            m_IsComposite = true;
+        }
 
-        private static string BuildIdentifier(string package, string identifier) => package != null ? $"{package}.{identifier}" : identifier;
+        public string AsSqlIndentifier() => !m_IsComposite ? SqlHelper.QuoteIdentifierIfNeeded(m_Value) : throw new InvalidOperationException();
+
+        private static string BuildIdentifier(params Identifier[] identifiers) => string.Join(".", identifiers.Where(x => x != null));
     }
 }

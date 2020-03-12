@@ -12,7 +12,8 @@ namespace FirebirdDbComparer.DatabaseObjects.Implementations
     public class MetadataFunctions30 : MetadataFunctions25, ISupportsComment
     {
         private IDictionary<Identifier, Function> m_LegacyFunctionsByName;
-        private IDictionary<Identifier, Function> m_NewFunctionsByName;
+        private IDictionary<Identifier, Function> m_NewNonPackageFunctionsByName;
+        private IDictionary<Identifier, Function> m_NewPackageFunctionsByName;
 
         public MetadataFunctions30(IMetadata metadata, ISqlHelper sqlHelper)
             : base(metadata, sqlHelper)
@@ -62,7 +63,8 @@ select trim(FA.RDB$FUNCTION_NAME) as RDB$FUNCTION_NAME,
 
         public override IDictionary<Identifier, Function> LegacyFunctionsByName => m_LegacyFunctionsByName;
 
-        public override IDictionary<Identifier, Function> NewFunctionsByName => m_NewFunctionsByName;
+        public override IDictionary<Identifier, Function> NewNonPackageFunctionsByName => m_NewNonPackageFunctionsByName;
+        public override IDictionary<Identifier, Function> NewPackageFunctionsByName => m_NewPackageFunctionsByName;
 
         public override void FinishInitialization()
         {
@@ -72,9 +74,13 @@ select trim(FA.RDB$FUNCTION_NAME) as RDB$FUNCTION_NAME,
                 .Where(x => x.IsLegacy)
                 .ToDictionary(x => x.FunctionNameKey, x => x);
 
-            m_NewFunctionsByName = FunctionsByName.Values
+            m_NewNonPackageFunctionsByName = FunctionsByName.Values
                 .Where(x => !x.IsLegacy)
                 .Where(x => x.PackageName == null)
+                .ToDictionary(x => x.FunctionNameKey, x => x);
+            m_NewPackageFunctionsByName = FunctionsByName.Values
+                .Where(x => !x.IsLegacy)
+                .Where(x => x.PackageName != null)
                 .ToDictionary(x => x.FunctionNameKey, x => x);
 
             foreach (var functionArgument in FunctionArguments.Values)
@@ -158,7 +164,7 @@ select trim(FA.RDB$FUNCTION_NAME) as RDB$FUNCTION_NAME,
 
         private IEnumerable<Function> FilterNewNewFunctions(IMetadata other)
         {
-            return FilterSystemFlagUser(NewFunctionsByName.Values)
+            return FilterSystemFlagUser(NewNonPackageFunctionsByName.Values)
                 .Where(f =>
                 {
                     other.MetadataFunctions.FunctionsByName.TryGetValue(f.FunctionNameKey, out var otherFunction);
@@ -176,22 +182,24 @@ select trim(FA.RDB$FUNCTION_NAME) as RDB$FUNCTION_NAME,
 
         private IEnumerable<Function> FilterNewFunctionsToBeDropped(IMetadata other)
         {
-            return FilterSystemFlagUser(other.MetadataFunctions.NewFunctionsByName.Values)
-                .Where(f => !NewFunctionsByName.ContainsKey(f.FunctionNameKey));
+            return FilterSystemFlagUser(other.MetadataFunctions.NewNonPackageFunctionsByName.Values)
+                .Where(f => !NewNonPackageFunctionsByName.ContainsKey(f.FunctionNameKey));
         }
 
         private IEnumerable<Function> FilterNewFunctionsToBeAltered(IMetadata other)
         {
-            return FilterSystemFlagUser(NewFunctionsByName.Values)
-                .Where(f => other.MetadataFunctions.NewFunctionsByName.TryGetValue(f.FunctionNameKey, out var otherFunction) && otherFunction != f);
+            return FilterSystemFlagUser(NewNonPackageFunctionsByName.Values)
+                .Where(f => other.MetadataFunctions.NewNonPackageFunctionsByName.TryGetValue(f.FunctionNameKey, out var otherFunction) && otherFunction != f);
         }
 
         IEnumerable<CommandGroup> ISupportsComment.Handle(IMetadata other, IComparerContext context)
         {
+            IEnumerable<Command> Nested(Function x) => HandleCommentNested(x.FunctionArguments.OrderBy(x => x.ArgumentPosition), other.MetadataFunctions.FunctionArguments, y => new FunctionArgumentKey(x.FunctionNameKey, y.ArgumentPosition, y.ArgumentName), x.FunctionName, "PARAMETER", y => new[] { y.ArgumentName }, context);
+
             var result = new CommandGroup()
                 .Append(HandleComment(LegacyFunctionsByName, other.MetadataFunctions.LegacyFunctionsByName, x => x.FunctionNameKey, "EXTERNAL FUNCTION", x => new[] { x.FunctionName }, context))
-                .Append(HandleComment(NewFunctionsByName, other.MetadataFunctions.NewFunctionsByName, x => x.FunctionNameKey, "FUNCTION", x => x.PackageName != null ? new[] { x.PackageName, x.FunctionName } : new[] { x.FunctionName }, context,
-                    x => HandleCommentNested(x.FunctionArguments.OrderBy(x => x.ArgumentPosition), other.MetadataFunctions.FunctionArguments, (a, b) => new FunctionArgumentKey(a, b.ArgumentPosition, b.ArgumentName), x.FunctionNameKey, "PARAMETER", y => new[] { y.ArgumentName }, context)));
+                .Append(HandleComment(NewNonPackageFunctionsByName, other.MetadataFunctions.NewNonPackageFunctionsByName, x => x.FunctionNameKey, "FUNCTION", x => x.PackageName != null ? new[] { x.PackageName, x.FunctionName } : new[] { x.FunctionName }, context, Nested))
+                .Append(HandleComment(NewPackageFunctionsByName, other.MetadataFunctions.NewPackageFunctionsByName, x => x.FunctionNameKey, "FUNCTION", x => x.PackageName != null ? new[] { x.PackageName, x.FunctionName } : new[] { x.FunctionName }, context, Nested));
             if (!result.IsEmpty)
             {
                 yield return result;

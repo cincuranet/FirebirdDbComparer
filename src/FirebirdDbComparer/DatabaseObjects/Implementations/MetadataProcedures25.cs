@@ -106,7 +106,7 @@ select trim(PP.RDB$PARAMETER_NAME) as RDB$PARAMETER_NAME,
         IEnumerable<CommandGroup> ISupportsComment.Handle(IMetadata other, IComparerContext context)
         {
             var result = new CommandGroup().Append(HandleComment(ProceduresByName, other.MetadataProcedures.ProceduresByName, x => x.ProcedureNameKey, "PROCEDURE", x => x.PackageName != null ? new[] { x.PackageName, x.ProcedureName } : new[] { x.ProcedureName }, context,
-                x => HandleCommentNested(x.ProcedureParameters.OrderBy(y => y.ParameterNumber), other.MetadataProcedures.ProcedureParameters, (a, b) => new ProcedureParameterKey(a, b.ParameterName), x.ProcedureNameKey, "PARAMETER", y => new[] { y.ParameterName }, context)));
+                x => HandleCommentNested(x.ProcedureParameters.OrderBy(y => y.ParameterNumber), other.MetadataProcedures.ProcedureParameters, y => new ProcedureParameterKey(x.ProcedureNameKey, y.ParameterName), x.ProcedureName, "PARAMETER", y => new[] { y.ParameterName }, context)));
             if (!result.IsEmpty)
             {
                 yield return result;

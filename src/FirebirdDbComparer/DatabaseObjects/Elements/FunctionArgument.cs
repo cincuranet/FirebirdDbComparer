@@ -97,7 +97,7 @@ namespace FirebirdDbComparer.DatabaseObjects.Elements
                     FieldPrecision = values["RDB$FIELD_PRECISION"].DbValueToInt32(),
                     CharacterLength = values["RDB$CHARACTER_LENGTH"].DbValueToInt32()
                 };
-            result.FunctionNameKey = result.FunctionName;
+            result.FunctionNameKey = new Identifier(sqlHelper, result.FunctionName);
 
             if (sqlHelper.TargetVersion.AtLeast30())
             {
@@ -113,7 +113,7 @@ namespace FirebirdDbComparer.DatabaseObjects.Elements
                 result.SystemFlag = (SystemFlagType)values["RDB$SYSTEM_FLAG"].DbValueToInt32().GetValueOrDefault();
                 result.Description = values["RDB$DESCRIPTION"].DbValueToString();
 
-                result.FunctionNameKey = new Identifier(sqlHelper, result.FunctionName.ToString(), result.PackageName.ToString());
+                result.FunctionNameKey = new Identifier(sqlHelper, result.PackageName, result.FunctionName);
             }
 
             return result;

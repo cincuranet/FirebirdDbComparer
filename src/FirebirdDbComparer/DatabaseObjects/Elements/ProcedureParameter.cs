@@ -81,13 +81,13 @@ namespace FirebirdDbComparer.DatabaseObjects.Elements
                     FieldName = new Identifier(sqlHelper, values["RDB$FIELD_NAME"].DbValueToString()),
                     RelationName = new Identifier(sqlHelper, values["RDB$RELATION_NAME"].DbValueToString())
                 };
-            result.ProcedureNameKey = result.ProcedureName;
+            result.ProcedureNameKey = new Identifier(sqlHelper, result.ProcedureName);
 
             if (sqlHelper.TargetVersion.AtLeast30())
             {
                 result.PackageName = new Identifier(sqlHelper, values["RDB$PACKAGE_NAME"].DbValueToString());
 
-                result.ProcedureNameKey = new Identifier(sqlHelper, result.ProcedureName.ToString(), result.PackageName.ToString());
+                result.ProcedureNameKey = new Identifier(sqlHelper, result.PackageName, result.ProcedureName);
             }
             return result;
         }

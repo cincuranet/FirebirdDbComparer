@@ -104,7 +104,7 @@ namespace FirebirdDbComparer.DatabaseObjects
         protected IEnumerable<Command> HandleCommentNested<TNested, TEquatable>(
             IEnumerable<TNested> nesteds,
             IDictionary<TEquatable, TNested> otherNesteds,
-            Func<Identifier, TNested, TEquatable> equatableFactory,
+            Func<TNested, TEquatable> equatableFactory,
             Identifier parentName,
             string objectTypeName,
             Func<TNested, IEnumerable<Identifier>> nestedNameFactory,
@@ -113,7 +113,7 @@ namespace FirebirdDbComparer.DatabaseObjects
         {
             foreach (var nested in nesteds)
             {
-                var key = equatableFactory(parentName, nested);
+                var key = equatableFactory(nested);
                 otherNesteds.TryGetValue(key, out var other);
 
                 var comment = SqlHelper.CreateComment(

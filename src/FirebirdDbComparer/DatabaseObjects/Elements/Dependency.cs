@@ -82,14 +82,14 @@ namespace FirebirdDbComparer.DatabaseObjects.Elements
                     DependentType = (ObjectType)values["RDB$DEPENDENT_TYPE"].DbValueToInt32().GetValueOrDefault(),
                     DependedOnType = (ObjectType)values["RDB$DEPENDED_ON_TYPE"].DbValueToInt32().GetValueOrDefault()
                 };
-            result.DependentNameKey = result.DependentName;
-            result.DependedOnNameKey = result.DependedOnName;
+            result.DependentNameKey = new Identifier(sqlHelper, result.DependentName);
+            result.DependedOnNameKey = new Identifier(sqlHelper, result.DependedOnName);
 
             if (sqlHelper.TargetVersion.AtLeast30())
             {
                 result.PackageName = new Identifier(sqlHelper, values["RDB$PACKAGE_NAME"].DbValueToString());
-                result.DependentNameKey = result.DependentName;
-                result.DependedOnNameKey = new Identifier(sqlHelper, result.DependedOnName.ToString(), result.PackageName.ToString());
+                result.DependentNameKey = new Identifier(sqlHelper, result.DependentName);
+                result.DependedOnNameKey = new Identifier(sqlHelper, result.PackageName, result.DependedOnName);
             }
             return result;
         }

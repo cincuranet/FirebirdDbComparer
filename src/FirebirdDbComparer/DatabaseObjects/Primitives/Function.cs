@@ -245,8 +245,7 @@ namespace FirebirdDbComparer.DatabaseObjects.Primitives
                     ReturnArgument = values["RDB$RETURN_ARGUMENT"].DbValueToInt32().GetValueOrDefault(),
                     SystemFlag = (SystemFlagType)values["RDB$SYSTEM_FLAG"].DbValueToInt32().GetValueOrDefault()
                 };
-            result.FunctionArguments = functionArguments[result.FunctionName].ToArray();
-            result.FunctionNameKey = result.FunctionName;
+            result.FunctionNameKey = new Identifier(sqlHelper, result.FunctionName);
 
             if (sqlHelper.TargetVersion.AtLeast30())
             {
@@ -258,8 +257,10 @@ namespace FirebirdDbComparer.DatabaseObjects.Primitives
                 result.LegacyFlag = (LegacyFlagType)values["RDB$LEGACY_FLAG"].DbValueToInt32().GetValueOrDefault();
                 result.DeterministicFlag = (DeterministicFlagType)values["RDB$DETERMINISTIC_FLAG"].DbValueToInt32().GetValueOrDefault();
 
-                result.FunctionNameKey = new Identifier(sqlHelper, result.FunctionName.ToString(), result.PackageName.ToString());
+                result.FunctionNameKey = new Identifier(sqlHelper, result.PackageName, result.FunctionName);
             }
+
+            result.FunctionArguments = functionArguments[result.FunctionNameKey].ToArray();
 
             return result;
         }

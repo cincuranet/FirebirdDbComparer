@@ -50,7 +50,9 @@ from RDB$FUNCTION_ARGUMENTS FA";
 
         public virtual IDictionary<Identifier, Function> LegacyFunctionsByName => FunctionsByName;
 
-        public virtual IDictionary<Identifier, Function> NewFunctionsByName => null;
+        public virtual IDictionary<Identifier, Function> NewNonPackageFunctionsByName => null;
+
+        public virtual IDictionary<Identifier, Function> NewPackageFunctionsByName => null;
 
         public override void Initialize()
         {
