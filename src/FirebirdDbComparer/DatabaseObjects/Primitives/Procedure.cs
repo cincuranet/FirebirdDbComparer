@@ -90,10 +90,6 @@ namespace FirebirdDbComparer.DatabaseObjects.Primitives
             }
             if (SqlHelper.IsValidExternalEngine(this))
             {
-                if (context.EmptyBodiesEnabled)
-                {
-                    yield break;
-                }
                 command.Append($"EXTERNAL NAME '{SqlHelper.DoubleSingleQuotes(EntryPoint)}'");
                 command.AppendLine();
                 command.Append($"ENGINE {EngineName.AsSqlIndentifier()}");
