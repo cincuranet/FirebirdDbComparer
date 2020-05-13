@@ -112,7 +112,6 @@ select trim(P.RDB$PACKAGE_NAME) as RDB$PACKAGE_NAME,
             return FilterSystemFlagUser(PackagesByName.Values)
                 .Where(p => other.MetadataPackages.PackagesByName.TryGetValue(p.PackageName, out var otherPackage) && otherPackage != p
                     && p.PackageHeaderSource != null
-                    && otherPackage.PackageHeaderSource != null
                     && !Package.PackageHeaderComparer.Equals(p, otherPackage));
         }
 
@@ -121,7 +120,6 @@ select trim(P.RDB$PACKAGE_NAME) as RDB$PACKAGE_NAME,
             return FilterSystemFlagUser(PackagesByName.Values)
                 .Where(p => other.MetadataPackages.PackagesByName.TryGetValue(p.PackageName, out var otherPackage) && otherPackage != p
                     && p.PackageBodySource != null
-                    && otherPackage.PackageBodySource != null
                     && !Package.PackageBodyComparer.Equals(p, otherPackage));
         }
     }
