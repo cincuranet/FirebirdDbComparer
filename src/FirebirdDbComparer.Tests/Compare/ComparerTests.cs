@@ -77,10 +77,10 @@ namespace FirebirdDbComparer.Tests.Compare
             }
             catch
             {
-                TestContext.WriteLine("Source:");
+                TestContext.WriteLine("*** Source:");
                 TestContext.WriteLine(sourceStructure);
                 TestContext.WriteLine();
-                TestContext.WriteLine("Target:");
+                TestContext.WriteLine("*** Target:");
                 TestContext.WriteLine(targetStructure);
                 TestContext.WriteLine();
                 throw;
@@ -97,7 +97,7 @@ namespace FirebirdDbComparer.Tests.Compare
             }
             catch
             {
-                TestContext.WriteLine("Differences:");
+                TestContext.WriteLine("*** Differences:");
                 foreach (var item in commands)
                 {
                     TestContext.WriteLine(item);
@@ -126,7 +126,7 @@ namespace FirebirdDbComparer.Tests.Compare
                 Assert.Fail("Expected exception but nothing happened.");
                 return default;
             }
-            TestContext.WriteLine("Change script:");
+            TestContext.WriteLine("*** Change script:");
             var commands = compareResult.AllStatements.ToArray();
             foreach (var item in commands)
             {
