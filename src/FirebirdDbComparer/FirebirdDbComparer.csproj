@@ -13,8 +13,8 @@
         <PackageTags>firebird, compare, comparare, metadata, structure</PackageTags>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="FirebirdSql.Data.FirebirdClient" Version="6.6.0" />
-        <PackageReference Include="Castle.Windsor" Version="4.1.1" />
+        <PackageReference Include="FirebirdSql.Data.FirebirdClient" Version="7.5.0" />
+        <PackageReference Include="Castle.Windsor" Version="5.1.1" />
         <PackageReference Include="System.ValueTuple" Version="4.5.0" />
     </ItemGroup>
     <ItemGroup>
