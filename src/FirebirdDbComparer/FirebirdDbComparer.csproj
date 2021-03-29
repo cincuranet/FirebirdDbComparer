@@ -10,7 +10,7 @@
         <Authors>Jiří Činčura, Danny Van den Wouwer</Authors>
         <PackageProjectUrl>https://github.com/cincuranet/FirebirdDbComparer</PackageProjectUrl>
         <Description>https://www.tabsoverspaces.com/tools/firebird-db-comparer</Description>
-        <PackageTags>firebird, compare, comparare, metadata, structure</PackageTags>
+        <PackageTags>firebird, compare, comparer, metadata, structure</PackageTags>
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="FirebirdSql.Data.FirebirdClient" Version="7.5.0" />
