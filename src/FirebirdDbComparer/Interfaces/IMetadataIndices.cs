@@ -1,10 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using FirebirdDbComparer.DatabaseObjects;
 using FirebirdDbComparer.DatabaseObjects.Elements;
-using FirebirdDbComparer.DatabaseObjects.Primitives;
 using FirebirdDbComparer.SqlGeneration;
+using Index = FirebirdDbComparer.DatabaseObjects.Primitives.Index;
 
 namespace FirebirdDbComparer.Interfaces
 {

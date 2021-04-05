@@ -1,12 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <OutputType>Exe</OutputType>
-        <TargetFrameworks>net452</TargetFrameworks>
+        <TargetFrameworks>net5.0</TargetFrameworks>
     </PropertyGroup>
     <ItemGroup>
         <ProjectReference Include="..\FirebirdDbComparer\FirebirdDbComparer.csproj" />
     </ItemGroup>
     <ItemGroup>
-        <Reference Include="System.Configuration" />
+        <PackageReference Include="System.Configuration.ConfigurationManager" Version="5.0.0" />
     </ItemGroup>
 </Project>

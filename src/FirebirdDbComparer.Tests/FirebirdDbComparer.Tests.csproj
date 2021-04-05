@@ -1,14 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFrameworks>net452</TargetFrameworks>
+        <TargetFrameworks>net5.0</TargetFrameworks>
     </PropertyGroup>
     <ItemGroup>
         <ProjectReference Include="..\FirebirdDbComparer\FirebirdDbComparer.csproj" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="FirebirdSql.Data.FirebirdClient" Version="7.5.0" />
-        <PackageReference Include="NUnit" Version="3.12.0" />
-        <PackageReference Include="System.ValueTuple" Version="4.5.0" />
+        <PackageReference Include="FirebirdSql.Data.FirebirdClient" Version="8.0.0" />
+        <PackageReference Include="NUnit" Version="3.13.1" />
     </ItemGroup>
     <ItemGroup>
         <EmbeddedResource Include="Compare\ComparerTestsData\**\*.sql" />

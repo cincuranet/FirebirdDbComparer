@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-
 using FirebirdDbComparer.Common;
 using FirebirdDbComparer.DatabaseObjects.Elements;
 using FirebirdDbComparer.DatabaseObjects.Primitives;
 using FirebirdDbComparer.Interfaces;
+using Index = FirebirdDbComparer.DatabaseObjects.Primitives.Index;
 
 namespace FirebirdDbComparer.DatabaseObjects.Implementations
 {

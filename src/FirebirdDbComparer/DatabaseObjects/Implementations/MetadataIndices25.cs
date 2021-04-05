@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using FirebirdDbComparer.Common;
 using FirebirdDbComparer.DatabaseObjects.EquatableKeys;
-using FirebirdDbComparer.DatabaseObjects.Primitives;
 using FirebirdDbComparer.DatabaseObjects.Elements;
 using FirebirdDbComparer.Interfaces;
 using FirebirdDbComparer.SqlGeneration;
+using Index = FirebirdDbComparer.DatabaseObjects.Primitives.Index;
 
 namespace FirebirdDbComparer.DatabaseObjects.Implementations
 {
