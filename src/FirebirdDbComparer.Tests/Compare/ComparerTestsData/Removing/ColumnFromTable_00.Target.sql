@@ -1,1 +1,0 @@
-﻿create table t (a varchar(20), b char(20));

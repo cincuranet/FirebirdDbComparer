@@ -1,1 +1,0 @@
-﻿create collation iso8859_1_unicode for iso8859_1;

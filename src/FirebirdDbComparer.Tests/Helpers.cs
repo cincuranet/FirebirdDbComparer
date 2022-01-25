@@ -23,11 +23,6 @@ namespace FirebirdDbComparer.Tests
                 Target,
             }
 
-            public static string GetFirebirdLocation(TargetVersion version)
-            {
-                return Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "_Firebird", version.VersionSuffix());
-            }
-
             public static string GetConnectionString(TargetVersion version, DatabaseLocation location)
             {
                 var builder =
@@ -37,7 +32,7 @@ namespace FirebirdDbComparer.Tests
                         UserID = "sysdba",
                         Password = "masterkey",
                         ServerType = FbServerType.Embedded,
-                        ClientLibrary = Path.Combine(GetFirebirdLocation(version), $"fbclient{version.VersionSuffix()}.dll"),
+                        ClientLibrary = Path.Combine(GetFirebirdLocation(version), $"fbclient.dll"),
                         Charset = "utf8",
                         Pooling = false,
                     };
@@ -54,37 +49,14 @@ namespace FirebirdDbComparer.Tests
                 FbConnection.DropDatabase(GetConnectionString(version, location));
             }
 
-            private static void ExecuteScript(TargetVersion version, DatabaseLocation location, FbScript script)
-            {
-                using (var connection = new FbConnection(GetConnectionString(version, location)))
-                {
-                    script.Parse();
-                    if (script.Results.Any())
-                    {
-                        var be = new FbBatchExecution(connection);
-                        be.AppendSqlStatements(script);
-                        be.Execute();
-                    }
-                }
-            }
-
-            private static string GetDatabasePath(TargetVersion version, DatabaseLocation location)
-            {
-                return Path.Combine(GetFirebirdLocation(version), $"compare_{location}.fdb");
-            }
-
             public static void ExecuteScript(TargetVersion version, DatabaseLocation location, IEnumerable<string> commands)
             {
                 ExecuteScript(version, location, new FbScript(string.Join(Environment.NewLine, commands)));
             }
 
-            public static void ExecuteScript(TargetVersion version, DatabaseLocation location, string resourceName)
+            public static void ExecuteScript(TargetVersion version, DatabaseLocation location, string script)
             {
-                var assembly = Assembly.GetExecutingAssembly();
-                using (var reader = new StreamReader(assembly.GetManifestResourceStream($"{assembly.GetName().Name}.{resourceName}"), Encoding.UTF8))
-                {
-                    ExecuteScript(version, location, new FbScript(reader.ReadToEnd()));
-                }
+                ExecuteScript(version, location, new FbScript(script));
             }
 
             public static string GetDatabaseStructure(TargetVersion version, DatabaseLocation location)
@@ -116,6 +88,30 @@ namespace FirebirdDbComparer.Tests
                     isql.WaitForExit();
                 }
                 return builder.ToString().Trim();
+            }
+
+            private static string GetFirebirdLocation(TargetVersion version)
+            {
+                return Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "_Firebird", version.VersionSuffix());
+            }
+
+            private static void ExecuteScript(TargetVersion version, DatabaseLocation location, FbScript script)
+            {
+                using (var connection = new FbConnection(GetConnectionString(version, location)))
+                {
+                    script.Parse();
+                    if (script.Results.Any())
+                    {
+                        var be = new FbBatchExecution(connection);
+                        be.AppendSqlStatements(script);
+                        be.Execute();
+                    }
+                }
+            }
+
+            private static string GetDatabasePath(TargetVersion version, DatabaseLocation location)
+            {
+                return Path.Combine(GetFirebirdLocation(version), $"compare_{location}.fdb");
             }
         }
     }

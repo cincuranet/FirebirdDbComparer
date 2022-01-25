@@ -1,7 +1,0 @@
-﻿create table t (i int);
-
-create ascending index idx_t_i_asc on t(i);
-create unique ascending index uq_idx_t_i_asc on t(i);
-create descending index idx_t_i_desc on t(i);
-create unique descending index uq_idx_t_i_desc on t(i);
-

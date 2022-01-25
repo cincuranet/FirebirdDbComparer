@@ -1,1 +1,0 @@
-﻿create table t (b boolean);

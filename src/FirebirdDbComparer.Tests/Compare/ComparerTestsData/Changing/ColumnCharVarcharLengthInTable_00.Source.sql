@@ -1,1 +1,0 @@
-﻿create table t (a char(2), b varchar(2));

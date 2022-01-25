@@ -138,7 +138,7 @@ namespace FirebirdDbComparer.DatabaseObjects.Primitives
                     SystemFlag = (SystemFlagType)values["RDB$SYSTEM_FLAG"].DbValueToInt32().GetValueOrDefault()
                 };
 
-            if (sqlHelper.TargetVersion.AtLeast30())
+            if (sqlHelper.TargetVersion.AtLeast(TargetVersion.Version30))
             {
                 result.EngineName = new Identifier(sqlHelper, values["RDB$ENGINE_NAME"].DbValueToString());
                 result.EntryPoint = values["RDB$ENTRYPOINT"].DbValueToString();

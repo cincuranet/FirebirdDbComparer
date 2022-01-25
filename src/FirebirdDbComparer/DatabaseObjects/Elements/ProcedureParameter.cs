@@ -83,7 +83,7 @@ namespace FirebirdDbComparer.DatabaseObjects.Elements
                 };
             result.ProcedureNameKey = new Identifier(sqlHelper, result.ProcedureName);
 
-            if (sqlHelper.TargetVersion.AtLeast30())
+            if (sqlHelper.TargetVersion.AtLeast(TargetVersion.Version30))
             {
                 result.PackageName = new Identifier(sqlHelper, values["RDB$PACKAGE_NAME"].DbValueToString());
 

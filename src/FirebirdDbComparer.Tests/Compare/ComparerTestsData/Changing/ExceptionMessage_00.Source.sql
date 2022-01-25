@@ -1,1 +1,0 @@
-﻿create exception e 'new message';

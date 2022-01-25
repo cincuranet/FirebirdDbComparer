@@ -81,7 +81,7 @@ namespace FirebirdDbComparer.DatabaseObjects.Primitives
                     BytesPerCharacter = values["RDB$BYTES_PER_CHARACTER"].DbValueToInt32().GetValueOrDefault()
                 };
 
-            if (sqlHelper.TargetVersion.AtLeast30())
+            if (sqlHelper.TargetVersion.AtLeast(TargetVersion.Version30))
             {
                 result.OwnerName = new Identifier(sqlHelper, values["RDB$OWNER_NAME"].DbValueToString());
             }

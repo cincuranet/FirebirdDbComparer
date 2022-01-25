@@ -1,1 +1,0 @@
-﻿create table test (x bigint);

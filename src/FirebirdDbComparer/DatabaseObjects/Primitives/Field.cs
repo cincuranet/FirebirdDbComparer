@@ -162,7 +162,7 @@ namespace FirebirdDbComparer.DatabaseObjects.Primitives
                     ? MetadataFieldType.SystemGenerated
                     : MetadataFieldType.Domain;
 
-            if (sqlHelper.TargetVersion.AtLeast30())
+            if (sqlHelper.TargetVersion.AtLeast(TargetVersion.Version30))
             {
                 result.OwnerName = new Identifier(sqlHelper, values["RDB$OWNER_NAME"].DbValueToString());
             }

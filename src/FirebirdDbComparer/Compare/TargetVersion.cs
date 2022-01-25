@@ -1,30 +1,27 @@
-using System;
-using System.Text.RegularExpressions;
-
 namespace FirebirdDbComparer.Compare
 {
     public enum TargetVersion
     {
-        Version25,
-        Version30,
+        Version25 = 25,
+        Version30 = 30,
+        Version40 = 40,
     }
 
     public static class TargetVersionExt
     {
-        public static string VersionSuffix(this TargetVersion targetVersion)
+        public static string VersionSuffix(this TargetVersion tv)
         {
-            return Regex.Match(targetVersion.ToString(), @"(\d+)$", RegexOptions.CultureInvariant).Groups[1].Value;
+            return ((int)tv).ToString();
         }
 
-        public static bool AtLeast25(this TargetVersion targetVersion)
+        public static bool AtLeast(this TargetVersion tv, TargetVersion targetVersion)
         {
-            return targetVersion == TargetVersion.Version25
-                || targetVersion == TargetVersion.Version30;
+            return tv >= targetVersion;
         }
 
-        public static bool AtLeast30(this TargetVersion targetVersion)
+        public static bool AtMost(this TargetVersion tv, TargetVersion targetVersion)
         {
-            return targetVersion == TargetVersion.Version30;
+            return tv <= targetVersion;
         }
     }
 }

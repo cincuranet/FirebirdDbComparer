@@ -1,1 +1,0 @@
-﻿create domain d_test as varchar(20);

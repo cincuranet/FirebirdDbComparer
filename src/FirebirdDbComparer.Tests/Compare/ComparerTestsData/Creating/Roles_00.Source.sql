@@ -1,1 +1,0 @@
-﻿create role r_normal;

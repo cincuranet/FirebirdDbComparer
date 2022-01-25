@@ -243,7 +243,7 @@ namespace FirebirdDbComparer.DatabaseObjects.Primitives
                 };
             result.FunctionNameKey = new Identifier(sqlHelper, result.FunctionName);
 
-            if (sqlHelper.TargetVersion.AtLeast30())
+            if (sqlHelper.TargetVersion.AtLeast(TargetVersion.Version30))
             {
                 result.EngineName = new Identifier(sqlHelper, values["RDB$ENGINE_NAME"].DbValueToString());
                 result.PackageName = new Identifier(sqlHelper, values["RDB$PACKAGE_NAME"].DbValueToString());

@@ -1,1 +1,0 @@
-﻿create table t (a char(1) dEfAuLt 'a', b char(1));

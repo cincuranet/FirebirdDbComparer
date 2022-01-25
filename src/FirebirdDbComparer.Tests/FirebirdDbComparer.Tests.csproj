@@ -1,16 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFrameworks>net5.0</TargetFrameworks>
+        <OutputType>Exe</OutputType>
+        <TargetFrameworks>net6.0</TargetFrameworks>
     </PropertyGroup>
     <ItemGroup>
         <ProjectReference Include="..\FirebirdDbComparer\FirebirdDbComparer.csproj" />
+        <ProjectReference Include="..\FooBar\FooBar.csproj" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="FirebirdSql.Data.FirebirdClient" Version="8.0.0" />
-        <PackageReference Include="NUnit" Version="3.13.1" />
-    </ItemGroup>
-    <ItemGroup>
-        <EmbeddedResource Include="Compare\ComparerTestsData\**\*.sql" />
+        <PackageReference Include="FirebirdSql.Data.FirebirdClient" Version="8.5.4" />
+        <PackageReference Include="NUnit" Version="3.13.2" />
+        <PackageReference Include="NUnitLite" Version="3.13.2" />
     </ItemGroup>
     <ItemGroup>
         <Compile Remove="_Firebird\**" />
@@ -19,5 +19,7 @@
     </ItemGroup>
     <Target Name="PostBuild" AfterTargets="PostBuildEvent">
         <Exec Command="xcopy $(ProjectDir)_Firebird $(TargetDir)_Firebird\ /E /Y" />
+        <Exec Command="xcopy $(OutDir)FooBar.dll $(TargetDir)_Firebird\30\plugins\ /Y" />
+        <Exec Command="xcopy $(OutDir)FooBar.dll $(TargetDir)_Firebird\40\plugins\ /Y" />
     </Target>
 </Project>

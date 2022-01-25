@@ -51,7 +51,7 @@ namespace FirebirdDbComparer.DatabaseObjects.Elements
                     ContextName = values["RDB$CONTEXT_NAME"].DbValueToString()
                 };
 
-            if (sqlHelper.TargetVersion.AtLeast30())
+            if (sqlHelper.TargetVersion.AtLeast(TargetVersion.Version30))
             {
                 result.ContextType = (ContextTypeType)values["RDB$CONTEXT_TYPE"].DbValueToInt32().GetValueOrDefault();
                 result.PackageName = new Identifier(sqlHelper, values["RDB$PACKAGE_NAME"].DbValueToString());

@@ -1,1 +1,0 @@
-﻿create table t (i int check (i > 0));

@@ -40,7 +40,7 @@ namespace FirebirdDbComparer.DatabaseObjects.Primitives
         {
             var command = new Command();
             command.Append($"CREATE SEQUENCE {GeneratorName.AsSqlIndentifier()}");
-            if (context.Settings.TargetVersion.AtLeast30())
+            if (context.Settings.TargetVersion.AtLeast(TargetVersion.Version30))
             {
                 if (InitialValue != 0)
                 {
@@ -88,7 +88,7 @@ namespace FirebirdDbComparer.DatabaseObjects.Primitives
                     Description = values["RDB$DESCRIPTION"].DbValueToString(),
                 };
 
-            if (sqlHelper.TargetVersion.AtLeast30())
+            if (sqlHelper.TargetVersion.AtLeast(TargetVersion.Version30))
             {
                 result.OwnerName = new Identifier(sqlHelper, values["RDB$OWNER_NAME"].DbValueToString());
                 result.InitialValue = values["RDB$INITIAL_VALUE"].DbValueToInt64();

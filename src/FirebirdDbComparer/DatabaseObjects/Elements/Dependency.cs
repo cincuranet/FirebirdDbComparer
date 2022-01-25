@@ -85,7 +85,7 @@ namespace FirebirdDbComparer.DatabaseObjects.Elements
             result.DependentNameKey = new Identifier(sqlHelper, result.DependentName);
             result.DependedOnNameKey = new Identifier(sqlHelper, result.DependedOnName);
 
-            if (sqlHelper.TargetVersion.AtLeast30())
+            if (sqlHelper.TargetVersion.AtLeast(TargetVersion.Version30))
             {
                 result.PackageName = new Identifier(sqlHelper, values["RDB$PACKAGE_NAME"].DbValueToString());
                 result.DependentNameKey = new Identifier(sqlHelper, result.DependentName);

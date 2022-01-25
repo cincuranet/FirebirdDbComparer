@@ -1,1 +1,0 @@
-﻿create exception new_exception 'text';
