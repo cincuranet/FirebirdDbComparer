@@ -79,8 +79,8 @@ namespace FirebirdDbComparer.DatabaseObjects.Elements
                     DependentName = new Identifier(sqlHelper, values["RDB$DEPENDENT_NAME"].DbValueToString()),
                     DependedOnName = new Identifier(sqlHelper, values["RDB$DEPENDED_ON_NAME"].DbValueToString()),
                     FieldName = new Identifier(sqlHelper, values["RDB$FIELD_NAME"].DbValueToString()),
-                    DependentType = (ObjectType)values["RDB$DEPENDENT_TYPE"].DbValueToInt32().GetValueOrDefault(),
-                    DependedOnType = (ObjectType)values["RDB$DEPENDED_ON_TYPE"].DbValueToInt32().GetValueOrDefault()
+                    DependentType = new ObjectType(sqlHelper, values["RDB$DEPENDENT_TYPE"].DbValueToInt32().GetValueOrDefault()),
+                    DependedOnType = new ObjectType(sqlHelper, values["RDB$DEPENDED_ON_TYPE"].DbValueToInt32().GetValueOrDefault())
                 };
             result.DependentNameKey = new Identifier(sqlHelper, result.DependentName);
             result.DependedOnNameKey = new Identifier(sqlHelper, result.DependedOnName);

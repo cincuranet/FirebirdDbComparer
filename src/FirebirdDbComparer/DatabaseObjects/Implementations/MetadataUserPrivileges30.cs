@@ -20,7 +20,7 @@ namespace FirebirdDbComparer.DatabaseObjects.Implementations
 
             foreach (var userPrivilege in UserPrivileges.Where(p => !p.IsSystemGeneratedObject))
             {
-                if (userPrivilege.ObjectType == ObjectType.Package)
+                if (userPrivilege.ObjectType.IsPackage)
                 {
                     userPrivilege.Package =
                         Metadata
@@ -44,14 +44,14 @@ namespace FirebirdDbComparer.DatabaseObjects.Implementations
                     if (!privilege.IsSystemGeneratedObject)
                     {
                         command = new Command();
-                        command.Append($"GRANT USAGE ON {privilege.ObjectType.ToDescription()} {privilege.ObjectName.AsSqlIndentifier()} TO {privilege.User.AsSqlIndentifier()}");
+                        command.Append($"GRANT USAGE ON {privilege.ObjectType.ToSqlObject()} {privilege.ObjectName.AsSqlIndentifier()} TO {privilege.User.AsSqlIndentifier()}");
                         AddWithOption(privilege, command);
                         AddGrantedBy(privilege, command);
 
                         // see \src\dsql\parse.y line 840 (release 3.0.2)
                         // only EXECEPTION, GENERATOR is parsed for the moment, but not clearly in the documentation
                         // reported 
-                        if (privilege.ObjectType != ObjectType.Exception && privilege.ObjectType != ObjectType.Generator)
+                        if (!privilege.ObjectType.IsException && !privilege.ObjectType.IsGenerator)
                         {
                             command = null;
                         }
@@ -77,8 +77,8 @@ namespace FirebirdDbComparer.DatabaseObjects.Implementations
                     command = new Command();
                     command.Append(
                         privilege.Privilege == Privilege.Create
-                            ? $"GRANT {privilege.Privilege.ToDescription()} {privilege.ObjectType.ToDescription()} TO {privilege.UserType.ToDescription()} {privilege.User}"
-                            : $"GRANT {privilege.Privilege.ToDescription()} ANY {privilege.ObjectType.ToDescription()} TO {privilege.UserType.ToDescription()} {privilege.User}");
+                            ? $"GRANT {privilege.Privilege.ToDescription()} {privilege.ObjectType.ToSqlObject()} TO {privilege.UserType.ToSqlObject()} {privilege.User}"
+                            : $"GRANT {privilege.Privilege.ToDescription()} ANY {privilege.ObjectType.ToSqlObject()} TO {privilege.UserType.ToSqlObject()} {privilege.User}");
                     AddWithOption(privilege, command);
                     break;
                 }
@@ -103,12 +103,12 @@ namespace FirebirdDbComparer.DatabaseObjects.Implementations
                     if (!privilege.IsSystemGeneratedObject)
                     {
                         command = new Command();
-                        command.Append($"REVOKE USAGE ON {privilege.ObjectType.ToDescription()} {privilege.ObjectName.AsSqlIndentifier()} FROM {privilege.User.AsSqlIndentifier()}");
+                        command.Append($"REVOKE USAGE ON {privilege.ObjectType.ToSqlObject()} {privilege.ObjectName.AsSqlIndentifier()} FROM {privilege.User.AsSqlIndentifier()}");
 
                         // see \src\dsql\parse.y line 840 (release 3.0.2)
                         // only EXECEPTION, GENERATOR is parsed for the moment, but not clearly in the documentation
                         // reported 
-                        if (privilege.ObjectType != ObjectType.Exception && privilege.ObjectType != ObjectType.Generator)
+                        if (!privilege.ObjectType.IsException && !privilege.ObjectType.IsGenerator)
                         {
                             command = null;
                         }
@@ -134,8 +134,8 @@ namespace FirebirdDbComparer.DatabaseObjects.Implementations
                     command = new Command();
                     command.Append(
                         privilege.Privilege == Privilege.Create
-                            ? $"REVOKE {privilege.Privilege.ToDescription()} {privilege.ObjectType.ToDescription()} FROM {privilege.UserType.ToDescription()} {privilege.User}"
-                            : $"REVOKE {privilege.Privilege.ToDescription()} ANY {privilege.ObjectType.ToDescription()} FROM {privilege.UserType.ToDescription()} {privilege.User}");
+                            ? $"REVOKE {privilege.Privilege.ToDescription()} {privilege.ObjectType.ToSqlObject()} FROM {privilege.UserType.ToSqlObject()} {privilege.User}"
+                            : $"REVOKE {privilege.Privilege.ToDescription()} ANY {privilege.ObjectType.ToSqlObject()} FROM {privilege.UserType.ToSqlObject()} {privilege.User}");
                     break;
                 }
                 default:
@@ -148,29 +148,33 @@ namespace FirebirdDbComparer.DatabaseObjects.Implementations
         protected override bool CanCreateRevoke(UserPrivilege privilege, IComparerContext context)
         {
             ITypeObjectNameKey primitiveType;
-            switch (privilege.ObjectType)
+            if (privilege.ObjectType.IsRelation || privilege.ObjectType.IsView)
             {
-                case ObjectType.Relation:
-                case ObjectType.View:
-                    primitiveType = privilege.Relation;
-                    break;
-                case ObjectType.Procedure:
-                    primitiveType = privilege.Procedure;
-                    break;
-                case ObjectType.Package:
-                    primitiveType = privilege.Package;
-                    break;
-                case ObjectType.UDF:
-                    primitiveType = privilege.Function;
-                    break;
-                case ObjectType.Exception:
-                    primitiveType = privilege.DbException;
-                    break;
-                case ObjectType.Generator:
-                    primitiveType = privilege.Generator;
-                    break;
-                default:
-                    return true;
+                primitiveType = privilege.Relation;
+            }
+            else if (privilege.ObjectType.IsProcedure)
+            {
+                primitiveType = privilege.Procedure;
+            }
+            else if (privilege.ObjectType.IsPackage)
+            {
+                primitiveType = privilege.Package;
+            }
+            else if (privilege.ObjectType.IsUDF)
+            {
+                primitiveType = privilege.Function;
+            }
+            else if (privilege.ObjectType.IsException)
+            {
+                primitiveType = privilege.DbException;
+            }
+            else if (privilege.ObjectType.IsGenerator)
+            {
+                primitiveType = privilege.Generator;
+            }
+            else
+            {
+                return true;
             }
             return !context.DroppedObjects.Contains(primitiveType.TypeObjectNameKey);
         }

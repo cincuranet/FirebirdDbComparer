@@ -27,7 +27,7 @@ select trim(D.RDB$DEPENDENT_NAME) as RDB$DEPENDENT_NAME,
             // TODO: Danny, I'm not sure of this
             foreach (var dependency in Dependencies)
             {
-                if (dependency.DependentType == ObjectType.PackageBody)
+                if (dependency.DependentType.IsPackageBody)
                 {
                     dependency.DependentPackage =
                         Metadata
@@ -35,7 +35,7 @@ select trim(D.RDB$DEPENDENT_NAME) as RDB$DEPENDENT_NAME,
                             .PackagesByName[dependency.DependentNameKey];
                 }
 
-                if (dependency.DependedOnType == ObjectType.Package)
+                if (dependency.DependedOnType.IsPackage)
                 {
                     dependency.DependendOnPackage =
                         Metadata

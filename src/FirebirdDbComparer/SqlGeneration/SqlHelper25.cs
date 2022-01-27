@@ -307,6 +307,61 @@ namespace FirebirdDbComparer.SqlGeneration
             return false;
         }
 
+        /// <summary>
+        /// for more information see \src\jrd\obj.h
+        /// </summary>
+        public virtual string ObjectTypeString(int objectType)
+        {
+            return objectType switch
+            {
+                0 => "TABLE",
+                1 => "VIEW",
+                2 => "TRIGGER",
+                5 => "PROCEDURE",
+                7 => "EXCEPTION",
+                8 => "USER",
+                9 => "DOMAIN",
+                10 => "INDEX",
+                11 => "CHARACTER SET",
+                13 => "ROLE",
+                14 => "SEQUENCE",
+                15 => "FUNCTION",
+                17 => "COLLATION",
+                18 => "PACKAGE",
+                20 => "DATABASE",
+                21 => "TABLE",
+                22 => "VIEW",
+                23 => "PROCEDURE",
+                24 => "FUNCTION",
+                25 => "PACKAGE",
+                26 => "SEQUENCE",
+                27 => "DOMAIN",
+                28 => "EXCEPTION",
+                29 => "ROLE",
+                30 => "CHARACTER SET",
+                31 => "COLLATION",
+                32 => "FILTER",
+                _ => throw new ArgumentOutOfRangeException($"Wrong type: {objectType}."),
+            };
+        }
+
+        public virtual bool ObjectTypeIsRelation(int objectType) => objectType == 0;
+        public virtual bool ObjectTypeIsView(int objectType) => objectType == 1;
+        public virtual bool ObjectTypeIsTrigger(int objectType) => objectType == 2;
+        public virtual bool ObjectTypeIsField(int objectType) => objectType == 9;
+        public virtual bool ObjectTypeIsComputedField(int objectType) => objectType == 3;
+        public virtual bool ObjectTypeIsProcedure(int objectType) => objectType == 5;
+        public virtual bool ObjectTypeIsException(int objectType) => objectType == 7;
+        public virtual bool ObjectTypeIsRole(int objectType) => objectType == 13;
+        public virtual bool ObjectTypeIsUser(int objectType) => objectType == 8;
+        public virtual bool ObjectTypeIsUDF(int objectType) => objectType == 15;
+        public virtual bool ObjectTypeIsExpressionIndex(int objectType) => objectType == 6;
+        public virtual bool ObjectTypeIsPackageBody(int objectType) => objectType == 19;
+        public virtual bool ObjectTypeIsPackage(int objectType) => objectType == 18;
+        public virtual bool ObjectTypeIsGenerator(int objectType) => objectType == 14;
+        public virtual bool ObjectTypeIsCharacterSet(int objectType) => objectType == 11;
+        public virtual bool ObjectTypeIsCollation(int objectType) => objectType == 17;
+
         protected virtual string ScalableNumber(string regularType, IDataType dataType)
         {
             if (dataType.FieldSubType == 2 || dataType.FieldSubType == 0 && dataType.FieldScale < 0)

@@ -38,5 +38,22 @@ namespace FirebirdDbComparer.Interfaces
         bool HasSystemPrefix(Identifier identifier);
         bool IsImplicitIntegrityConstraintName(Identifier identifier);
         bool IsValidExternalEngine(IHasExternalEngine item);
+        string ObjectTypeString(int objectType);
+        bool ObjectTypeIsRelation(int objectType);
+        bool ObjectTypeIsView(int objectType);
+        bool ObjectTypeIsTrigger(int objectType);
+        bool ObjectTypeIsField(int objectType);
+        bool ObjectTypeIsComputedField(int objectType);
+        bool ObjectTypeIsProcedure(int objectType);
+        bool ObjectTypeIsException(int objectType);
+        bool ObjectTypeIsRole(int objectType);
+        bool ObjectTypeIsUser(int objectType);
+        bool ObjectTypeIsUDF(int objectType);
+        bool ObjectTypeIsExpressionIndex(int objectType);
+        bool ObjectTypeIsPackageBody(int objectType);
+        bool ObjectTypeIsPackage(int objectType);
+        bool ObjectTypeIsGenerator(int objectType);
+        bool ObjectTypeIsCharacterSet(int objectType);
+        bool ObjectTypeIsCollation(int objectType);
     }
 }

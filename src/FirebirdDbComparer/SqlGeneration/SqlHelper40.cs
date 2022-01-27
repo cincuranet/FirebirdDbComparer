@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 using FirebirdDbComparer.Compare;
@@ -30,6 +31,44 @@ namespace FirebirdDbComparer.SqlGeneration
                 default:
                     return base.GetDataType(dataType, characterSets, defaultCharacterSetId);
             }
+        }
+
+        /// <summary>
+        /// for more information see \src\jrd\obj.h
+        /// </summary>
+        public override string ObjectTypeString(int objectType)
+        {
+            return objectType switch
+            {
+                0 => "TABLE",
+                1 => "VIEW",
+                2 => "TRIGGER",
+                5 => "PROCEDURE",
+                7 => "EXCEPTION",
+                8 => "USER",
+                9 => "DOMAIN",
+                10 => "INDEX",
+                11 => "CHARACTER SET",
+                13 => "ROLE",
+                14 => "SEQUENCE",
+                15 => "FUNCTION",
+                17 => "COLLATION",
+                18 => "PACKAGE",
+                21 => "DATABASE",
+                22 => "TABLE",
+                23 => "VIEW",
+                24 => "PROCEDURE",
+                25 => "FUNCTION",
+                26 => "PACKAGE",
+                27 => "SEQUENCE",
+                28 => "DOMAIN",
+                29 => "EXCEPTION",
+                30 => "ROLE",
+                31 => "CHARACTER SET",
+                32 => "COLLATION",
+                33 => "FILTER",
+                _ => throw new ArgumentOutOfRangeException($"Wrong type: {objectType}."),
+            };
         }
     }
 }

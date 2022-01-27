@@ -46,112 +46,118 @@ select trim(D.RDB$DEPENDENT_NAME) as RDB$DEPENDENT_NAME,
         {
             foreach (var dependency in Dependencies)
             {
-                switch (dependency.DependentType)
+                if (dependency.DependentType.IsRelation || dependency.DependentType.IsView)
                 {
-                    case ObjectType.Relation:
-                    case ObjectType.View:
-                        dependency.DependentRelation =
-                            Metadata
-                                .MetadataRelations
-                                .Relations[dependency.DependentNameKey];
-                        break;
-                    case ObjectType.Trigger:
-                        dependency.DependentTrigger =
-                            Metadata
-                                .MetadataTriggers
-                                .TriggersByName[dependency.DependentNameKey];
-                        break;
-                    case ObjectType.Field:
-                    case ObjectType.ComputedField:
-                        dependency.DependentField =
-                            Metadata
-                                .MetadataFields
-                                .Fields[dependency.DependentNameKey];
-                        break;
-                    case ObjectType.Procedure:
-                        dependency.DependentProcedure =
-                            Metadata
-                                .MetadataProcedures
-                                .ProceduresByName[dependency.DependentNameKey];
-                        break;
-                    case ObjectType.Exception:
-                        dependency.DependentException =
-                            Metadata
-                                .MetadataExceptions
-                                .ExceptionsByName[dependency.DependentNameKey];
-                        break;
-                    case ObjectType.Role:
-                        dependency.DependentRole =
-                            Metadata
-                                .MetadataRoles
-                                .Roles[dependency.DependentNameKey];
-                        break;
-                    case ObjectType.UDF:
-                        dependency.DependentFunction =
-                            Metadata
-                                .MetadataFunctions
-                                .FunctionsByName[dependency.DependentNameKey];
-                        break;
-                    case ObjectType.ExpressionIndex:
-                        dependency.DependentIndex =
-                            Metadata
-                                .MetadataIndices
-                                .Indices[dependency.DependentNameKey];
-                        break;
+                    dependency.DependentRelation =
+                        Metadata
+                            .MetadataRelations
+                            .Relations[dependency.DependentNameKey];
+                }
+                else if (dependency.DependentType.IsTrigger)
+                {
+                    dependency.DependentTrigger =
+                        Metadata
+                            .MetadataTriggers
+                            .TriggersByName[dependency.DependentNameKey];
+                }
+                else if (dependency.DependentType.IsField || dependency.DependentType.IsComputedField)
+                {
+                    dependency.DependentField =
+                        Metadata
+                            .MetadataFields
+                            .Fields[dependency.DependentNameKey];
+                }
+                else if (dependency.DependentType.IsProcedure)
+                {
+                    dependency.DependentProcedure =
+                        Metadata
+                            .MetadataProcedures
+                            .ProceduresByName[dependency.DependentNameKey];
+                }
+                else if (dependency.DependentType.IsException)
+                {
+                    dependency.DependentException =
+                        Metadata
+                            .MetadataExceptions
+                            .ExceptionsByName[dependency.DependentNameKey];
+                }
+                else if (dependency.DependentType.IsRole)
+                {
+                    dependency.DependentRole =
+                        Metadata
+                            .MetadataRoles
+                            .Roles[dependency.DependentNameKey];
+                }
+                else if (dependency.DependentType.IsUDF)
+                {
+                    dependency.DependentFunction =
+                        Metadata
+                            .MetadataFunctions
+                            .FunctionsByName[dependency.DependentNameKey];
+                }
+                else if (dependency.DependentType.IsExpressionIndex)
+                {
+                    dependency.DependentIndex =
+                        Metadata
+                            .MetadataIndices
+                            .Indices[dependency.DependentNameKey];
                 }
 
-                switch (dependency.DependedOnType)
+                if (dependency.DependedOnType.IsRelation || dependency.DependedOnType.IsView)
                 {
-                    case ObjectType.Relation:
-                    case ObjectType.View:
-                        dependency.DependedOnRelation =
-                            Metadata
-                                .MetadataRelations
-                                .Relations[dependency.DependedOnNameKey];
-                        break;
-                    case ObjectType.Trigger:
-                        dependency.DependedOnTrigger =
-                            Metadata
-                                .MetadataTriggers
-                                .TriggersByName[dependency.DependedOnNameKey];
-                        break;
-                    case ObjectType.Field:
-                    case ObjectType.ComputedField:
-                        dependency.DependedOnField =
-                            Metadata
-                                .MetadataFields
-                                .Fields[dependency.DependedOnNameKey];
-                        break;
-                    case ObjectType.Procedure:
-                        dependency.DependedOnProcedure =
-                            Metadata
-                                .MetadataProcedures
-                                .ProceduresByName[dependency.DependedOnNameKey];
-                        break;
-                    case ObjectType.Exception:
-                        dependency.DependedOnException =
-                            Metadata
-                                .MetadataExceptions
-                                .ExceptionsByName[dependency.DependedOnNameKey];
-                        break;
-                    case ObjectType.Role:
-                        dependency.DependedOnRole =
-                            Metadata
-                                .MetadataRoles
-                                .Roles[dependency.DependedOnNameKey];
-                        break;
-                    case ObjectType.UDF:
-                        dependency.DependedOnFunction =
-                            Metadata
-                                .MetadataFunctions
-                                .FunctionsByName[dependency.DependedOnNameKey];
-                        break;
-                    case ObjectType.ExpressionIndex:
-                        dependency.DependendOnIndex =
-                            Metadata
-                                .MetadataIndices
-                                .Indices[dependency.DependedOnNameKey];
-                        break;
+                    dependency.DependedOnRelation =
+                        Metadata
+                            .MetadataRelations
+                            .Relations[dependency.DependedOnNameKey];
+                }
+                else if (dependency.DependedOnType.IsTrigger)
+                {
+                    dependency.DependedOnTrigger =
+                        Metadata
+                            .MetadataTriggers
+                            .TriggersByName[dependency.DependedOnNameKey];
+                }
+                else if (dependency.DependedOnType.IsField || dependency.DependedOnType.IsComputedField)
+                {
+                    dependency.DependedOnField =
+                        Metadata
+                            .MetadataFields
+                            .Fields[dependency.DependedOnNameKey];
+                }
+                else if (dependency.DependedOnType.IsProcedure)
+                {
+                    dependency.DependedOnProcedure =
+                        Metadata
+                            .MetadataProcedures
+                            .ProceduresByName[dependency.DependedOnNameKey];
+                }
+                else if (dependency.DependedOnType.IsException)
+                {
+                    dependency.DependedOnException =
+                        Metadata
+                            .MetadataExceptions
+                            .ExceptionsByName[dependency.DependedOnNameKey];
+                }
+                else if (dependency.DependedOnType.IsRole)
+                {
+                    dependency.DependedOnRole =
+                        Metadata
+                            .MetadataRoles
+                            .Roles[dependency.DependedOnNameKey];
+                }
+                else if (dependency.DependedOnType.IsUDF)
+                {
+                    dependency.DependedOnFunction =
+                        Metadata
+                            .MetadataFunctions
+                            .FunctionsByName[dependency.DependedOnNameKey];
+                }
+                else if (dependency.DependedOnType.IsExpressionIndex)
+                {
+                    dependency.DependendOnIndex =
+                        Metadata
+                            .MetadataIndices
+                            .Indices[dependency.DependedOnNameKey];
                 }
             }
         }
@@ -233,34 +239,36 @@ select trim(D.RDB$DEPENDENT_NAME) as RDB$DEPENDENT_NAME,
                 {
                     yield return dependency;
 
-                    switch (dependency.DependentType)
+                    if (dependency.DependentType.IsRelation || dependency.DependentType.IsView)
                     {
-                        case ObjectType.Relation:
-                        case ObjectType.View:
-                            yield return dependency.DependentRelation;
-                            break;
-                        case ObjectType.Trigger:
-                            if (dependency.DependentTrigger.SystemFlag == SystemFlagType.User)
-                            {
-                                yield return dependency.DependentTrigger;
-                            }
-                            break;
-                        case ObjectType.Field:
-                        case ObjectType.ComputedField:
-                            yield return dependency.DependentField;
-                            break;
-                        case ObjectType.Procedure:
-                            yield return dependency.DependentProcedure;
-                            break;
-                        case ObjectType.ExpressionIndex:
-                            yield return dependency.DependentIndex;
-                            break;
-                        case ObjectType.Exception:
-                            yield return dependency.DependentException;
-                            break;
-                        case ObjectType.UDF:
-                            yield return dependency.DependentFunction;
-                            break;
+                        yield return dependency.DependentRelation;
+                    }
+                    else if (dependency.DependentType.IsTrigger)
+                    {
+                        if (dependency.DependentTrigger.SystemFlag == SystemFlagType.User)
+                        {
+                            yield return dependency.DependentTrigger;
+                        }
+                    }
+                    else if (dependency.DependentType.IsField || dependency.DependentType.IsComputedField)
+                    {
+                        yield return dependency.DependentField;
+                    }
+                    else if (dependency.DependentType.IsProcedure)
+                    {
+                        yield return dependency.DependentProcedure;
+                    }
+                    else if (dependency.DependentType.IsExpressionIndex)
+                    {
+                        yield return dependency.DependentIndex;
+                    }
+                    else if (dependency.DependentType.IsException)
+                    {
+                        yield return dependency.DependentException;
+                    }
+                    else if (dependency.DependentType.IsUDF)
+                    {
+                        yield return dependency.DependentFunction;
                     }
                 }
             }

@@ -43,63 +43,68 @@ select trim(UP.RDB$USER) as RDB$USER,
         {
             foreach (var userPrivilege in UserPrivileges.Where(p => !p.IsSystemGeneratedObject))
             {
-                switch (userPrivilege.ObjectType)
+                if (userPrivilege.ObjectType.IsRelation || userPrivilege.ObjectType.IsView)
                 {
-                    case ObjectType.Relation:
-                    case ObjectType.View:
-                        userPrivilege.Relation =
-                            Metadata
-                                .MetadataRelations
-                                .Relations[userPrivilege.ObjectName];
-                        break;
-                    case ObjectType.Procedure:
-                        userPrivilege.Procedure =
-                            Metadata
-                                .MetadataProcedures
-                                .ProceduresByName[userPrivilege.ObjectName];
-                        break;
-                    case ObjectType.Exception:
-                        userPrivilege.DbException =
-                            Metadata
-                                .MetadataExceptions
-                                .ExceptionsByName[userPrivilege.ObjectName];
-                        break;
-                    case ObjectType.Field:
-                        userPrivilege.Field =
-                            Metadata
-                                .MetadataFields
-                                .Fields[userPrivilege.ObjectName];
-                        break;
-                    case ObjectType.CharacterSet:
-                        userPrivilege.CharacterSet =
-                            Metadata
-                                .MetadataCharacterSets
-                                .CharacterSetsByName[userPrivilege.ObjectName];
-                        break;
-                    case ObjectType.Role:
-                        userPrivilege.Role =
-                            Metadata
-                                .MetadataRoles
-                                .Roles[userPrivilege.ObjectName];
-                        break;
-                    case ObjectType.Generator:
-                        userPrivilege.Generator =
-                            Metadata
-                                .MetadataGenerators
-                                .GeneratorsByName[userPrivilege.ObjectName];
-                        break;
-                    case ObjectType.UDF:
-                        userPrivilege.Function =
-                            Metadata
-                                .MetadataFunctions
-                                .FunctionsByName[userPrivilege.ObjectName];
-                        break;
-                    case ObjectType.Collation:
-                        userPrivilege.Collation =
-                            Metadata
-                                .MetadataCollations
-                                .CollationsByName[userPrivilege.ObjectName];
-                        break;
+                    userPrivilege.Relation =
+                        Metadata
+                            .MetadataRelations
+                            .Relations[userPrivilege.ObjectName];
+                }
+                else if (userPrivilege.ObjectType.IsProcedure)
+                {
+                    userPrivilege.Procedure =
+                        Metadata
+                            .MetadataProcedures
+                            .ProceduresByName[userPrivilege.ObjectName];
+                }
+                else if (userPrivilege.ObjectType.IsException)
+                {
+                    userPrivilege.DbException =
+                        Metadata
+                            .MetadataExceptions
+                            .ExceptionsByName[userPrivilege.ObjectName];
+                }
+                else if (userPrivilege.ObjectType.IsField)
+                {
+                    userPrivilege.Field =
+                        Metadata
+                            .MetadataFields
+                            .Fields[userPrivilege.ObjectName];
+                }
+                else if (userPrivilege.ObjectType.IsCharacterSet)
+                {
+                    userPrivilege.CharacterSet =
+                        Metadata
+                            .MetadataCharacterSets
+                            .CharacterSetsByName[userPrivilege.ObjectName];
+                }
+                else if (userPrivilege.ObjectType.IsRole)
+                {
+                    userPrivilege.Role =
+                        Metadata
+                            .MetadataRoles
+                            .Roles[userPrivilege.ObjectName];
+                }
+                else if (userPrivilege.ObjectType.IsGenerator)
+                {
+                    userPrivilege.Generator =
+                        Metadata
+                            .MetadataGenerators
+                            .GeneratorsByName[userPrivilege.ObjectName];
+                }
+                else if (userPrivilege.ObjectType.IsUDF)
+                {
+                    userPrivilege.Function =
+                        Metadata
+                            .MetadataFunctions
+                            .FunctionsByName[userPrivilege.ObjectName];
+                }
+                else if (userPrivilege.ObjectType.IsCollation)
+                {
+                    userPrivilege.Collation =
+                        Metadata
+                            .MetadataCollations
+                            .CollationsByName[userPrivilege.ObjectName];
                 }
             }
         }
@@ -117,16 +122,16 @@ select trim(UP.RDB$USER) as RDB$USER,
                 toRevoke
                     .Select(
                         x => new
-                             {
-                                 Privilege = x,
-                                 Revoke = true
-                             })
+                        {
+                            Privilege = x,
+                            Revoke = true
+                        })
                     .Concat(toGrant.Select(
                                 x => new
-                                     {
-                                         Privilege = x,
-                                         Revoke = false
-                                     }))
+                                {
+                                    Privilege = x,
+                                    Revoke = false
+                                }))
                     .GroupBy(x => x.Privilege.ObjectName);
 
             foreach (var group in data)
@@ -182,7 +187,7 @@ select trim(UP.RDB$USER) as RDB$USER,
             command.Append(
                 privilege.Privilege == Privilege.Member
                     ? $"GRANT {privilege.ObjectName.AsSqlIndentifier()} TO {privilege.User.AsSqlIndentifier()}"
-                    : $"GRANT {CreatePrivilegeName(privilege)} ON {privilege.ObjectType.ToDescription()} {privilege.ObjectName.AsSqlIndentifier()} TO {CreateToObjectName(privilege)}");
+                    : $"GRANT {CreatePrivilegeName(privilege)} ON {privilege.ObjectType.ToSqlObject()} {privilege.ObjectName.AsSqlIndentifier()} TO {CreateToObjectName(privilege)}");
             AddWithOption(privilege, command);
             AddGrantedBy(privilege, command);
             return command;
@@ -194,7 +199,7 @@ select trim(UP.RDB$USER) as RDB$USER,
             command.Append(
                 privilege.Privilege == Privilege.Member
                     ? $"REVOKE {privilege.ObjectName.AsSqlIndentifier()} FROM {privilege.User.AsSqlIndentifier()}"
-                    : $"REVOKE {CreatePrivilegeName(privilege)} ON {privilege.ObjectType.ToDescription()} {privilege.ObjectName.AsSqlIndentifier()} FROM {CreateToObjectName(privilege)}");
+                    : $"REVOKE {CreatePrivilegeName(privilege)} ON {privilege.ObjectType.ToSqlObject()} {privilege.ObjectName.AsSqlIndentifier()} FROM {CreateToObjectName(privilege)}");
             return command;
         }
 
@@ -203,17 +208,17 @@ select trim(UP.RDB$USER) as RDB$USER,
         protected virtual bool CanCreateRevoke(UserPrivilege privilege, IComparerContext context)
         {
             ITypeObjectNameKey primitiveType;
-            switch (privilege.ObjectType)
+            if (privilege.ObjectType.IsRelation || privilege.ObjectType.IsView)
             {
-                case ObjectType.Relation:
-                case ObjectType.View:
-                    primitiveType = privilege.Relation;
-                    break;
-                case ObjectType.Procedure:
-                    primitiveType = privilege.Procedure;
-                    break;
-                default:
-                    return true;
+                primitiveType = privilege.Relation;
+            }
+            else if (privilege.ObjectType.IsProcedure)
+            {
+                primitiveType = privilege.Procedure;
+            }
+            else
+            {
+                return true;
             }
             return !context.DroppedObjects.Contains(primitiveType.TypeObjectNameKey);
         }
@@ -232,9 +237,9 @@ select trim(UP.RDB$USER) as RDB$USER,
         protected virtual string CreateToObjectName(UserPrivilege userPrivilege)
         {
             var builder = new StringBuilder();
-            if (!(userPrivilege.UserType == ObjectType.User || userPrivilege.UserType == ObjectType.Role))
+            if (!(userPrivilege.UserType.IsUser || userPrivilege.UserType.IsRole))
             {
-                builder.Append(userPrivilege.UserType.ToDescription());
+                builder.Append(userPrivilege.UserType.ToSqlObject());
                 builder.Append(" ");
             }
             builder.Append(userPrivilege.User.AsSqlIndentifier());

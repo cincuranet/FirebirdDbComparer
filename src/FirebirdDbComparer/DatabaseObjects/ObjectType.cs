@@ -1,79 +1,65 @@
+using System;
 using System.ComponentModel;
+using System.Diagnostics;
+using FirebirdDbComparer.Common;
+using FirebirdDbComparer.Interfaces;
 
 namespace FirebirdDbComparer.DatabaseObjects
 {
-    /// <summary>
-    /// for more information see \src\jrd\obj.h
-    /// </summary>
-    public enum ObjectType
+    [DebuggerDisplay("{ToString()}")]
+    public class ObjectType : IEquatable<ObjectType>, IComparable<ObjectType>
     {
-        [Description("TABLE")]
-        Relation = 0,
-        View = 1,
-        Trigger = 2,
-        ComputedField = 3,
-        Validation = 4,
-        Procedure = 5,
-        ExpressionIndex = 6,
-        Exception = 7,
-        User = 8,
+        private readonly int m_Value;
 
-        [Description("DOMAIN")]
-        Field = 9,
-        Index = 10,
+        public ISqlHelper SqlHelper { get; }
 
-        [Description("CHARACTER SET")]
-        CharacterSet = 11,
-        UserGroup = 12,
-        Role = 13,
+        public ObjectType(ISqlHelper sqlHelper, int value)
+        {
+            m_Value = value;
+            SqlHelper = sqlHelper ?? throw new ArgumentNullException(nameof(sqlHelper));
+        }
 
-        [Description("SEQUENCE")]
-        Generator = 14,
+        public string ToSqlObject()
+        {
+            return SqlHelper.ObjectTypeString(this);
+        }
 
-        [Description("FUNCTION")]
-        UDF = 15,
-        BlobFilter = 16,
-        Collation = 17,
-        Package = 18,
-        PackageBody = 19,
+        public bool IsRelation => SqlHelper.ObjectTypeIsRelation(this);
+        public bool IsView => SqlHelper.ObjectTypeIsView(this);
+        public bool IsTrigger => SqlHelper.ObjectTypeIsTrigger(this);
+        public bool IsField => SqlHelper.ObjectTypeIsField(this);
+        public bool IsComputedField => SqlHelper.ObjectTypeIsComputedField(this);
+        public bool IsProcedure => SqlHelper.ObjectTypeIsProcedure(this);
+        public bool IsException => SqlHelper.ObjectTypeIsException(this);
+        public bool IsRole => SqlHelper.ObjectTypeIsRole(this);
+        public bool IsUser => SqlHelper.ObjectTypeIsUser(this);
+        public bool IsUDF => SqlHelper.ObjectTypeIsUDF(this);
+        public bool IsExpressionIndex => SqlHelper.ObjectTypeIsExpressionIndex(this);
+        public bool IsPackageBody => SqlHelper.ObjectTypeIsPackageBody(this);
+        public bool IsPackage => SqlHelper.ObjectTypeIsPackage(this);
+        public bool IsCharacterSet => SqlHelper.ObjectTypeIsCharacterSet(this);
+        public bool IsGenerator => SqlHelper.ObjectTypeIsGenerator(this);
+        public bool IsCollation => SqlHelper.ObjectTypeIsCollation(this);
 
-        [Description("DATABASE")]
-        DDLDatabase = 20,
-        
-        [Description("TABLE")]
-        DDLRelations = 21,
+        public static implicit operator int(ObjectType value)
+        {
+            return value.m_Value;
+        }
 
-        [Description("VIEW")]
-        DDLViews = 22,
+        public override int GetHashCode() => m_Value.GetHashCode();
 
-        [Description("PROCEDURE")]
-        DDLProcedure = 23,
+        public override string ToString() => m_Value.ToString();
 
-        [Description("FUNCTION")]
-        DDLFunctions = 24,
+        public override bool Equals(object obj) => EquatableHelper.ElementaryEqualsThenEquatableEquals(this, obj);
 
-        [Description("PACKAGE")]
-        DDLPackages = 25,
+        public bool Equals(ObjectType other) => EquatableHelper.ElementaryEquals(this, other) ?? CompareImpl(this, other) == 0;
 
-        [Description("SEQUENCE")]
-        DDLGenerators = 26,
+        public int CompareTo(ObjectType other) => CompareImpl(this, other);
 
-        [Description("DOMAIN")]
-        DDLDomains = 27,
+        public static bool operator ==(ObjectType x, ObjectType y) => CompareImpl(x, y) == 0;
 
-        [Description("EXCEPTION")]
-        DDLExceptions = 28,
+        public static bool operator !=(ObjectType x, ObjectType y) => CompareImpl(x, y) != 0;
 
-        [Description("ROLE")]
-        DDLRoles = 29,
-
-        [Description("CHARACTER SET")]
-        DDLCharacterSet = 30,
-
-        [Description("COLLATION")]
-        DDLCollations = 31,
-
-        [Description("FILTER")]
-        DDLFilters = 32,
+        private static int CompareImpl(ObjectType x, ObjectType y) => ReferenceEquals(x, null) ? 1 : ReferenceEquals(y, null) ? -1 : x.m_Value.CompareTo(y.m_Value);
     }
 }

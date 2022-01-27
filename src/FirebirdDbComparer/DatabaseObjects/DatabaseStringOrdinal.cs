@@ -26,15 +26,13 @@ namespace FirebirdDbComparer.DatabaseObjects
 
         public override bool Equals(object obj) => EquatableHelper.ElementaryEqualsThenEquatableEquals(this, obj);
 
-        public int GetHashCode(DatabaseStringOrdinal obj) => obj.GetHashCode();
-
         public static bool operator ==(DatabaseStringOrdinal x, DatabaseStringOrdinal y) => CompareImpl(x, y) == 0;
 
         public static bool operator !=(DatabaseStringOrdinal x, DatabaseStringOrdinal y) => CompareImpl(x, y) != 0;
 
         public int CompareTo(DatabaseStringOrdinal other) => CompareImpl(this, other);
 
-        public bool Equals(DatabaseStringOrdinal other) => CompareImpl(this, other) == 0;
+        public bool Equals(DatabaseStringOrdinal other) => EquatableHelper.ElementaryEquals(this, other) ?? CompareImpl(this, other) == 0;
 
         private static int CompareImpl(DatabaseStringOrdinal x, DatabaseStringOrdinal y) => string.CompareOrdinal(x?.m_Value, y?.m_Value);
 

@@ -81,8 +81,8 @@ namespace FirebirdDbComparer.DatabaseObjects.Primitives
                     GrantOption = values["RDB$GRANT_OPTION"].DbValueToBool().GetValueOrDefault(),
                     ObjectName = new Identifier(sqlHelper, values["RDB$RELATION_NAME"].DbValueToString()),
                     FieldName = new Identifier(sqlHelper, values["RDB$FIELD_NAME"].DbValueToString()),
-                    UserType = (ObjectType)values["RDB$USER_TYPE"].DbValueToInt32().GetValueOrDefault(),
-                    ObjectType = (ObjectType)values["RDB$OBJECT_TYPE"].DbValueToInt32().GetValueOrDefault()
+                    UserType = new ObjectType(sqlHelper, values["RDB$USER_TYPE"].DbValueToInt32().GetValueOrDefault()),
+                    ObjectType = new ObjectType(sqlHelper, values["RDB$OBJECT_TYPE"].DbValueToInt32().GetValueOrDefault())
                 };
             result.IsSystemGeneratedObject = sqlHelper.HasSystemPrefix(result.ObjectName);
             return result;
