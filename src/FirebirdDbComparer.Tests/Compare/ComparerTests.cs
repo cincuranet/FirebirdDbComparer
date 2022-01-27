@@ -107,7 +107,7 @@ namespace FirebirdDbComparer.Tests.Compare
             }
         }
 
-        private ScriptResult UpdateDatabase(IComparerSettings settings, TestCaseStructure testCaseStructure)
+        private ScriptResult CompareAndUpdateDatabase(IComparerSettings settings, TestCaseStructure testCaseStructure)
         {
             var comparer = CreateComparer(settings);
             var compareResult = default(ScriptResult);
@@ -168,7 +168,7 @@ namespace FirebirdDbComparer.Tests.Compare
                 () => Helpers.Database.ExecuteScript(m_Version, Helpers.Database.DatabaseLocation.Source, testCaseStructure.Source),
                 () => Helpers.Database.ExecuteScript(m_Version, Helpers.Database.DatabaseLocation.Target, testCaseStructure.Target));
             var settings = new ComparerSettings(m_Version);
-            var compareResult = UpdateDatabase(settings, testCaseStructure);
+            var compareResult = CompareAndUpdateDatabase(settings, testCaseStructure);
             if (compareResult != null)
             {
                 AssertNoDifferenceBetweenSourceAndTarget();
@@ -184,7 +184,7 @@ namespace FirebirdDbComparer.Tests.Compare
                 () => Helpers.Database.ExecuteScript(m_Version, Helpers.Database.DatabaseLocation.Source, new[] { "create table test(c int);", "grant all on test to someuser;" }),
                 () => Helpers.Database.ExecuteScript(m_Version, Helpers.Database.DatabaseLocation.Target, new[] { "create table test(c int);" }));
             var settings = new ComparerSettings(m_Version) { IgnorePermissions = true };
-            var compareResult = UpdateDatabase(settings, TestCaseStructure.Empty);
+            var compareResult = CompareAndUpdateDatabase(settings, TestCaseStructure.Empty);
             Assert.That(compareResult.AllStatements, Is.Empty);
             AssertComparerSeesNoDifference(settings);
         }
@@ -196,7 +196,7 @@ namespace FirebirdDbComparer.Tests.Compare
                 () => Helpers.Database.ExecuteScript(m_Version, Helpers.Database.DatabaseLocation.Source, new[] { "create table test(c int);", "grant all on test to someuser;" }),
                 () => Helpers.Database.ExecuteScript(m_Version, Helpers.Database.DatabaseLocation.Target, new[] { "create table test(c int);" }));
             var settings = new ComparerSettings(m_Version) { IgnorePermissions = false };
-            var compareResult = UpdateDatabase(settings, TestCaseStructure.Empty);
+            var compareResult = CompareAndUpdateDatabase(settings, TestCaseStructure.Empty);
             Assert.That(compareResult.AllStatements.Count(), Is.GreaterThanOrEqualTo(1));
             Assert.That(compareResult.AllStatements.First(), Does.StartWith("GRANT "));
             AssertComparerSeesNoDifference(settings);
