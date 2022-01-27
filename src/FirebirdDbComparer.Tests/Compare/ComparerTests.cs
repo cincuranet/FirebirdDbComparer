@@ -146,7 +146,7 @@ namespace FirebirdDbComparer.Tests.Compare
                     .Select(x =>
                     {
                         var result = new TestCaseData(x);
-                        result.SetName(x);
+                        result.SetName(x.Replace("FirebirdDbComparer.Tests.Compare.ComparerTestsData.", string.Empty));
                         return result;
                     });
                 foreach (var item in data)
