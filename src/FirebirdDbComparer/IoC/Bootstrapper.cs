@@ -8,20 +8,19 @@ using Castle.Windsor.Installer;
 using FirebirdDbComparer.Interfaces;
 using FirebirdDbComparer.Ioc;
 
-namespace FirebirdDbComparer.IoC
+namespace FirebirdDbComparer.IoC;
+
+public static class Bootstrapper
 {
-    public static class Bootstrapper
+    public static IWindsorContainer BootstrapContainerDefault(IComparerSettings settings)
     {
-        public static IWindsorContainer BootstrapContainerDefault(IComparerSettings settings)
-        {
-            var container = new WindsorContainer();
-            container.Kernel.Resolver.AddSubResolver(new CollectionResolver(container.Kernel));
-            container.Kernel.AddHandlerSelector(new SqlHelperSelector(settings));
-            container.Kernel.AddHandlerSelector(new DatabaseObjectSelector(settings));
-            container.AddFacility<TypedFactoryFacility>();
-            container.Register(Component.For<IComparerSettings>().Instance(settings));
-            container.Install(FromAssembly.InThisApplication(Assembly.GetExecutingAssembly()));
-            return container;
-        }
+        var container = new WindsorContainer();
+        container.Kernel.Resolver.AddSubResolver(new CollectionResolver(container.Kernel));
+        container.Kernel.AddHandlerSelector(new SqlHelperSelector(settings));
+        container.Kernel.AddHandlerSelector(new DatabaseObjectSelector(settings));
+        container.AddFacility<TypedFactoryFacility>();
+        container.Register(Component.For<IComparerSettings>().Instance(settings));
+        container.Install(FromAssembly.InThisApplication(Assembly.GetExecutingAssembly()));
+        return container;
     }
 }

@@ -1,8 +1,7 @@
-namespace FirebirdDbComparer.DatabaseObjects
+namespace FirebirdDbComparer.DatabaseObjects;
+
+public enum MetadataFieldType
 {
-    public enum MetadataFieldType
-    {
-        SystemGenerated,
-        Domain,
-    }
+    SystemGenerated,
+    Domain,
 }

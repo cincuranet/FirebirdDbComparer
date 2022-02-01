@@ -1,9 +1,8 @@
 using FirebirdDbComparer.DatabaseObjects;
 
-namespace FirebirdDbComparer.Interfaces
+namespace FirebirdDbComparer.Interfaces;
+
+public interface IHasSystemFlag
 {
-    public interface IHasSystemFlag
-    {
-        SystemFlagType SystemFlag { get; }
-    }
+    SystemFlagType SystemFlag { get; }
 }

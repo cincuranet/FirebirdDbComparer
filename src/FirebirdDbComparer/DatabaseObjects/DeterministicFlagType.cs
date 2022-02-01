@@ -1,7 +1,6 @@
-namespace FirebirdDbComparer.DatabaseObjects
+namespace FirebirdDbComparer.DatabaseObjects;
+
+public enum DeterministicFlagType
 {
-    public enum DeterministicFlagType
-    {
-        Deterministic = 1,
-    }
+    Deterministic = 1,
 }

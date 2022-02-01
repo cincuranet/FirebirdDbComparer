@@ -1,11 +1,10 @@
 using FirebirdDbComparer.Interfaces;
 
-namespace FirebirdDbComparer.DatabaseObjects.Implementations
+namespace FirebirdDbComparer.DatabaseObjects.Implementations;
+
+public class MetadataGenerators40 : MetadataGenerators30
 {
-    public class MetadataGenerators40 : MetadataGenerators30
-    {
-        public MetadataGenerators40(IMetadata metadata, ISqlHelper sqlHelper)
-            : base(metadata, sqlHelper)
-        { }
-    }
+    public MetadataGenerators40(IMetadata metadata, ISqlHelper sqlHelper)
+        : base(metadata, sqlHelper)
+    { }
 }

@@ -1,11 +1,10 @@
 using FirebirdDbComparer.Interfaces;
 
-namespace FirebirdDbComparer.DatabaseObjects.Implementations
+namespace FirebirdDbComparer.DatabaseObjects.Implementations;
+
+public class MetadataFields40 : MetadataFields30
 {
-    public class MetadataFields40 : MetadataFields30
-    {
-        public MetadataFields40(IMetadata metadata, ISqlHelper sqlHelper)
-            : base(metadata, sqlHelper)
-        { }
-    }
+    public MetadataFields40(IMetadata metadata, ISqlHelper sqlHelper)
+        : base(metadata, sqlHelper)
+    { }
 }

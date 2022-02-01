@@ -1,9 +1,8 @@
 using FirebirdDbComparer.DatabaseObjects;
 
-namespace FirebirdDbComparer.Interfaces
+namespace FirebirdDbComparer.Interfaces;
+
+public interface IHasDescription
 {
-    public interface IHasDescription
-    {
-        DatabaseStringOrdinal Description { get; }
-    }
+    DatabaseStringOrdinal Description { get; }
 }

@@ -3,17 +3,17 @@ using System.Linq;
 using FirebirdDbComparer.DatabaseObjects.Primitives;
 using FirebirdDbComparer.Interfaces;
 
-namespace FirebirdDbComparer.DatabaseObjects.Implementations
+namespace FirebirdDbComparer.DatabaseObjects.Implementations;
+
+public class MetadataProcedures30 : MetadataProcedures25, ISupportsComment
 {
-    public class MetadataProcedures30 : MetadataProcedures25, ISupportsComment
-    {
-        private IDictionary<Identifier, Procedure> m_NonPackageProceduresByName;
+    private IDictionary<Identifier, Procedure> m_NonPackageProceduresByName;
 
-        public MetadataProcedures30(IMetadata metadata, ISqlHelper sqlHelper)
-            : base(metadata, sqlHelper)
-        { }
+    public MetadataProcedures30(IMetadata metadata, ISqlHelper sqlHelper)
+        : base(metadata, sqlHelper)
+    { }
 
-        protected override string ProcedureCommandText => @"
+    protected override string ProcedureCommandText => @"
 select trim(P.RDB$PROCEDURE_NAME) as RDB$PROCEDURE_NAME,
        P.RDB$PROCEDURE_ID,
        P.RDB$PROCEDURE_INPUTS,
@@ -29,7 +29,7 @@ select trim(P.RDB$PROCEDURE_NAME) as RDB$PROCEDURE_NAME,
        P.RDB$PRIVATE_FLAG
   from RDB$PROCEDURES P";
 
-        protected override string ProcedureParameterCommandText => @"
+    protected override string ProcedureParameterCommandText => @"
 select trim(PP.RDB$PARAMETER_NAME) as RDB$PARAMETER_NAME,
        trim(PP.RDB$PROCEDURE_NAME) as RDB$PROCEDURE_NAME,
        PP.RDB$PARAMETER_NUMBER,
@@ -46,55 +46,54 @@ select trim(PP.RDB$PARAMETER_NAME) as RDB$PARAMETER_NAME,
        trim(PP.RDB$PACKAGE_NAME) as RDB$PACKAGE_NAME
   from RDB$PROCEDURE_PARAMETERS PP";
 
-        public override IDictionary<Identifier, Procedure> NonPackageProceduresByName => m_NonPackageProceduresByName;
+    public override IDictionary<Identifier, Procedure> NonPackageProceduresByName => m_NonPackageProceduresByName;
 
-        public override void FinishInitialization()
+    public override void FinishInitialization()
+    {
+        base.FinishInitialization();
+
+        m_NonPackageProceduresByName = ProceduresById.Values
+            .Where(x => x.PackageName == null)
+            .ToDictionary(x => x.ProcedureNameKey, x => x);
+
+        foreach (var procedureParameter in ProcedureParameters.Values)
         {
-            base.FinishInitialization();
-
-            m_NonPackageProceduresByName = ProceduresById.Values
-                .Where(x => x.PackageName == null)
-                .ToDictionary(x => x.ProcedureNameKey, x => x);
-
-            foreach (var procedureParameter in ProcedureParameters.Values)
+            if (procedureParameter.PackageName != null)
             {
-                if (procedureParameter.PackageName != null)
-                {
-                    procedureParameter.Package =
-                        Metadata
-                            .MetadataPackages
-                            .PackagesByName[procedureParameter.PackageName];
-                }
-            }
-
-            foreach (var procedure in ProceduresById.Values)
-            {
-                if (procedure.PackageName != null)
-                {
-                    procedure.Package =
-                        Metadata
-                            .MetadataPackages
-                            .PackagesByName[procedure.PackageName];
-                }
+                procedureParameter.Package =
+                    Metadata
+                        .MetadataPackages
+                        .PackagesByName[procedureParameter.PackageName];
             }
         }
 
-        protected override IEnumerable<Procedure> FilterNewProcedures(IMetadata other)
+        foreach (var procedure in ProceduresById.Values)
         {
-            return FilterSystemFlagUser(NonPackageProceduresByName.Values)
-                .Where(p => !other.MetadataProcedures.NonPackageProceduresByName.ContainsKey(p.ProcedureNameKey));
+            if (procedure.PackageName != null)
+            {
+                procedure.Package =
+                    Metadata
+                        .MetadataPackages
+                        .PackagesByName[procedure.PackageName];
+            }
         }
+    }
 
-        protected override IEnumerable<Procedure> FilterProceduresToBeDropped(IMetadata other)
-        {
-            return FilterSystemFlagUser(other.MetadataProcedures.NonPackageProceduresByName.Values)
-                .Where(p => !NonPackageProceduresByName.ContainsKey(p.ProcedureNameKey));
-        }
+    protected override IEnumerable<Procedure> FilterNewProcedures(IMetadata other)
+    {
+        return FilterSystemFlagUser(NonPackageProceduresByName.Values)
+            .Where(p => !other.MetadataProcedures.NonPackageProceduresByName.ContainsKey(p.ProcedureNameKey));
+    }
 
-        protected override IEnumerable<Procedure> FilterProceduresToBeAltered(IMetadata other)
-        {
-            return FilterSystemFlagUser(NonPackageProceduresByName.Values)
-                .Where(p => other.MetadataProcedures.NonPackageProceduresByName.TryGetValue(p.ProcedureNameKey, out var otherProcedure) && otherProcedure != p);
-        }
+    protected override IEnumerable<Procedure> FilterProceduresToBeDropped(IMetadata other)
+    {
+        return FilterSystemFlagUser(other.MetadataProcedures.NonPackageProceduresByName.Values)
+            .Where(p => !NonPackageProceduresByName.ContainsKey(p.ProcedureNameKey));
+    }
+
+    protected override IEnumerable<Procedure> FilterProceduresToBeAltered(IMetadata other)
+    {
+        return FilterSystemFlagUser(NonPackageProceduresByName.Values)
+            .Where(p => other.MetadataProcedures.NonPackageProceduresByName.TryGetValue(p.ProcedureNameKey, out var otherProcedure) && otherProcedure != p);
     }
 }

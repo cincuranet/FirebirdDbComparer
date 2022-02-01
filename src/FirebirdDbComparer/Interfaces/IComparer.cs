@@ -1,12 +1,11 @@
 using FirebirdDbComparer.Compare;
 
-namespace FirebirdDbComparer.Interfaces
+namespace FirebirdDbComparer.Interfaces;
+
+public interface IComparer
 {
-    public interface IComparer
-    {
-        IComparerContext ComparerContext { get; }
-        IMetadata SourceMetadata { get; }
-        IMetadata TargetMetadata { get; }
-        CompareResult Compare();
-    }
+    IComparerContext ComparerContext { get; }
+    IMetadata SourceMetadata { get; }
+    IMetadata TargetMetadata { get; }
+    CompareResult Compare();
 }

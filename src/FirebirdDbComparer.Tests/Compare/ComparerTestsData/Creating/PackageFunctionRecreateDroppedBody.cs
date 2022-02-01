@@ -3,16 +3,16 @@ using System.Linq;
 using FirebirdDbComparer.Compare;
 using NUnit.Framework;
 
-namespace FirebirdDbComparer.Tests.Compare.ComparerTestsData.Creating
-{
-    public class PackageFunctionRecreateDroppedBody : ComparerTests.TestCaseStructure
-    {
-        public override bool IsCompatibleWithVersion(TargetVersion targetVersion)
-        {
-            return targetVersion.AtLeast(TargetVersion.Version30);
-        }
+namespace FirebirdDbComparer.Tests.Compare.ComparerTestsData.Creating;
 
-        public override string Source => @"
+public class PackageFunctionRecreateDroppedBody : ComparerTests.TestCaseStructure
+{
+    public override bool IsCompatibleWithVersion(TargetVersion targetVersion)
+    {
+        return targetVersion.AtLeast(TargetVersion.Version30);
+    }
+
+    public override string Source => @"
 set term ^;
 
 create package some_pkg
@@ -34,7 +34,7 @@ end^
 set term ;^				
 ";
 
-        public override string Target => @"
+    public override string Target => @"
 set term ^;
 
 create package some_pkg
@@ -57,5 +57,4 @@ set term ;^
 
 drop package body some_pkg;
 ";
-    }
 }

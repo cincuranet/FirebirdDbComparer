@@ -1,9 +1,8 @@
 using FirebirdDbComparer.DatabaseObjects;
 
-namespace FirebirdDbComparer.Interfaces
+namespace FirebirdDbComparer.Interfaces;
+
+public interface IHasDefaultSource
 {
-    public interface IHasDefaultSource
-    {
-        DatabaseStringOrdinal DefaultSource { get; }
-    }
+    DatabaseStringOrdinal DefaultSource { get; }
 }

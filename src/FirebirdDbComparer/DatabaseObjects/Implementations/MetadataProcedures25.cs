@@ -7,27 +7,27 @@ using FirebirdDbComparer.DatabaseObjects.Primitives;
 using FirebirdDbComparer.Interfaces;
 using FirebirdDbComparer.SqlGeneration;
 
-namespace FirebirdDbComparer.DatabaseObjects.Implementations
+namespace FirebirdDbComparer.DatabaseObjects.Implementations;
+
+public class MetadataProcedures25 : DatabaseObject, IMetadataProcedures, ISupportsComment
 {
-    public class MetadataProcedures25 : DatabaseObject, IMetadataProcedures, ISupportsComment
-    {
-        private IDictionary<ProcedureParameterKey, ProcedureParameter> m_ProcedureParameters;
-        private IDictionary<int, Procedure> m_ProceduresById;
-        private IDictionary<Identifier, Procedure> m_ProceduresByName;
+    private IDictionary<ProcedureParameterKey, ProcedureParameter> m_ProcedureParameters;
+    private IDictionary<int, Procedure> m_ProceduresById;
+    private IDictionary<Identifier, Procedure> m_ProceduresByName;
 
-        public MetadataProcedures25(IMetadata metadata, ISqlHelper sqlHelper)
-            : base(metadata, sqlHelper)
-        { }
+    public MetadataProcedures25(IMetadata metadata, ISqlHelper sqlHelper)
+        : base(metadata, sqlHelper)
+    { }
 
-        public IDictionary<ProcedureParameterKey, ProcedureParameter> ProcedureParameters => m_ProcedureParameters;
+    public IDictionary<ProcedureParameterKey, ProcedureParameter> ProcedureParameters => m_ProcedureParameters;
 
-        public IDictionary<int, Procedure> ProceduresById => m_ProceduresById;
+    public IDictionary<int, Procedure> ProceduresById => m_ProceduresById;
 
-        public virtual IDictionary<Identifier, Procedure> ProceduresByName => m_ProceduresByName;
+    public virtual IDictionary<Identifier, Procedure> ProceduresByName => m_ProceduresByName;
 
-        public virtual IDictionary<Identifier, Procedure> NonPackageProceduresByName => ProceduresByName;
+    public virtual IDictionary<Identifier, Procedure> NonPackageProceduresByName => ProceduresByName;
 
-        protected virtual string ProcedureCommandText => @"
+    protected virtual string ProcedureCommandText => @"
 select trim(P.RDB$PROCEDURE_NAME) as RDB$PROCEDURE_NAME,
        P.RDB$PROCEDURE_ID,
        P.RDB$PROCEDURE_INPUTS,
@@ -39,7 +39,7 @@ select trim(P.RDB$PROCEDURE_NAME) as RDB$PROCEDURE_NAME,
        P.RDB$SYSTEM_FLAG
   from RDB$PROCEDURES P";
 
-        protected virtual string ProcedureParameterCommandText => @"
+    protected virtual string ProcedureParameterCommandText => @"
 select trim(PP.RDB$PARAMETER_NAME) as RDB$PARAMETER_NAME,
        trim(PP.RDB$PROCEDURE_NAME) as RDB$PROCEDURE_NAME,
        PP.RDB$PARAMETER_NUMBER,
@@ -55,108 +55,107 @@ select trim(PP.RDB$PARAMETER_NAME) as RDB$PARAMETER_NAME,
        trim(PP.RDB$RELATION_NAME) as RDB$RELATION_NAME
   from RDB$PROCEDURE_PARAMETERS PP";
 
-        public override void Initialize()
-        {
-            m_ProcedureParameters =
-                Execute(ProcedureParameterCommandText)
-                    .Select(o => ProcedureParameter.CreateFrom(SqlHelper, o))
-                    .ToDictionary(x => new ProcedureParameterKey(x.ProcedureNameKey, x.ParameterName));
-            var procedureParameters = m_ProcedureParameters.Values.ToLookup(x => x.ProcedureNameKey);
-            var procedures =
-                Execute(ProcedureCommandText)
-                    .Select(o => Procedure.CreateFrom(SqlHelper, o, procedureParameters))
-                    .ToArray();
-            m_ProceduresById = procedures.ToDictionary(x => x.ProcedureId);
-            m_ProceduresByName = procedures.ToDictionary(x => x.ProcedureNameKey);
-        }
+    public override void Initialize()
+    {
+        m_ProcedureParameters =
+            Execute(ProcedureParameterCommandText)
+                .Select(o => ProcedureParameter.CreateFrom(SqlHelper, o))
+                .ToDictionary(x => new ProcedureParameterKey(x.ProcedureNameKey, x.ParameterName));
+        var procedureParameters = m_ProcedureParameters.Values.ToLookup(x => x.ProcedureNameKey);
+        var procedures =
+            Execute(ProcedureCommandText)
+                .Select(o => Procedure.CreateFrom(SqlHelper, o, procedureParameters))
+                .ToArray();
+        m_ProceduresById = procedures.ToDictionary(x => x.ProcedureId);
+        m_ProceduresByName = procedures.ToDictionary(x => x.ProcedureNameKey);
+    }
 
-        public override void FinishInitialization()
+    public override void FinishInitialization()
+    {
+        foreach (var procedureParameter in ProcedureParameters.Values)
         {
-            foreach (var procedureParameter in ProcedureParameters.Values)
+            procedureParameter.Procedure = ProceduresByName[procedureParameter.ProcedureNameKey];
+            if (procedureParameter.FieldSource != null)
             {
-                procedureParameter.Procedure = ProceduresByName[procedureParameter.ProcedureNameKey];
-                if (procedureParameter.FieldSource != null)
+                procedureParameter.Field =
+                    Metadata
+                        .MetadataFields
+                        .Fields[procedureParameter.FieldSource];
+                if (procedureParameter.CollationId != null && procedureParameter.Field.CharacterSetId != null)
                 {
-                    procedureParameter.Field =
+                    procedureParameter.Collation =
                         Metadata
-                            .MetadataFields
-                            .Fields[procedureParameter.FieldSource];
-                    if (procedureParameter.CollationId != null && procedureParameter.Field.CharacterSetId != null)
-                    {
-                        procedureParameter.Collation =
-                            Metadata
-                                .MetadataCollations
-                                .CollationsByKey[new CollationKey((int)procedureParameter.Field.CharacterSetId, (int)procedureParameter.CollationId)];
-                    }
-                }
-                if (procedureParameter.FieldName != null && procedureParameter.RelationName != null)
-                {
-                    procedureParameter.RelationField =
-                        Metadata
-                            .MetadataRelations
-                            .RelationFields[new RelationFieldKey(procedureParameter.RelationName, procedureParameter.FieldName)];
-                    procedureParameter.Relation =
-                        Metadata
-                            .MetadataRelations
-                            .Relations[procedureParameter.RelationName];
+                            .MetadataCollations
+                            .CollationsByKey[new CollationKey((int)procedureParameter.Field.CharacterSetId, (int)procedureParameter.CollationId)];
                 }
             }
-        }
-
-        IEnumerable<CommandGroup> ISupportsComment.Handle(IMetadata other, IComparerContext context)
-        {
-            static IEnumerable<Identifier> Name(Procedure x) => x.PackageName != null ? new[] { x.PackageName, x.ProcedureName } : new[] { x.ProcedureName };
-
-            var result = new CommandGroup().Append(HandleComment(ProceduresByName, other.MetadataProcedures.ProceduresByName, x => x.ProcedureNameKey, "PROCEDURE", Name, context,
-                x => HandleCommentNested(x.ProcedureParameters.OrderBy(y => y.ParameterNumber), other.MetadataProcedures.ProcedureParameters, y => new ProcedureParameterKey(x.ProcedureNameKey, y.ParameterName), Name(x), "PARAMETER", y => new[] { y.ParameterName }, context)));
-            if (!result.IsEmpty)
+            if (procedureParameter.FieldName != null && procedureParameter.RelationName != null)
             {
-                yield return result;
+                procedureParameter.RelationField =
+                    Metadata
+                        .MetadataRelations
+                        .RelationFields[new RelationFieldKey(procedureParameter.RelationName, procedureParameter.FieldName)];
+                procedureParameter.Relation =
+                    Metadata
+                        .MetadataRelations
+                        .Relations[procedureParameter.RelationName];
             }
         }
+    }
 
-        public IEnumerable<CommandGroup> CreateEmptyNewProcedures(IMetadata other, IComparerContext context)
-        {
-            return FilterNewProcedures(other)
-                .Select(procedure => new CommandGroup().Append(WrapActionWithEmptyBody(procedure.Create)(Metadata, other, context)));
-        }
+    IEnumerable<CommandGroup> ISupportsComment.Handle(IMetadata other, IComparerContext context)
+    {
+        static IEnumerable<Identifier> Name(Procedure x) => x.PackageName != null ? new[] { x.PackageName, x.ProcedureName } : new[] { x.ProcedureName };
 
-        public IEnumerable<CommandGroup> AlterProceduresToFullBody(IMetadata other, IComparerContext context)
+        var result = new CommandGroup().Append(HandleComment(ProceduresByName, other.MetadataProcedures.ProceduresByName, x => x.ProcedureNameKey, "PROCEDURE", Name, context,
+            x => HandleCommentNested(x.ProcedureParameters.OrderBy(y => y.ParameterNumber), other.MetadataProcedures.ProcedureParameters, y => new ProcedureParameterKey(x.ProcedureNameKey, y.ParameterName), Name(x), "PARAMETER", y => new[] { y.ParameterName }, context)));
+        if (!result.IsEmpty)
         {
-            return FilterNewProcedures(other).Concat(FilterProceduresToBeAltered(other))
-                .Select(procedure => new CommandGroup().Append(procedure.Alter(Metadata, other, context)))
-                .Where(x => !x.IsEmpty);
+            yield return result;
         }
+    }
 
-        public IEnumerable<CommandGroup> AlterProceduresToEmptyBodyForAlteringOrDropping(IMetadata other, IComparerContext context)
-        {
-            return FilterProceduresToBeDropped(other).Concat(FilterProceduresToBeAltered(other))
-                .Select(procedure => new CommandGroup().Append(WrapActionWithEmptyBody(procedure.Alter)(Metadata, other, context)))
-                .Where(x => !x.IsEmpty);
-        }
+    public IEnumerable<CommandGroup> CreateEmptyNewProcedures(IMetadata other, IComparerContext context)
+    {
+        return FilterNewProcedures(other)
+            .Select(procedure => new CommandGroup().Append(WrapActionWithEmptyBody(procedure.Create)(Metadata, other, context)));
+    }
 
-        public IEnumerable<CommandGroup> DropProcedures(IMetadata other, IComparerContext context)
-        {
-            return FilterProceduresToBeDropped(other)
-                .Select(procedure => new CommandGroup().Append(procedure.Drop(Metadata, other, context)));
-        }
+    public IEnumerable<CommandGroup> AlterProceduresToFullBody(IMetadata other, IComparerContext context)
+    {
+        return FilterNewProcedures(other).Concat(FilterProceduresToBeAltered(other))
+            .Select(procedure => new CommandGroup().Append(procedure.Alter(Metadata, other, context)))
+            .Where(x => !x.IsEmpty);
+    }
 
-        protected virtual IEnumerable<Procedure> FilterNewProcedures(IMetadata other)
-        {
-            return FilterSystemFlagUser(ProceduresByName.Values)
-                .Where(p => !other.MetadataProcedures.ProceduresByName.ContainsKey(p.ProcedureNameKey));
-        }
+    public IEnumerable<CommandGroup> AlterProceduresToEmptyBodyForAlteringOrDropping(IMetadata other, IComparerContext context)
+    {
+        return FilterProceduresToBeDropped(other).Concat(FilterProceduresToBeAltered(other))
+            .Select(procedure => new CommandGroup().Append(WrapActionWithEmptyBody(procedure.Alter)(Metadata, other, context)))
+            .Where(x => !x.IsEmpty);
+    }
 
-        protected virtual IEnumerable<Procedure> FilterProceduresToBeDropped(IMetadata other)
-        {
-            return FilterSystemFlagUser(other.MetadataProcedures.ProceduresByName.Values)
-                .Where(p => !ProceduresByName.ContainsKey(p.ProcedureNameKey));
-        }
+    public IEnumerable<CommandGroup> DropProcedures(IMetadata other, IComparerContext context)
+    {
+        return FilterProceduresToBeDropped(other)
+            .Select(procedure => new CommandGroup().Append(procedure.Drop(Metadata, other, context)));
+    }
 
-        protected virtual IEnumerable<Procedure> FilterProceduresToBeAltered(IMetadata other)
-        {
-            return FilterSystemFlagUser(ProceduresByName.Values)
-                .Where(p => other.MetadataProcedures.ProceduresByName.TryGetValue(p.ProcedureNameKey, out var otherProcedure) && otherProcedure != p);
-        }
+    protected virtual IEnumerable<Procedure> FilterNewProcedures(IMetadata other)
+    {
+        return FilterSystemFlagUser(ProceduresByName.Values)
+            .Where(p => !other.MetadataProcedures.ProceduresByName.ContainsKey(p.ProcedureNameKey));
+    }
+
+    protected virtual IEnumerable<Procedure> FilterProceduresToBeDropped(IMetadata other)
+    {
+        return FilterSystemFlagUser(other.MetadataProcedures.ProceduresByName.Values)
+            .Where(p => !ProceduresByName.ContainsKey(p.ProcedureNameKey));
+    }
+
+    protected virtual IEnumerable<Procedure> FilterProceduresToBeAltered(IMetadata other)
+    {
+        return FilterSystemFlagUser(ProceduresByName.Values)
+            .Where(p => other.MetadataProcedures.ProceduresByName.TryGetValue(p.ProcedureNameKey, out var otherProcedure) && otherProcedure != p);
     }
 }

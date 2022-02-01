@@ -3,11 +3,11 @@ using System.Linq;
 using FirebirdDbComparer.Compare;
 using NUnit.Framework;
 
-namespace FirebirdDbComparer.Tests.Compare.ComparerTestsData.Changing
+namespace FirebirdDbComparer.Tests.Compare.ComparerTestsData.Changing;
+
+public class ComputedColumnToSameComputedColumnRawDataTypeFromOtherTable : ComparerTests.TestCaseStructure
 {
-    public class ComputedColumnToSameComputedColumnRawDataTypeFromOtherTable : ComparerTests.TestCaseStructure
-    {
-        public override string Source => @"
+    public override string Source => @"
 create table parent (
     id bigint not null,
     code bigint
@@ -19,7 +19,7 @@ create table foobar (
 );				
 ";
 
-        public override string Target => @"
+    public override string Target => @"
 create table parent (
     id bigint not null,
     code int
@@ -30,5 +30,4 @@ create table foobar (
     code computed by ((select code from parent where id=id_master))
 );
 ";
-    }
 }

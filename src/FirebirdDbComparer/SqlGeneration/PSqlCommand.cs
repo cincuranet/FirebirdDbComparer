@@ -1,5 +1,4 @@
-namespace FirebirdDbComparer.SqlGeneration
-{
-    public sealed class PSqlCommand : Command
-    { }
-}
+namespace FirebirdDbComparer.SqlGeneration;
+
+public sealed class PSqlCommand : Command
+{ }

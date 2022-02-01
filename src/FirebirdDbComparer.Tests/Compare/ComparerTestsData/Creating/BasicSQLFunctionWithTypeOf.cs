@@ -3,16 +3,16 @@ using System.Linq;
 using FirebirdDbComparer.Compare;
 using NUnit.Framework;
 
-namespace FirebirdDbComparer.Tests.Compare.ComparerTestsData.Creating
-{
-    public class BasicSQLFunctionWithTypeOf : ComparerTests.TestCaseStructure
-    {
-        public override bool IsCompatibleWithVersion(TargetVersion targetVersion)
-        {
-            return targetVersion.AtLeast(TargetVersion.Version30);
-        }
+namespace FirebirdDbComparer.Tests.Compare.ComparerTestsData.Creating;
 
-        public override string Source => @"
+public class BasicSQLFunctionWithTypeOf : ComparerTests.TestCaseStructure
+{
+    public override bool IsCompatibleWithVersion(TargetVersion targetVersion)
+    {
+        return targetVersion.AtLeast(TargetVersion.Version30);
+    }
+
+    public override string Source => @"
 create domain d_test as varchar(20);
 
 set term ^;
@@ -25,8 +25,7 @@ end^
 set term ;^				
 ";
 
-        public override string Target => @"
+    public override string Target => @"
 create domain d_test as varchar(20);
 ";
-    }
 }

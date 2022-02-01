@@ -3,11 +3,11 @@ using System.Linq;
 using FirebirdDbComparer.Compare;
 using NUnit.Framework;
 
-namespace FirebirdDbComparer.Tests.Compare.ComparerTestsData.Creating
+namespace FirebirdDbComparer.Tests.Compare.ComparerTestsData.Creating;
+
+public class Trigger_BUD_Inactive_Position : ComparerTests.TestCaseStructure
 {
-    public class Trigger_BUD_Inactive_Position : ComparerTests.TestCaseStructure
-    {
-        public override string Source => @"
+    public override string Source => @"
 create table t (i int);
 
 set term ^;
@@ -23,8 +23,7 @@ end^
 set term ;^				
 ";
 
-        public override string Target => @"
+    public override string Target => @"
 
 ";
-    }
 }

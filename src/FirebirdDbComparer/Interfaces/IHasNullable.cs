@@ -1,7 +1,6 @@
-namespace FirebirdDbComparer.Interfaces
+namespace FirebirdDbComparer.Interfaces;
+
+public interface IHasNullable
 {
-    public interface IHasNullable
-    {
-        bool Nullable { get; }
-    }
+    bool Nullable { get; }
 }

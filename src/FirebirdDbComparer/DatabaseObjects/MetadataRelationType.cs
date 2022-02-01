@@ -1,18 +1,17 @@
 using System.ComponentModel;
 
-namespace FirebirdDbComparer.DatabaseObjects
+namespace FirebirdDbComparer.DatabaseObjects;
+
+public enum MetadataRelationType
 {
-    public enum MetadataRelationType
-    {
-        Persistent = 0,
-        View = 1,
-        External = 2,
-        Virtual = 3,
+    Persistent = 0,
+    View = 1,
+    External = 2,
+    Virtual = 3,
 
-        [Description("PRESERVE")]
-        GlobalTemporaryPreserve = 4,
+    [Description("PRESERVE")]
+    GlobalTemporaryPreserve = 4,
 
-        [Description("DELETE")]
-        GlobalTemporaryDelete = 5,
-    }
+    [Description("DELETE")]
+    GlobalTemporaryDelete = 5,
 }

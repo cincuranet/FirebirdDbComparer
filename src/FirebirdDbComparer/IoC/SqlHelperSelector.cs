@@ -3,13 +3,12 @@ using System;
 using FirebirdDbComparer.Interfaces;
 using FirebirdDbComparer.IoC;
 
-namespace FirebirdDbComparer.Ioc
+namespace FirebirdDbComparer.Ioc;
+
+public class SqlHelperSelector : VersionHandlerSelector<ISqlHelper>
 {
-    public class SqlHelperSelector : VersionHandlerSelector<ISqlHelper>
-    {
-        public SqlHelperSelector(IComparerSettings comparerSettings)
-            : base(comparerSettings)
-        { }
-    }
+    public SqlHelperSelector(IComparerSettings comparerSettings)
+        : base(comparerSettings)
+    { }
 }
 

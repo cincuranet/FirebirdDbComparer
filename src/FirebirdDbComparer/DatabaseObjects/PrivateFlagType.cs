@@ -1,8 +1,7 @@
-namespace FirebirdDbComparer.DatabaseObjects
+namespace FirebirdDbComparer.DatabaseObjects;
+
+public enum PrivateFlagType
 {
-    public enum PrivateFlagType
-    {
-        Public = 0,
-        Private = 1,
-    }
+    Public = 0,
+    Private = 1,
 }

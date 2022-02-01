@@ -1,8 +1,7 @@
-namespace FirebirdDbComparer.Interfaces
+namespace FirebirdDbComparer.Interfaces;
+
+public interface IDatabaseObject
 {
-    public interface IDatabaseObject
-    {
-        void Initialize();
-        void FinishInitialization();
-    }
+    void Initialize();
+    void FinishInitialization();
 }

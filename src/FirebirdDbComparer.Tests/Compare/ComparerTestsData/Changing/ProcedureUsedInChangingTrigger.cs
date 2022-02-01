@@ -3,11 +3,11 @@ using System.Linq;
 using FirebirdDbComparer.Compare;
 using NUnit.Framework;
 
-namespace FirebirdDbComparer.Tests.Compare.ComparerTestsData.Changing
+namespace FirebirdDbComparer.Tests.Compare.ComparerTestsData.Changing;
+
+public class ProcedureUsedInChangingTrigger : ComparerTests.TestCaseStructure
 {
-    public class ProcedureUsedInChangingTrigger : ComparerTests.TestCaseStructure
-    {
-        public override string Source => @"
+    public override string Source => @"
 set term ^ ;
 
 create procedure p (in_i int)
@@ -34,7 +34,7 @@ end^
 set term ;^				
 ";
 
-        public override string Target => @"
+    public override string Target => @"
 set term ^ ;
 
 create procedure p (in_i int)
@@ -59,5 +59,4 @@ end^
 
 set term ;^
 ";
-    }
 }

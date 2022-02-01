@@ -3,16 +3,16 @@ using System.Linq;
 using FirebirdDbComparer.Compare;
 using NUnit.Framework;
 
-namespace FirebirdDbComparer.Tests.Compare.ComparerTestsData.Changing
-{
-    public class PackageProcedureUsingNewTableNewColumnViaTypeOfColumn : ComparerTests.TestCaseStructure
-    {
-        public override bool IsCompatibleWithVersion(TargetVersion targetVersion)
-        {
-            return targetVersion.AtLeast(TargetVersion.Version30);
-        }
+namespace FirebirdDbComparer.Tests.Compare.ComparerTestsData.Changing;
 
-        public override string Source => @"
+public class PackageProcedureUsingNewTableNewColumnViaTypeOfColumn : ComparerTests.TestCaseStructure
+{
+    public override bool IsCompatibleWithVersion(TargetVersion targetVersion)
+    {
+        return targetVersion.AtLeast(TargetVersion.Version30);
+    }
+
+    public override string Source => @"
 create table test (c bigint);
 
 set term ^;
@@ -26,7 +26,7 @@ end^
 set term ;^				
 ";
 
-        public override string Target => @"
+    public override string Target => @"
 set term ^;
 
 create package some_pkg
@@ -37,5 +37,4 @@ end^
 
 set term ;^
 ";
-    }
 }

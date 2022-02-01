@@ -1,9 +1,8 @@
 using FirebirdDbComparer.DatabaseObjects;
 
-namespace FirebirdDbComparer.Interfaces
+namespace FirebirdDbComparer.Interfaces;
+
+public interface IHasValidationSource
 {
-    public interface IHasValidationSource
-    {
-        DatabaseStringOrdinal ValidationSource { get; }
-    }
+    DatabaseStringOrdinal ValidationSource { get; }
 }

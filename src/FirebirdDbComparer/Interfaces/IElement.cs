@@ -1,5 +1,4 @@
-namespace FirebirdDbComparer.Interfaces
-{
-    internal interface IElement
-    { }
-}
+namespace FirebirdDbComparer.Interfaces;
+
+internal interface IElement
+{ }

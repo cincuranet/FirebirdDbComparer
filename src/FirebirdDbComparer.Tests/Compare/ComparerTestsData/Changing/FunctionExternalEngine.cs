@@ -3,27 +3,26 @@ using System.Linq;
 using FirebirdDbComparer.Compare;
 using NUnit.Framework;
 
-namespace FirebirdDbComparer.Tests.Compare.ComparerTestsData.Changing
-{
-    public class FunctionExternalEngine : ComparerTests.TestCaseStructure
-    {
-        public override bool IsCompatibleWithVersion(TargetVersion targetVersion)
-        {
-            return targetVersion.AtLeast(TargetVersion.Version30);
-        }
+namespace FirebirdDbComparer.Tests.Compare.ComparerTestsData.Changing;
 
-        public override string Source => @"
+public class FunctionExternalEngine : ComparerTests.TestCaseStructure
+{
+    public override bool IsCompatibleWithVersion(TargetVersion targetVersion)
+    {
+        return targetVersion.AtLeast(TargetVersion.Version30);
+    }
+
+    public override string Source => @"
 create function new_ee_function(in1 integer)
 returns integer
 external name 'FooBar!Foo.NewEEFunction'
 engine FbNetExternalEngine;				
 ";
 
-        public override string Target => @"
+    public override string Target => @"
 create function new_ee_function(in1 bigint)
 returns bigint
 external name 'FooBar!Foo.NewEEFunction'
 engine FbNetExternalEngine;
 ";
-    }
 }

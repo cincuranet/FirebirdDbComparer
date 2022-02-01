@@ -2,12 +2,11 @@ using System;
 
 using FirebirdDbComparer.Interfaces;
 
-namespace FirebirdDbComparer.IoC
+namespace FirebirdDbComparer.IoC;
+
+public class DatabaseObjectSelector : VersionHandlerSelector<IDatabaseObject>
 {
-    public class DatabaseObjectSelector : VersionHandlerSelector<IDatabaseObject>
-    {
-        public DatabaseObjectSelector(IComparerSettings comparerSettings)
-            : base(comparerSettings)
-        { }
-    }
+    public DatabaseObjectSelector(IComparerSettings comparerSettings)
+        : base(comparerSettings)
+    { }
 }

@@ -1,13 +1,13 @@
 ﻿using System;
 using FirebirdDbComparer.Exceptions;
 
-namespace FirebirdDbComparer.Tests.Compare.ComparerTestsData.Removing
-{
-    public class ViewWithSameNameAsTableWithDependenciesInSource : ComparerTests.TestCaseStructure
-    {
-        public override Type ExpectedCompareException => typeof(CrossTypesOfSameObjectTypesException);
+namespace FirebirdDbComparer.Tests.Compare.ComparerTestsData.Removing;
 
-        public override string Source => @"
+public class ViewWithSameNameAsTableWithDependenciesInSource : ComparerTests.TestCaseStructure
+{
+    public override Type ExpectedCompareException => typeof(CrossTypesOfSameObjectTypesException);
+
+    public override string Source => @"
 create table t (
     i  int
 );
@@ -23,7 +23,7 @@ select * from t;
 				
 ";
 
-        public override string Target => @"
+    public override string Target => @"
 create view t(i)
 as
 select 1 as i from rdb$database;
@@ -38,5 +38,4 @@ as
 select * from t;
 
 ";
-    }
 }

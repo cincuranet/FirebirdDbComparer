@@ -1,7 +1,6 @@
-namespace FirebirdDbComparer.Interfaces
+namespace FirebirdDbComparer.Interfaces;
+
+public interface IHasCollation
 {
-    public interface IHasCollation
-    {
-        int? CollationId { get; }
-    }
+    int? CollationId { get; }
 }

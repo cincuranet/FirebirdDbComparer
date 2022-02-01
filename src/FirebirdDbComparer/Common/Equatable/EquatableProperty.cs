@@ -1,20 +1,19 @@
 using System;
 using System.Diagnostics;
 
-namespace FirebirdDbComparer.Common.Equatable
+namespace FirebirdDbComparer.Common.Equatable;
+
+[DebuggerDisplay("{FullName}")]
+public sealed class EquatableProperty<T>
 {
-    [DebuggerDisplay("{FullName}")]
-    public sealed class EquatableProperty<T>
+    public string FullName => $"{typeof(T).FullName}.{Name}";
+
+    public EquatableProperty(Func<T, object> valueFactory, string name)
     {
-        public string FullName => $"{typeof(T).FullName}.{Name}";
-
-        public EquatableProperty(Func<T, object> valueFactory, string name)
-        {
-            ValueFactory = valueFactory;
-            Name = name;
-        }
-
-        public Func<T, object> ValueFactory { get; }
-        public string Name { get; }
+        ValueFactory = valueFactory;
+        Name = name;
     }
+
+    public Func<T, object> ValueFactory { get; }
+    public string Name { get; }
 }

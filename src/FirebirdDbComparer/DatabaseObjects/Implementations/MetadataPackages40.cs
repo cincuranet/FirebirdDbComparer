@@ -6,12 +6,11 @@ using FirebirdDbComparer.DatabaseObjects.Primitives;
 using FirebirdDbComparer.Interfaces;
 using FirebirdDbComparer.SqlGeneration;
 
-namespace FirebirdDbComparer.DatabaseObjects.Implementations
+namespace FirebirdDbComparer.DatabaseObjects.Implementations;
+
+public class MetadataPackages40 : MetadataPackages30
 {
-    public class MetadataPackages40 : MetadataPackages30
-    {
-        public MetadataPackages40(IMetadata metadata, ISqlHelper sqlHelper)
-            : base(metadata, sqlHelper)
-        { }
-    }
+    public MetadataPackages40(IMetadata metadata, ISqlHelper sqlHelper)
+        : base(metadata, sqlHelper)
+    { }
 }

@@ -3,11 +3,11 @@ using System.Linq;
 using FirebirdDbComparer.Compare;
 using NUnit.Framework;
 
-namespace FirebirdDbComparer.Tests.Compare.ComparerTestsData.Creating
+namespace FirebirdDbComparer.Tests.Compare.ComparerTestsData.Creating;
+
+public class TableWithBasicFieldFeatures : ComparerTests.TestCaseStructure
 {
-    public class TableWithBasicFieldFeatures : ComparerTests.TestCaseStructure
-    {
-        public override string Source => @"
+    public override string Source => @"
 create domain datetime as timestamp;
 create domain intnn as int not null;
 
@@ -23,8 +23,7 @@ create table simple_table (
     e intnn not null);				
 ";
 
-        public override string Target => @"
+    public override string Target => @"
 
 ";
-    }
 }

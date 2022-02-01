@@ -2,18 +2,18 @@
 using FirebirdDbComparer.Compare;
 using FirebirdDbComparer.Exceptions;
 
-namespace FirebirdDbComparer.Tests.Compare.ComparerTestsData.Changing
+namespace FirebirdDbComparer.Tests.Compare.ComparerTestsData.Changing;
+
+public class Trigger_DDL_FromBeforeToAfter : ComparerTests.TestCaseStructure
 {
-    public class Trigger_DDL_FromBeforeToAfter : ComparerTests.TestCaseStructure
+    public override bool IsCompatibleWithVersion(TargetVersion targetVersion)
     {
-        public override bool IsCompatibleWithVersion(TargetVersion targetVersion)
-        {
-            return targetVersion.AtLeast(TargetVersion.Version30);
-        }
+        return targetVersion.AtLeast(TargetVersion.Version30);
+    }
 
-        public override Type ExpectedCompareException => typeof(NotSupportedOnFirebirdException);
+    public override Type ExpectedCompareException => typeof(NotSupportedOnFirebirdException);
 
-        public override string Source => @"
+    public override string Source => @"
 set term ^;
 
 create trigger trig
@@ -26,7 +26,7 @@ end^
 set term ;^				
 ";
 
-        public override string Target => @"
+    public override string Target => @"
 set term ^;
 
 create trigger trig
@@ -38,5 +38,4 @@ end^
 
 set term ;^
 ";
-    }
 }

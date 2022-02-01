@@ -1,9 +1,8 @@
 using FirebirdDbComparer.DatabaseObjects.EquatableKeys;
 
-namespace FirebirdDbComparer.Interfaces
+namespace FirebirdDbComparer.Interfaces;
+
+public interface ITypeObjectNameKey
 {
-    public interface ITypeObjectNameKey
-    {
-        TypeObjectNameKey TypeObjectNameKey { get; }
-    }
+    TypeObjectNameKey TypeObjectNameKey { get; }
 }

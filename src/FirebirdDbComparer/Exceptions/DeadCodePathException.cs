@@ -1,11 +1,10 @@
 using System;
 
-namespace FirebirdDbComparer.Exceptions
+namespace FirebirdDbComparer.Exceptions;
+
+class DeadCodePathException : Exception
 {
-    class DeadCodePathException : Exception
-    {
-        public DeadCodePathException()
-            : base("This code path is dead and should be handled on other place.")
-        { }
-    }
+    public DeadCodePathException()
+        : base("This code path is dead and should be handled on other place.")
+    { }
 }

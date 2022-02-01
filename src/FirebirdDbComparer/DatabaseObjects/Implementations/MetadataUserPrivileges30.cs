@@ -6,36 +6,36 @@ using FirebirdDbComparer.DatabaseObjects.Primitives;
 using FirebirdDbComparer.Interfaces;
 using FirebirdDbComparer.SqlGeneration;
 
-namespace FirebirdDbComparer.DatabaseObjects.Implementations
+namespace FirebirdDbComparer.DatabaseObjects.Implementations;
+
+public class MetadataUserPrivileges30 : MetadataUserPrivileges25
 {
-    public class MetadataUserPrivileges30 : MetadataUserPrivileges25
+    public MetadataUserPrivileges30(IMetadata metadata, ISqlHelper sqlHelper)
+        : base(metadata, sqlHelper)
+    { }
+
+    public override void FinishInitialization()
     {
-        public MetadataUserPrivileges30(IMetadata metadata, ISqlHelper sqlHelper)
-            : base(metadata, sqlHelper)
-        { }
+        base.FinishInitialization();
 
-        public override void FinishInitialization()
+        foreach (var userPrivilege in UserPrivileges.Where(p => !p.IsSystemGeneratedObject))
         {
-            base.FinishInitialization();
-
-            foreach (var userPrivilege in UserPrivileges.Where(p => !p.IsSystemGeneratedObject))
+            if (userPrivilege.ObjectType.IsPackage)
             {
-                if (userPrivilege.ObjectType.IsPackage)
-                {
-                    userPrivilege.Package =
-                        Metadata
-                            .MetadataPackages
-                            .PackagesByName[userPrivilege.ObjectName];
-                }
+                userPrivilege.Package =
+                    Metadata
+                        .MetadataPackages
+                        .PackagesByName[userPrivilege.ObjectName];
             }
         }
+    }
 
-        protected override Command CreateGrant(UserPrivilege privilege, IComparerContext context)
+    protected override Command CreateGrant(UserPrivilege privilege, IComparerContext context)
+    {
+        Command command;
+        switch (privilege.Privilege)
         {
-            Command command;
-            switch (privilege.Privilege)
-            {
-                case Privilege.Usage:
+            case Privilege.Usage:
                 {
                     // Syntax:
                     //   GRANT USAGE ON < object type > < name > TO < grantee list > [< grant option > < granted by clause >]
@@ -62,9 +62,9 @@ namespace FirebirdDbComparer.DatabaseObjects.Implementations
                     }
                     break;
                 }
-                case Privilege.Create:
-                case Privilege.Alter:
-                case Privilege.Drop:
+            case Privilege.Create:
+            case Privilege.Alter:
+            case Privilege.Drop:
                 {
                     // Syntax:
                     //   GRANT CREATE <object-type >
@@ -82,19 +82,19 @@ namespace FirebirdDbComparer.DatabaseObjects.Implementations
                     AddWithOption(privilege, command);
                     break;
                 }
-                default:
-                    command = base.CreateGrant(privilege, context);
-                    break;
-            }
-            return command;
+            default:
+                command = base.CreateGrant(privilege, context);
+                break;
         }
+        return command;
+    }
 
-        protected override Command CreateRevoke(UserPrivilege privilege, IComparerContext context)
+    protected override Command CreateRevoke(UserPrivilege privilege, IComparerContext context)
+    {
+        Command command;
+        switch (privilege.Privilege)
         {
-            Command command;
-            switch (privilege.Privilege)
-            {
-                case Privilege.Usage:
+            case Privilege.Usage:
                 {
                     // Syntax:
                     //   REVOKE USAGE ON < object type > < name > FROM < grantee list > [< granted by clause >]
@@ -119,9 +119,9 @@ namespace FirebirdDbComparer.DatabaseObjects.Implementations
                     }
                     break;
                 }
-                case Privilege.Create:
-                case Privilege.Alter:
-                case Privilege.Drop:
+            case Privilege.Create:
+            case Privilege.Alter:
+            case Privilege.Drop:
                 {
                     // Syntax:
                     //   REVOKE[GRANT OPTION FOR] CREATE < object - type >
@@ -138,45 +138,44 @@ namespace FirebirdDbComparer.DatabaseObjects.Implementations
                             : $"REVOKE {privilege.Privilege.ToDescription()} ANY {privilege.ObjectType.ToSqlObject()} FROM {privilege.UserType.ToSqlObject()} {privilege.User}");
                     break;
                 }
-                default:
-                    command = base.CreateRevoke(privilege, context);
-                    break;
-            }
-            return command;
+            default:
+                command = base.CreateRevoke(privilege, context);
+                break;
         }
+        return command;
+    }
 
-        protected override bool CanCreateRevoke(UserPrivilege privilege, IComparerContext context)
+    protected override bool CanCreateRevoke(UserPrivilege privilege, IComparerContext context)
+    {
+        ITypeObjectNameKey primitiveType;
+        if (privilege.ObjectType.IsRelation || privilege.ObjectType.IsView)
         {
-            ITypeObjectNameKey primitiveType;
-            if (privilege.ObjectType.IsRelation || privilege.ObjectType.IsView)
-            {
-                primitiveType = privilege.Relation;
-            }
-            else if (privilege.ObjectType.IsProcedure)
-            {
-                primitiveType = privilege.Procedure;
-            }
-            else if (privilege.ObjectType.IsPackage)
-            {
-                primitiveType = privilege.Package;
-            }
-            else if (privilege.ObjectType.IsUDF)
-            {
-                primitiveType = privilege.Function;
-            }
-            else if (privilege.ObjectType.IsException)
-            {
-                primitiveType = privilege.DbException;
-            }
-            else if (privilege.ObjectType.IsGenerator)
-            {
-                primitiveType = privilege.Generator;
-            }
-            else
-            {
-                return true;
-            }
-            return !context.DroppedObjects.Contains(primitiveType.TypeObjectNameKey);
+            primitiveType = privilege.Relation;
         }
+        else if (privilege.ObjectType.IsProcedure)
+        {
+            primitiveType = privilege.Procedure;
+        }
+        else if (privilege.ObjectType.IsPackage)
+        {
+            primitiveType = privilege.Package;
+        }
+        else if (privilege.ObjectType.IsUDF)
+        {
+            primitiveType = privilege.Function;
+        }
+        else if (privilege.ObjectType.IsException)
+        {
+            primitiveType = privilege.DbException;
+        }
+        else if (privilege.ObjectType.IsGenerator)
+        {
+            primitiveType = privilege.Generator;
+        }
+        else
+        {
+            return true;
+        }
+        return !context.DroppedObjects.Contains(primitiveType.TypeObjectNameKey);
     }
 }

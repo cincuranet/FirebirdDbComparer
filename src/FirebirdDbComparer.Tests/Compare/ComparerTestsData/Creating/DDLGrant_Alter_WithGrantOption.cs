@@ -3,16 +3,16 @@ using System.Linq;
 using FirebirdDbComparer.Compare;
 using NUnit.Framework;
 
-namespace FirebirdDbComparer.Tests.Compare.ComparerTestsData.Creating
-{
-    public class DDLGrant_Alter_WithGrantOption : ComparerTests.TestCaseStructure
-    {
-        public override bool IsCompatibleWithVersion(TargetVersion targetVersion)
-        {
-            return targetVersion.AtLeast(TargetVersion.Version30);
-        }
+namespace FirebirdDbComparer.Tests.Compare.ComparerTestsData.Creating;
 
-        public override string Source => @"
+public class DDLGrant_Alter_WithGrantOption : ComparerTests.TestCaseStructure
+{
+    public override bool IsCompatibleWithVersion(TargetVersion targetVersion)
+    {
+        return targetVersion.AtLeast(TargetVersion.Version30);
+    }
+
+    public override string Source => @"
 grant alter any COLLATION TO PUBLIC WITH GRANT OPTION;
 grant alter any DOMAIN TO PUBLIC WITH GRANT OPTION;
 grant alter any EXCEPTION TO PUBLIC WITH GRANT OPTION;
@@ -27,8 +27,7 @@ grant alter any VIEW TO PUBLIC WITH GRANT OPTION;
 grant alter any CHARACTER SET TO PUBLIC WITH GRANT OPTION;				
 ";
 
-        public override string Target => @"
+    public override string Target => @"
 
 ";
-    }
 }

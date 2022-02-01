@@ -1,11 +1,10 @@
 using System;
 
-namespace FirebirdDbComparer.Exceptions
+namespace FirebirdDbComparer.Exceptions;
+
+public class NotSupportedOnFirebirdException : NotSupportedException
 {
-    public class NotSupportedOnFirebirdException : NotSupportedException
-    {
-        public NotSupportedOnFirebirdException(string message)
-            : base(message)
-        { }
-    }
+    public NotSupportedOnFirebirdException(string message)
+        : base(message)
+    { }
 }

@@ -1,22 +1,21 @@
 using System.ComponentModel;
 
-namespace FirebirdDbComparer.DatabaseObjects
+namespace FirebirdDbComparer.DatabaseObjects;
+
+public enum RelationConstraintType
 {
-    public enum RelationConstraintType
-    {
-        [Description("CHECK")]
-        Check,
+    [Description("CHECK")]
+    Check,
 
-        [Description("FOREIGN KEY")]
-        ForeignKey,
+    [Description("FOREIGN KEY")]
+    ForeignKey,
 
-        [Description("NOT NULL")]
-        NotNull,
+    [Description("NOT NULL")]
+    NotNull,
 
-        [Description("PRIMARY KEY")]
-        PrimaryKey,
+    [Description("PRIMARY KEY")]
+    PrimaryKey,
 
-        [Description("UNIQUE")]
-        Unique,
-    }
+    [Description("UNIQUE")]
+    Unique,
 }

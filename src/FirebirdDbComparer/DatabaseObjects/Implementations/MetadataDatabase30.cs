@@ -4,17 +4,17 @@ using System.Diagnostics.CodeAnalysis;
 using FirebirdDbComparer.Common;
 using FirebirdDbComparer.Interfaces;
 
-namespace FirebirdDbComparer.DatabaseObjects.Implementations
+namespace FirebirdDbComparer.DatabaseObjects.Implementations;
+
+public class MetadataDatabase30 : MetadataDatabase25
 {
-    public class MetadataDatabase30 : MetadataDatabase25
-    {
-        public MetadataDatabase30(IMetadata metadata, ISqlHelper sqlHelper)
-            : base(metadata, sqlHelper)
-        { }
+    public MetadataDatabase30(IMetadata metadata, ISqlHelper sqlHelper)
+        : base(metadata, sqlHelper)
+    { }
 
-        public int? Linger { get; private set; }
+    public int? Linger { get; private set; }
 
-        protected override string CommandText => @"
+    protected override string CommandText => @"
 select D.RDB$DESCRIPTION,
        trim(D.RDB$CHARACTER_SET_NAME) as RDB$CHARACTER_SET_NAME,
        M.MON$SQL_DIALECT,
@@ -24,12 +24,11 @@ select D.RDB$DESCRIPTION,
   from RDB$DATABASE D
        cross join MON$DATABASE M";
 
-        [SuppressMessage("ReSharper", "PossibleInvalidOperationException")]
-        protected override void Initialize(IDictionary<string, object> values)
-        {
-            base.Initialize(values);
+    [SuppressMessage("ReSharper", "PossibleInvalidOperationException")]
+    protected override void Initialize(IDictionary<string, object> values)
+    {
+        base.Initialize(values);
 
-            Linger = values["RDB$LINGER"].DbValueToInt32();
-        }
+        Linger = values["RDB$LINGER"].DbValueToInt32();
     }
 }

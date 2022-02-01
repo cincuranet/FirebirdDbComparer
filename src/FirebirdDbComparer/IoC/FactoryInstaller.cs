@@ -7,23 +7,22 @@ using Castle.Windsor;
 
 using FirebirdDbComparer.Interfaces;
 
-namespace FirebirdDbComparer.Ioc
+namespace FirebirdDbComparer.Ioc;
+
+public class FactoryInstaller : IWindsorInstaller
 {
-    public class FactoryInstaller : IWindsorInstaller
+    public void Install(IWindsorContainer container, IConfigurationStore store)
     {
-        public void Install(IWindsorContainer container, IConfigurationStore store)
-        {
-            container.Register(
-                Component
-                    .For<IMetadataFactory>()
-                    .AsFactory(),
-                Component
-                    .For<IComparerFactory>()
-                    .AsFactory(),
-                Component.For<DatabaseObjectFactorySelector>(),
-                Component
-                    .For<IDatabaseObjectFactory>()
-                    .AsFactory(c => c.SelectedWith<DatabaseObjectFactorySelector>()));
-        }
+        container.Register(
+            Component
+                .For<IMetadataFactory>()
+                .AsFactory(),
+            Component
+                .For<IComparerFactory>()
+                .AsFactory(),
+            Component.For<DatabaseObjectFactorySelector>(),
+            Component
+                .For<IDatabaseObjectFactory>()
+                .AsFactory(c => c.SelectedWith<DatabaseObjectFactorySelector>()));
     }
 }

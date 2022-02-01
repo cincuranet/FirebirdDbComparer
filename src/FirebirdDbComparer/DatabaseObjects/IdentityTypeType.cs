@@ -1,8 +1,7 @@
-namespace FirebirdDbComparer.DatabaseObjects
+namespace FirebirdDbComparer.DatabaseObjects;
+
+public enum IdentityTypeType
 {
-    public enum IdentityTypeType
-    {
-        Always = 0,
-        ByDefault = 1,
-    }
+    Always = 0,
+    ByDefault = 1,
 }

@@ -1,9 +1,8 @@
 using FirebirdDbComparer.DatabaseObjects.Primitives;
 
-namespace FirebirdDbComparer.Interfaces
+namespace FirebirdDbComparer.Interfaces;
+
+public interface IUsesField
 {
-    public interface IUsesField
-    {
-        Field Field { get; }
-    }
+    Field Field { get; }
 }

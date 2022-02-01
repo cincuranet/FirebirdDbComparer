@@ -1,9 +1,8 @@
-namespace FirebirdDbComparer.DatabaseObjects
+namespace FirebirdDbComparer.DatabaseObjects;
+
+public enum ProcedureProcedureType
 {
-    public enum ProcedureProcedureType
-    {
-        Legacy = 0,
-        Selectable = 1,
-        Executable = 2,
-    }
+    Legacy = 0,
+    Selectable = 1,
+    Executable = 2,
 }

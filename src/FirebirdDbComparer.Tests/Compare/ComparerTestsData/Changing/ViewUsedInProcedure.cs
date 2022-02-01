@@ -3,11 +3,11 @@ using System.Linq;
 using FirebirdDbComparer.Compare;
 using NUnit.Framework;
 
-namespace FirebirdDbComparer.Tests.Compare.ComparerTestsData.Changing
+namespace FirebirdDbComparer.Tests.Compare.ComparerTestsData.Changing;
+
+public class ViewUsedInProcedure : ComparerTests.TestCaseStructure
 {
-    public class ViewUsedInProcedure : ComparerTests.TestCaseStructure
-    {
-        public override string Source => @"
+    public override string Source => @"
 create view v
 as
 select 2 as i from rdb$database;
@@ -27,7 +27,7 @@ end^
 set term ;^				
 ";
 
-        public override string Target => @"
+    public override string Target => @"
 create view v
 as
 select 1 as i from rdb$database;
@@ -46,5 +46,4 @@ end^
 
 set term ;^
 ";
-    }
 }

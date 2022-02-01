@@ -1,9 +1,8 @@
 using System;
 
-namespace FirebirdDbComparer.Interfaces
+namespace FirebirdDbComparer.Interfaces;
+
+public interface IMetadataFactory : IDisposable
 {
-    public interface IMetadataFactory : IDisposable
-    {
-        IMetadata Create(string connectionString);
-    }
+    IMetadata Create(string connectionString);
 }

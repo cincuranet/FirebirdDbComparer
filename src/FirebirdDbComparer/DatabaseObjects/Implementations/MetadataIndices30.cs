@@ -1,11 +1,10 @@
 using FirebirdDbComparer.Interfaces;
 
-namespace FirebirdDbComparer.DatabaseObjects.Implementations
+namespace FirebirdDbComparer.DatabaseObjects.Implementations;
+
+public class MetadataIndices30 : MetadataIndices25
 {
-    public class MetadataIndices30 : MetadataIndices25
-    {
-        public MetadataIndices30(IMetadata metadata, ISqlHelper sqlHelper)
-            : base(metadata, sqlHelper)
-        { }
-    }
+    public MetadataIndices30(IMetadata metadata, ISqlHelper sqlHelper)
+        : base(metadata, sqlHelper)
+    { }
 }

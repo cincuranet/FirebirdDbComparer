@@ -1,11 +1,10 @@
 using System;
 
-namespace FirebirdDbComparer.DatabaseObjects
+namespace FirebirdDbComparer.DatabaseObjects;
+
+[Flags]
+public enum RoleFlagType
 {
-    [Flags]
-    public enum RoleFlagType
-    {
-        RoleFlagMayTrust = 2,
-        RoleFlagDBO = 4,
-    }
+    RoleFlagMayTrust = 2,
+    RoleFlagDBO = 4,
 }

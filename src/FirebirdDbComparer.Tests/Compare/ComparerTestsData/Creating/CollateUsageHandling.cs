@@ -3,11 +3,11 @@ using System.Linq;
 using FirebirdDbComparer.Compare;
 using NUnit.Framework;
 
-namespace FirebirdDbComparer.Tests.Compare.ComparerTestsData.Creating
+namespace FirebirdDbComparer.Tests.Compare.ComparerTestsData.Creating;
+
+public class CollateUsageHandling : ComparerTests.TestCaseStructure
 {
-    public class CollateUsageHandling : ComparerTests.TestCaseStructure
-    {
-        public override string Source => @"
+    public override string Source => @"
 create domain d_string as varchar(20) character set utf8 collate unicode_ci;
 create table t (
     a varchar(20) character set utf8,
@@ -17,8 +17,7 @@ create table t (
     e d_string collate unicode);				
 ";
 
-        public override string Target => @"
+    public override string Target => @"
 
 ";
-    }
 }

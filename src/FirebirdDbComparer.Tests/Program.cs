@@ -1,13 +1,12 @@
 ﻿using System.Reflection;
 using NUnitLite;
 
-namespace FirebirdDbComparer.Tests
+namespace FirebirdDbComparer.Tests;
+
+public static class Program
 {
-    public static class Program
+    public static void Main()
     {
-        public static void Main()
-        {
-            new AutoRun(Assembly.GetEntryAssembly()).Execute(new string[] { @"--where=test=~/ComparerTests40\./" });
-        }
+        new AutoRun(Assembly.GetEntryAssembly()).Execute(new string[] { @"--where=test=~/ComparerTests40\./" });
     }
 }

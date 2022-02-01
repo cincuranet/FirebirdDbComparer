@@ -5,14 +5,13 @@ using FirebirdDbComparer.DatabaseObjects.EquatableKeys;
 using FirebirdDbComparer.DatabaseObjects.Primitives;
 using FirebirdDbComparer.SqlGeneration;
 
-namespace FirebirdDbComparer.Interfaces
+namespace FirebirdDbComparer.Interfaces;
+
+public interface IMetadataCollations : IDatabaseObject
 {
-    public interface IMetadataCollations : IDatabaseObject
-    {
-        IDictionary<CollationKey, Collation> CollationsByKey { get; }
-        IDictionary<Identifier, Collation> CollationsByName { get; }
-        IDictionary<int, IList<Collation>> CollationsByCharacterSetId { get; }
-        IEnumerable<CommandGroup> CreateCollations(IMetadata other, IComparerContext context);
-        IEnumerable<CommandGroup> DropCollations(IMetadata other, IComparerContext context);
-    }
+    IDictionary<CollationKey, Collation> CollationsByKey { get; }
+    IDictionary<Identifier, Collation> CollationsByName { get; }
+    IDictionary<int, IList<Collation>> CollationsByCharacterSetId { get; }
+    IEnumerable<CommandGroup> CreateCollations(IMetadata other, IComparerContext context);
+    IEnumerable<CommandGroup> DropCollations(IMetadata other, IComparerContext context);
 }

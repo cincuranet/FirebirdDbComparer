@@ -1,21 +1,20 @@
 using System.ComponentModel;
 
-namespace FirebirdDbComparer.DatabaseObjects
+namespace FirebirdDbComparer.DatabaseObjects;
+
+public enum ConstraintRule
 {
-    public enum ConstraintRule
-    {
-        Restrict,
+    Restrict,
 
-        [Description("CASCADE")]
-        Cascade,
+    [Description("CASCADE")]
+    Cascade,
 
-        [Description("SET DEFAULT")]
-        SetDefault,
+    [Description("SET DEFAULT")]
+    SetDefault,
 
-        [Description("SET NULL")]
-        SetNull,
+    [Description("SET NULL")]
+    SetNull,
 
-        [Description("NO ACTION")]
-        NoAction,
-    }
+    [Description("NO ACTION")]
+    NoAction,
 }

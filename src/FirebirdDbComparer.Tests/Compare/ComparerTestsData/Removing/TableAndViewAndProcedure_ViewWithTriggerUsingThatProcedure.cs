@@ -3,15 +3,15 @@ using System.Linq;
 using FirebirdDbComparer.Compare;
 using NUnit.Framework;
 
-namespace FirebirdDbComparer.Tests.Compare.ComparerTestsData.Removing
+namespace FirebirdDbComparer.Tests.Compare.ComparerTestsData.Removing;
+
+public class TableAndViewAndProcedure_ViewWithTriggerUsingThatProcedure : ComparerTests.TestCaseStructure
 {
-    public class TableAndViewAndProcedure_ViewWithTriggerUsingThatProcedure : ComparerTests.TestCaseStructure
-    {
-        public override string Source => @"
+    public override string Source => @"
 				
 ";
 
-        public override string Target => @"
+    public override string Target => @"
 create table t (a varchar(20));
 
 create view v
@@ -38,5 +38,4 @@ end^
 
 set term ;^
 ";
-    }
 }

@@ -3,11 +3,11 @@ using System.Linq;
 using FirebirdDbComparer.Compare;
 using NUnit.Framework;
 
-namespace FirebirdDbComparer.Tests.Compare.ComparerTestsData.Creating
+namespace FirebirdDbComparer.Tests.Compare.ComparerTestsData.Creating;
+
+public class TableWithComputedFields : ComparerTests.TestCaseStructure
 {
-    public class TableWithComputedFields : ComparerTests.TestCaseStructure
-    {
-        public override string Source => @"
+    public override string Source => @"
 create table aaa (i int);
 create table zzz (i int);
 
@@ -27,8 +27,7 @@ alter table table_cf2 add c computed by (j + (select first 1 i from table_cf2));
 alter table table_cf1 add a computed by ((select first 1 a from table_cf2));				
 ";
 
-        public override string Target => @"
+    public override string Target => @"
 
 ";
-    }
 }

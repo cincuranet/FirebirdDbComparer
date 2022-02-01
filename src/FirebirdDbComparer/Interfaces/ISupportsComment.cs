@@ -2,10 +2,9 @@ using System.Collections.Generic;
 
 using FirebirdDbComparer.SqlGeneration;
 
-namespace FirebirdDbComparer.Interfaces
+namespace FirebirdDbComparer.Interfaces;
+
+internal interface ISupportsComment
 {
-    internal interface ISupportsComment
-    {
-        IEnumerable<CommandGroup> Handle(IMetadata other, IComparerContext context);
-    }
+    IEnumerable<CommandGroup> Handle(IMetadata other, IComparerContext context);
 }

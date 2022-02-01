@@ -1,9 +1,8 @@
-namespace FirebirdDbComparer.DatabaseObjects
+namespace FirebirdDbComparer.DatabaseObjects;
+
+public enum ContextTypeType
 {
-    public enum ContextTypeType
-    {
-        Table = 0,
-        View = 1,
-        Procedure = 2,
-    }
+    Table = 0,
+    View = 1,
+    Procedure = 2,
 }

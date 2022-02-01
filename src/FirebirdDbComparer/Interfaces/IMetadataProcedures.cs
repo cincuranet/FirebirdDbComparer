@@ -5,17 +5,16 @@ using FirebirdDbComparer.DatabaseObjects.EquatableKeys;
 using FirebirdDbComparer.DatabaseObjects.Primitives;
 using FirebirdDbComparer.SqlGeneration;
 
-namespace FirebirdDbComparer.Interfaces
+namespace FirebirdDbComparer.Interfaces;
+
+public interface IMetadataProcedures : IDatabaseObject
 {
-    public interface IMetadataProcedures : IDatabaseObject
-    {
-        IDictionary<ProcedureParameterKey, ProcedureParameter> ProcedureParameters { get; }
-        IDictionary<int, Procedure> ProceduresById { get; }
-        IDictionary<Identifier, Procedure> ProceduresByName { get; }
-        IDictionary<Identifier, Procedure> NonPackageProceduresByName { get; }
-        IEnumerable<CommandGroup> CreateEmptyNewProcedures(IMetadata other, IComparerContext context);
-        IEnumerable<CommandGroup> AlterProceduresToFullBody(IMetadata other, IComparerContext context);
-        IEnumerable<CommandGroup> AlterProceduresToEmptyBodyForAlteringOrDropping(IMetadata other, IComparerContext context);
-        IEnumerable<CommandGroup> DropProcedures(IMetadata other, IComparerContext context);
-    }
+    IDictionary<ProcedureParameterKey, ProcedureParameter> ProcedureParameters { get; }
+    IDictionary<int, Procedure> ProceduresById { get; }
+    IDictionary<Identifier, Procedure> ProceduresByName { get; }
+    IDictionary<Identifier, Procedure> NonPackageProceduresByName { get; }
+    IEnumerable<CommandGroup> CreateEmptyNewProcedures(IMetadata other, IComparerContext context);
+    IEnumerable<CommandGroup> AlterProceduresToFullBody(IMetadata other, IComparerContext context);
+    IEnumerable<CommandGroup> AlterProceduresToEmptyBodyForAlteringOrDropping(IMetadata other, IComparerContext context);
+    IEnumerable<CommandGroup> DropProcedures(IMetadata other, IComparerContext context);
 }

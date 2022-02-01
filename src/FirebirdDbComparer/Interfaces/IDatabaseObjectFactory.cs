@@ -1,9 +1,8 @@
 using System;
 
-namespace FirebirdDbComparer.Interfaces
+namespace FirebirdDbComparer.Interfaces;
+
+public interface IDatabaseObjectFactory : IDisposable
 {
-    public interface IDatabaseObjectFactory : IDisposable
-    {
-        IDatabaseObject[] ResolveAll(IMetadata metadata);
-    }
+    IDatabaseObject[] ResolveAll(IMetadata metadata);
 }

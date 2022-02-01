@@ -2,11 +2,10 @@ using System;
 
 using FirebirdDbComparer.Compare;
 
-namespace FirebirdDbComparer.Interfaces
+namespace FirebirdDbComparer.Interfaces;
+
+public interface IComparerSettings
 {
-    public interface IComparerSettings
-    {
-        TargetVersion TargetVersion { get; }
-        bool IgnorePermissions { get; }
-    }
+    TargetVersion TargetVersion { get; }
+    bool IgnorePermissions { get; }
 }

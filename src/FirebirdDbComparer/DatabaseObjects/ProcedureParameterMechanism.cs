@@ -1,8 +1,7 @@
-namespace FirebirdDbComparer.DatabaseObjects
+namespace FirebirdDbComparer.DatabaseObjects;
+
+public enum ProcedureParameterMechanism
 {
-    public enum ProcedureParameterMechanism
-    {
-        Normal = 0,
-        TypeOf = 1,
-    }
+    Normal = 0,
+    TypeOf = 1,
 }

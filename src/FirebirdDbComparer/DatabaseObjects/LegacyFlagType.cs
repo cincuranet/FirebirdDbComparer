@@ -1,8 +1,7 @@
-namespace FirebirdDbComparer.DatabaseObjects
+namespace FirebirdDbComparer.DatabaseObjects;
+
+public enum LegacyFlagType
 {
-    public enum LegacyFlagType
-    {
-        NewStyle = 0,
-        LegacyStyle = 1,
-    }
+    NewStyle = 0,
+    LegacyStyle = 1,
 }

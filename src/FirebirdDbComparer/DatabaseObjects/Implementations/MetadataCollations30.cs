@@ -1,14 +1,14 @@
 using FirebirdDbComparer.Interfaces;
 
-namespace FirebirdDbComparer.DatabaseObjects.Implementations
-{
-    public class MetadataCollations30 : MetadataCollations25
-    {
-        public MetadataCollations30(IMetadata metadata, ISqlHelper sqlHelper)
-            : base(metadata, sqlHelper)
-        { }
+namespace FirebirdDbComparer.DatabaseObjects.Implementations;
 
-        protected override string CommandText => @"
+public class MetadataCollations30 : MetadataCollations25
+{
+    public MetadataCollations30(IMetadata metadata, ISqlHelper sqlHelper)
+        : base(metadata, sqlHelper)
+    { }
+
+    protected override string CommandText => @"
 select trim(C.RDB$COLLATION_NAME) as RDB$COLLATION_NAME,
        C.RDB$COLLATION_ID,
        C.RDB$CHARACTER_SET_ID,
@@ -20,5 +20,4 @@ select trim(C.RDB$COLLATION_NAME) as RDB$COLLATION_NAME,
        C.RDB$SPECIFIC_ATTRIBUTES,
        trim(C.RDB$OWNER_NAME) as RDB$OWNER_NAME
   from RDB$COLLATIONS C";
-    }
 }

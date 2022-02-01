@@ -1,9 +1,8 @@
-namespace FirebirdDbComparer.DatabaseObjects
+namespace FirebirdDbComparer.DatabaseObjects;
+
+public enum TriggerClassType
 {
-    public enum TriggerClassType
-    {
-        DML,
-        DB,
-        DDL,
-    }
+    DML,
+    DB,
+    DDL,
 }

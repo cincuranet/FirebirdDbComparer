@@ -1,9 +1,8 @@
 using FirebirdDbComparer.DatabaseObjects;
 
-namespace FirebirdDbComparer.Interfaces
+namespace FirebirdDbComparer.Interfaces;
+
+public interface IHasPackage
 {
-    public interface IHasPackage
-    {
-        Identifier PackageName { get; }
-    }
+    Identifier PackageName { get; }
 }

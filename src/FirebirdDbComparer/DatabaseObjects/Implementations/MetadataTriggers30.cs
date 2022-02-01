@@ -1,14 +1,14 @@
 using FirebirdDbComparer.Interfaces;
 
-namespace FirebirdDbComparer.DatabaseObjects.Implementations
-{
-    public class MetadataTriggers30 : MetadataTriggers25
-    {
-        public MetadataTriggers30(IMetadata metadata, ISqlHelper sqlHelper)
-            : base(metadata, sqlHelper)
-        { }
+namespace FirebirdDbComparer.DatabaseObjects.Implementations;
 
-        protected override string CommandText => @"
+public class MetadataTriggers30 : MetadataTriggers25
+{
+    public MetadataTriggers30(IMetadata metadata, ISqlHelper sqlHelper)
+        : base(metadata, sqlHelper)
+    { }
+
+    protected override string CommandText => @"
 select trim(T.RDB$TRIGGER_NAME) as RDB$TRIGGER_NAME,
        trim(T.RDB$RELATION_NAME) as RDB$RELATION_NAME,
        T.RDB$TRIGGER_SEQUENCE,
@@ -20,5 +20,4 @@ select trim(T.RDB$TRIGGER_NAME) as RDB$TRIGGER_NAME,
        trim(T.RDB$ENGINE_NAME) as RDB$ENGINE_NAME,
        trim(T.RDB$ENTRYPOINT) as RDB$ENTRYPOINT
   from RDB$TRIGGERS T";
-    }
 }

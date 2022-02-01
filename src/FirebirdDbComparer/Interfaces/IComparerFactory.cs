@@ -1,9 +1,8 @@
 using System;
 
-namespace FirebirdDbComparer.Interfaces
+namespace FirebirdDbComparer.Interfaces;
+
+public interface IComparerFactory : IDisposable
 {
-    public interface IComparerFactory : IDisposable
-    {
-        IComparer Create(IComparerSettings comparerSettings, IMetadata sourceMetadata, IMetadata targetMetadata);
-    }
+    IComparer Create(IComparerSettings comparerSettings, IMetadata sourceMetadata, IMetadata targetMetadata);
 }

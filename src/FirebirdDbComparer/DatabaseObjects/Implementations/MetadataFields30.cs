@@ -1,17 +1,17 @@
 using FirebirdDbComparer.Interfaces;
 
-namespace FirebirdDbComparer.DatabaseObjects.Implementations
-{
-    public class MetadataFields30 : MetadataFields25
-    {
-        public MetadataFields30(IMetadata metadata, ISqlHelper sqlHelper)
-            : base(metadata, sqlHelper)
-        { }
+namespace FirebirdDbComparer.DatabaseObjects.Implementations;
 
-        // RDB$FIELD_SUB_TYPE: weird discrepancy in some databases
-        // RDB$FIELD_SCALE: weird discrepancy in some databases
-        // RDB$FIELD_PRECISION: CORE-5550
-        protected override string CommandText => @"
+public class MetadataFields30 : MetadataFields25
+{
+    public MetadataFields30(IMetadata metadata, ISqlHelper sqlHelper)
+        : base(metadata, sqlHelper)
+    { }
+
+    // RDB$FIELD_SUB_TYPE: weird discrepancy in some databases
+    // RDB$FIELD_SCALE: weird discrepancy in some databases
+    // RDB$FIELD_PRECISION: CORE-5550
+    protected override string CommandText => @"
 select trim(F.RDB$FIELD_NAME) as RDB$FIELD_NAME,
        trim(F.RDB$DESCRIPTION) as RDB$DESCRIPTION,
        trim(F.RDB$COMPUTED_SOURCE) as RDB$COMPUTED_SOURCE,
@@ -30,5 +30,4 @@ select trim(F.RDB$FIELD_NAME) as RDB$FIELD_NAME,
        F.RDB$SYSTEM_FLAG,
        trim(F.RDB$OWNER_NAME) as RDB$OWNER_NAME
   from RDB$FIELDS F";
-    }
 }

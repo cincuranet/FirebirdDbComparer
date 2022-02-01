@@ -3,15 +3,15 @@ using System.Linq;
 using FirebirdDbComparer.Compare;
 using NUnit.Framework;
 
-namespace FirebirdDbComparer.Tests.Compare.ComparerTestsData.Removing
+namespace FirebirdDbComparer.Tests.Compare.ComparerTestsData.Removing;
+
+public class DependingProcedure : ComparerTests.TestCaseStructure
 {
-    public class DependingProcedure : ComparerTests.TestCaseStructure
-    {
-        public override string Source => @"
+    public override string Source => @"
 				
 ";
 
-        public override string Target => @"
+    public override string Target => @"
 create domain d_test as int;
 
 set term ^;
@@ -51,5 +51,4 @@ end^
 
 set term ;^
 ";
-    }
 }

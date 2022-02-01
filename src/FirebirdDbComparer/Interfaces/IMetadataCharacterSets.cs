@@ -3,12 +3,11 @@ using FirebirdDbComparer.DatabaseObjects;
 using FirebirdDbComparer.DatabaseObjects.Primitives;
 using FirebirdDbComparer.SqlGeneration;
 
-namespace FirebirdDbComparer.Interfaces
+namespace FirebirdDbComparer.Interfaces;
+
+public interface IMetadataCharacterSets : IDatabaseObject
 {
-    public interface IMetadataCharacterSets : IDatabaseObject
-    {
-        IDictionary<int, CharacterSet> CharacterSetsById { get; }
-        IDictionary<Identifier, CharacterSet> CharacterSetsByName { get; }
-        IEnumerable<CommandGroup> AlterCharacterSets(IMetadata other, IComparerContext context);
-    }
+    IDictionary<int, CharacterSet> CharacterSetsById { get; }
+    IDictionary<Identifier, CharacterSet> CharacterSetsByName { get; }
+    IEnumerable<CommandGroup> AlterCharacterSets(IMetadata other, IComparerContext context);
 }

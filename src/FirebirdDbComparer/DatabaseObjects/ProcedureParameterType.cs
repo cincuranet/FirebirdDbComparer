@@ -1,8 +1,7 @@
-namespace FirebirdDbComparer.DatabaseObjects
+namespace FirebirdDbComparer.DatabaseObjects;
+
+public enum ProcedureParameterType
 {
-    public enum ProcedureParameterType
-    {
-        In = 0,
-        Out = 1,
-    }
+    In = 0,
+    Out = 1,
 }
