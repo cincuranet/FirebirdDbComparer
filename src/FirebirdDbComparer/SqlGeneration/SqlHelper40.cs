@@ -25,9 +25,9 @@ public class SqlHelper40 : SqlHelper30
             case FieldType.Int128:
                 return "INT128";
             case FieldType.TimeWithTimeZone:
-                return "TIME WITH TIMEZONE";
+                return "TIME WITH TIME ZONE";
             case FieldType.TimestampWithTimeZone:
-                return "TIMESTAMP WITH TIMEZONE";
+                return "TIMESTAMP WITH TIME ZONE";
             default:
                 return base.GetDataType(dataType, characterSets, defaultCharacterSetId);
         }
