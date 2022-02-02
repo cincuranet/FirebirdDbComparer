@@ -18,9 +18,9 @@ public class SqlHelper40 : SqlHelper30
     {
         switch (dataType.FieldType)
         {
-            case FieldType.DecFloat34:
-                return "DECFLOAT(16)";
             case FieldType.DecFloat16:
+                return "DECFLOAT(16)";
+            case FieldType.DecFloat34:
                 return "DECFLOAT(34)";
             case FieldType.Int128:
                 return "INT128";
