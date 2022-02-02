@@ -23,7 +23,7 @@ public class SqlHelper40 : SqlHelper30
             case FieldType.DecFloat34:
                 return "DECFLOAT(34)";
             case FieldType.Int128:
-                return "INT128";
+                return ScalableNumber("INT128", dataType);
             case FieldType.TimeWithTimeZone:
                 return "TIME WITH TIME ZONE";
             case FieldType.TimestampWithTimeZone:
