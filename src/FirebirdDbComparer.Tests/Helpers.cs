@@ -28,7 +28,7 @@ public static class Helpers
             var builder =
                 new FbConnectionStringBuilder
                 {
-                    Database = GetDatabasePath(version, location),
+                    Database = GetDatabasePath(location),
                     UserID = "sysdba",
                     Password = "masterkey",
                     ServerType = FbServerType.Embedded,
@@ -67,7 +67,7 @@ public static class Helpers
                 isql.StartInfo = new ProcessStartInfo
                 {
                     FileName = Path.Combine(GetFirebirdLocation(version), "isql.exe"),
-                    Arguments = $"-x {GetDatabasePath(version, location)}",
+                    Arguments = $"-x {GetDatabasePath(location)}",
                     UseShellExecute = false,
                     CreateNoWindow = true,
                     RedirectStandardOutput = true
@@ -109,9 +109,9 @@ public static class Helpers
             }
         }
 
-        private static string GetDatabasePath(TargetVersion version, DatabaseLocation location)
+        private static string GetDatabasePath(DatabaseLocation location)
         {
-            return Path.Combine(GetFirebirdLocation(version), $"compare_{location}.fdb");
+            return Path.Combine(Path.GetTempPath(), $"compare_{location}.fdb");
         }
     }
 }
