@@ -132,6 +132,7 @@ select trim(UP.RDB$USER) as RDB$USER,
                                 Privilege = x,
                                 Revoke = false
                             }))
+                .Where(x => !x.Privilege.IsSystemGeneratedObject)
                 .GroupBy(x => x.Privilege.ObjectName);
 
         foreach (var group in data)

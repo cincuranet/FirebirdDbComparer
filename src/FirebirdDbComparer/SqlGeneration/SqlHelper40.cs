@@ -70,4 +70,17 @@ public class SqlHelper40 : SqlHelper30
             _ => throw new ArgumentOutOfRangeException($"Wrong type: {objectType}."),
         };
     }
+
+    public override IEnumerable<Command> HandleAlterIdentity(RelationField field, RelationField otherField)
+    {
+        if (field.IdentityType == null && otherField.IdentityType != null)
+        {
+            yield return new Command().Append($"ALTER TABLE {field.RelationName.AsSqlIndentifier()} ALTER {field.FieldName.AsSqlIndentifier()} DROP IDENTITY");
+        }
+        else if (field.IdentityType != otherField.IdentityType)
+        {
+            foreach (var item in base.HandleAlterIdentity(field, otherField))
+                yield return item;
+        }
+    }
 }

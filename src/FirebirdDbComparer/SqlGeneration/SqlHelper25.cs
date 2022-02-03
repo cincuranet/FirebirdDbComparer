@@ -9,6 +9,7 @@ using FirebirdDbComparer.DatabaseObjects;
 using FirebirdDbComparer.DatabaseObjects.Elements;
 using FirebirdDbComparer.DatabaseObjects.EquatableKeys;
 using FirebirdDbComparer.DatabaseObjects.Primitives;
+using FirebirdDbComparer.Exceptions;
 using FirebirdDbComparer.Interfaces;
 
 namespace FirebirdDbComparer.SqlGeneration;
@@ -361,6 +362,11 @@ public class SqlHelper25 : ISqlHelper
     public virtual bool ObjectTypeIsGenerator(int objectType) => objectType == 14;
     public virtual bool ObjectTypeIsCharacterSet(int objectType) => objectType == 11;
     public virtual bool ObjectTypeIsCollation(int objectType) => objectType == 17;
+
+    public virtual IEnumerable<Command> HandleAlterIdentity(RelationField field, RelationField otherField)
+    {
+        throw new NotSupportedOnFirebirdException($"Altering identity definition on a field is not supported ({field.RelationName}.{field.FieldName}).");
+    }
 
     protected virtual string ScalableNumber(string regularType, IDataType dataType)
     {

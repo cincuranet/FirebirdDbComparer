@@ -55,4 +55,5 @@ public interface ISqlHelper
     bool ObjectTypeIsGenerator(int objectType);
     bool ObjectTypeIsCharacterSet(int objectType);
     bool ObjectTypeIsCollation(int objectType);
+    IEnumerable<Command> HandleAlterIdentity(RelationField field, RelationField otherField);
 }

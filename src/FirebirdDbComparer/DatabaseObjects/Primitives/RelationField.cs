@@ -158,10 +158,6 @@ public sealed class RelationField : Primitive<RelationField>, IHasDescription, I
         {
             throw new NotSupportedOnFirebirdException($"Altering from computed to normal field or visa versa is not supported ({RelationName}.{FieldName}).");
         }
-        if (IdentityType != otherField.IdentityType)
-        {
-            throw new NotSupportedOnFirebirdException($"Altering identity definition on a field is not supported ({RelationName}.{FieldName}).");
-        }
 
         if (Field.ComputedSource != null)
         {
@@ -178,6 +174,7 @@ public sealed class RelationField : Primitive<RelationField>, IHasDescription, I
         else
         {
             var commands = SqlHelper.HandleAlterDefault(AlterTableColumnHelper, this, otherField)
+                .Concat(SqlHelper.HandleAlterIdentity(this, otherField))
                 .Concat(SqlHelper.HandleAlterDataType(AlterTableColumnHelper, this, otherField, sourceMetadata, targetMetadata))
                 .Concat(SqlHelper.HandleAlterCollation(FieldName, RelationName, this, otherField))
                 .Concat(SqlHelper.HandleAlterNullable(FieldName, RelationName, this, otherField));
