@@ -7,6 +7,6 @@ public static class Program
 {
     public static void Main()
     {
-        new AutoRun(Assembly.GetEntryAssembly()).Execute(new string[] { @"--where=test=~/ComparerTests40\./" });
+        new AutoRun(Assembly.GetEntryAssembly()).Execute(new string[] { @"--where=test=~/ComparerTests40\..*.*/" });
     }
 }
