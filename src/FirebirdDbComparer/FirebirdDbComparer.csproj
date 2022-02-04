@@ -17,8 +17,11 @@
         <PackageReference Include="Castle.Windsor" Version="5.1.1" />
     </ItemGroup>
     <ItemGroup Condition="'$(TargetFramework)'=='net48'">
-		<Reference Include="Microsoft.CSharp" />
-	</ItemGroup>
+        <Reference Include="Microsoft.CSharp" />
+    </ItemGroup>
+    <ItemGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
+        <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+    </ItemGroup>
     <ItemGroup>
         <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
             <_Parameter1>FirebirdDbComparer.Tests</_Parameter1>
