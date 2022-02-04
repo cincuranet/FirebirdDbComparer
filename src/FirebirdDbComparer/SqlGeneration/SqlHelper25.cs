@@ -365,7 +365,11 @@ public class SqlHelper25 : ISqlHelper
 
     public virtual IEnumerable<Command> HandleAlterIdentity(RelationField field, RelationField otherField)
     {
-        throw new NotSupportedOnFirebirdException($"Altering identity definition on a field is not supported ({field.RelationName}.{field.FieldName}).");
+        if (field.IdentityType != otherField.IdentityType)
+        {
+            throw new NotSupportedOnFirebirdException($"Altering identity definition on a field is not supported ({field.RelationName}.{field.FieldName}).");
+        }
+        yield break;
     }
 
     protected virtual string ScalableNumber(string regularType, IDataType dataType)

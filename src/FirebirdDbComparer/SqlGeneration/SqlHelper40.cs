@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-
+using FirebirdDbComparer.Common;
 using FirebirdDbComparer.Compare;
 using FirebirdDbComparer.DatabaseObjects;
 using FirebirdDbComparer.DatabaseObjects.Primitives;
@@ -77,7 +77,20 @@ public class SqlHelper40 : SqlHelper30
         {
             yield return new Command().Append($"ALTER TABLE {field.RelationName.AsSqlIndentifier()} ALTER {field.FieldName.AsSqlIndentifier()} DROP IDENTITY");
         }
-        else if (field.IdentityType != otherField.IdentityType)
+        else if (field.IdentityType != null && otherField.IdentityType != null && field.IdentityType != otherField.IdentityType)
+        {
+            var command = new Command().Append($"ALTER TABLE {field.RelationName.AsSqlIndentifier()} ALTER {field.FieldName.AsSqlIndentifier()} SET GENERATED {field.IdentityType.ToDescription()}");
+            if (field.Generator.GeneratorIncrement != otherField.Generator.GeneratorIncrement)
+            {
+                command.Append($" SET INCREMENT BY {field.Generator.GeneratorIncrement}");
+            }
+            yield return command;
+        }
+        else if (field.IdentityType != null && otherField.IdentityType != null && field.IdentityType == otherField.IdentityType && field.Generator.GeneratorIncrement != otherField.Generator.GeneratorIncrement)
+        {
+            yield return new Command().Append($"ALTER TABLE {field.RelationName.AsSqlIndentifier()} ALTER {field.FieldName.AsSqlIndentifier()} SET INCREMENT BY {field.Generator.GeneratorIncrement}");
+        }
+        else
         {
             foreach (var item in base.HandleAlterIdentity(field, otherField))
                 yield return item;
