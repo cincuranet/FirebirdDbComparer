@@ -5,8 +5,8 @@ namespace FirebirdDbComparer.Tests;
 
 public static class Program
 {
-    public static void Main()
+    public static int Main()
     {
-        new AutoRun(Assembly.GetEntryAssembly()).Execute(new string[] { @"--where=test=~/ComparerTests40\..*.*/" });
+        return new AutoRun(Assembly.GetEntryAssembly()).Execute(new string[] { @"--where=test=~/ComparerTests40\..*.*/" });
     }
 }
