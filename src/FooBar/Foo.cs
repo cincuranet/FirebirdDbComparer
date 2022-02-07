@@ -8,7 +8,17 @@ public static class foo
         yield break;
     }
 
+    public static IEnumerator<ValueTuple<long?>> NewEEProcedure2(long? in1)
+    {
+        yield break;
+    }
+
     public static long? NewEEFunction(long? in1)
+    {
+        return default;
+    }
+
+    public static long? NewEEFunction2(long? in1)
     {
         return default;
     }
