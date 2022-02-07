@@ -22,4 +22,9 @@ public static class foo
     {
         return default;
     }
+
+    public static string DllVersion(long? dummy)
+    {
+        return default;
+    }
 }

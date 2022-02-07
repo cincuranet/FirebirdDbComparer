@@ -156,11 +156,20 @@ public sealed class Function : Primitive<Function>, IHasSystemFlag, IHasDescript
     {
         if (IsLegacy)
         {
-            throw new NotSupportedOnFirebirdException($"Altering function is not supported ({FunctionName}).");
+            var otherFunction = FindOtherChecked(targetMetadata.MetadataFunctions.FunctionsByName, FunctionNameKey, "function");
+            if (EquatableHelper.PropertiesEqual(this, otherFunction, EquatableProperties, new[] { nameof(ModuleName), nameof(EntryPoint) }))
+            {
+                yield return new Command().Append($"ALTER EXTERNAL FUNCTION {FunctionName.AsSqlIndentifier()} ENTRY_POINT '{SqlHelper.DoubleSingleQuotes(EntryPoint)}' MODULE_NAME '{SqlHelper.DoubleSingleQuotes(ModuleName)}'");
+            }
+            else
+            {
+                throw new NotSupportedOnFirebirdException($"Altering function is not supported ({FunctionName}).");
+            }
         }
         else
         {
-            return OnCreate(sourceMetadata, targetMetadata, context);
+            foreach (var item in OnCreate(sourceMetadata, targetMetadata, context))
+                yield return item;
         }
     }
 

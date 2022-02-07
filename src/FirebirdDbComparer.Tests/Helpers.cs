@@ -97,6 +97,16 @@ public static class Helpers
 
         private static void ExecuteScript(TargetVersion version, DatabaseLocation location, FbScript script)
         {
+            // NETProvider#1026
+            script.UnknownStatement += (sender, e) =>
+            {
+                var match = e.Statement.Text.StartsWith("ALTER EXTERNAL FUNCTION ", StringComparison.OrdinalIgnoreCase);
+                if (match)
+                {
+                    e.Handled = true;
+                    e.NewStatementType = SqlStatementType.AlterFunction;
+                }
+            };
             using (var connection = new FbConnection(GetConnectionString(version, location)))
             {
                 script.Parse();
