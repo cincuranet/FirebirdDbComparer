@@ -1,5 +1,4 @@
 using System;
-using System.ComponentModel;
 using System.Diagnostics;
 using FirebirdDbComparer.Common;
 using FirebirdDbComparer.Interfaces;
@@ -7,7 +6,7 @@ using FirebirdDbComparer.Interfaces;
 namespace FirebirdDbComparer.DatabaseObjects;
 
 [DebuggerDisplay("{ToString()}")]
-public class ObjectType : IEquatable<ObjectType>, IComparable<ObjectType>
+public class ObjectType : IEquatable<ObjectType>
 {
     private readonly int m_Value;
 
@@ -52,13 +51,9 @@ public class ObjectType : IEquatable<ObjectType>, IComparable<ObjectType>
 
     public override bool Equals(object obj) => EquatableHelper.ElementaryEqualsThenEquatableEquals(this, obj);
 
-    public bool Equals(ObjectType other) => EquatableHelper.ElementaryEquals(this, other) ?? CompareImpl(this, other) == 0;
+    public bool Equals(ObjectType other) => this == other;
 
-    public int CompareTo(ObjectType other) => CompareImpl(this, other);
+    public static bool operator ==(ObjectType x, ObjectType y) => EquatableHelper.ElementaryEquals(x, y) ?? x.m_Value == y.m_Value;
 
-    public static bool operator ==(ObjectType x, ObjectType y) => CompareImpl(x, y) == 0;
-
-    public static bool operator !=(ObjectType x, ObjectType y) => CompareImpl(x, y) != 0;
-
-    private static int CompareImpl(ObjectType x, ObjectType y) => ReferenceEquals(x, null) ? 1 : ReferenceEquals(y, null) ? -1 : x.m_Value.CompareTo(y.m_Value);
+    public static bool operator !=(ObjectType x, ObjectType y) => !(x == y);
 }

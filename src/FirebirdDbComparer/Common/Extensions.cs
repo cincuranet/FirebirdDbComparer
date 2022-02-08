@@ -58,6 +58,11 @@ internal static class Extensions
         return DbValueToHelper(value, true, x => Convert.ToInt32(x, CultureInfo.InvariantCulture) == 0);
     }
 
+    public static byte[] DbValueToBytes(this object value)
+    {
+        return DbValueToHelper(value, null, x => (byte[])x);
+    }
+
     public static bool SetEquals<T>(this IEnumerable<T> source, IEnumerable<T> other, IEqualityComparer<T> comparer = null)
     {
         return new HashSet<T>(source, comparer).SetEquals(other);

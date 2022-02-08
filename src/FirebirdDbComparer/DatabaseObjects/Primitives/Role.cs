@@ -1,7 +1,8 @@
 using System.Collections.Generic;
-
+using System.Linq;
 using FirebirdDbComparer.Common;
 using FirebirdDbComparer.Common.Equatable;
+using FirebirdDbComparer.Compare;
 using FirebirdDbComparer.Exceptions;
 using FirebirdDbComparer.Interfaces;
 using FirebirdDbComparer.SqlGeneration;
@@ -15,7 +16,8 @@ public sealed class Role : Primitive<Role>, IHasSystemFlag, IHasDescription
             new EquatableProperty<Role>(x => x.RoleName, nameof(RoleName)),
             new EquatableProperty<Role>(x => x.OwnerName, nameof(OwnerName)),
             new EquatableProperty<Role>(x => x.RoleFlag, nameof(RoleFlag)),
-            new EquatableProperty<Role>(x => x.SystemFlag, nameof(SystemFlag))
+            new EquatableProperty<Role>(x => x.SystemFlag, nameof(SystemFlag)),
+            new EquatableProperty<Role>(x => x.SystemPrivileges, nameof(SystemPrivileges))
         };
 
     public Role(ISqlHelper sqlHelper)
@@ -26,6 +28,7 @@ public sealed class Role : Primitive<Role>, IHasSystemFlag, IHasDescription
     public DatabaseStringOrdinal OwnerName { get; private set; }
     public DatabaseStringOrdinal Description { get; private set; }
     private SystemFlagType _SystemFlag { get; set; }
+    public SystemPrivileges SystemPrivileges { get; private set; }
 
     public RoleFlagType RoleFlag => (RoleFlagType)_SystemFlag;
 
@@ -37,8 +40,14 @@ public sealed class Role : Primitive<Role>, IHasSystemFlag, IHasDescription
 
     protected override IEnumerable<Command> OnCreate(IMetadata sourceMetadata, IMetadata targetMetadata, IComparerContext context)
     {
-        yield return new Command()
+        var command = new Command()
             .Append($"CREATE ROLE {RoleName.AsSqlIndentifier()}");
+        var systemPrivileges = SystemPrivileges?.ToPrivileges() ?? Enumerable.Empty<string>();
+        if (systemPrivileges.Any())
+        {
+            command.Append($" SET SYSTEM PRIVILEGES TO {string.Join(", ", systemPrivileges)}");
+        }
+        yield return command;
         if (RoleFlag.HasFlag(RoleFlagType.RoleFlagMayTrust))
         {
             yield return new Command()
@@ -78,6 +87,11 @@ public sealed class Role : Primitive<Role>, IHasSystemFlag, IHasDescription
                 Description = values["RDB$DESCRIPTION"].DbValueToString(),
                 _SystemFlag = (SystemFlagType)values["RDB$SYSTEM_FLAG"].DbValueToInt32().GetValueOrDefault()
             };
+
+        if (sqlHelper.TargetVersion.AtLeast(TargetVersion.Version40))
+        {
+            result.SystemPrivileges = new SystemPrivileges(sqlHelper, values["RDB$SYSTEM_PRIVILEGES"].DbValueToBytes());
+        }
         return result;
     }
 }
