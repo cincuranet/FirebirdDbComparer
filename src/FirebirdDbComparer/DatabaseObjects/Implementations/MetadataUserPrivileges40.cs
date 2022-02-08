@@ -13,4 +13,12 @@ public class MetadataUserPrivileges40 : MetadataUserPrivileges30
     public MetadataUserPrivileges40(IMetadata metadata, ISqlHelper sqlHelper)
         : base(metadata, sqlHelper)
     { }
+
+    protected override void AddDefault(UserPrivilege privilege, Command command)
+    {
+        if (privilege.FieldName == "D")
+        {
+            command.Append(" DEFAULT");
+        }
+    }
 }

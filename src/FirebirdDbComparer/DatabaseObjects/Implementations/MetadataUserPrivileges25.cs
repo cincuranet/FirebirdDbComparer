@@ -182,13 +182,18 @@ select trim(UP.RDB$USER) as RDB$USER,
         }
     }
 
+    protected virtual void AddDefault(UserPrivilege privilege, Command command)
+    { }
+
     protected virtual Command CreateGrant(UserPrivilege privilege, IComparerContext context)
     {
         var command = new Command();
+        command.Append("GRANT");
+        AddDefault(privilege, command);
         command.Append(
             privilege.Privilege == Privilege.Member
-                ? $"GRANT {privilege.ObjectName.AsSqlIndentifier()} TO {privilege.User.AsSqlIndentifier()}"
-                : $"GRANT {CreatePrivilegeName(privilege)} ON {privilege.ObjectType.ToSqlObject()} {privilege.ObjectName.AsSqlIndentifier()} TO {CreateToObjectName(privilege)}");
+                ? $" {privilege.ObjectName.AsSqlIndentifier()} TO {privilege.User.AsSqlIndentifier()}"
+                : $" {CreatePrivilegeName(privilege)} ON {privilege.ObjectType.ToSqlObject()} {privilege.ObjectName.AsSqlIndentifier()} TO {CreateToObjectName(privilege)}");
         AddWithOption(privilege, command);
         AddGrantedBy(privilege, command);
         return command;
