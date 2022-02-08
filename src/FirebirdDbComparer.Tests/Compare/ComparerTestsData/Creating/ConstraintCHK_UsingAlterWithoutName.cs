@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using FirebirdDbComparer.Compare;
 using NUnit.Framework;

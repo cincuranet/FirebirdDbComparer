@@ -1,7 +1,4 @@
-﻿using System;
-using FirebirdDbComparer.Exceptions;
-
-namespace FirebirdDbComparer.Tests.Compare.ComparerTestsData.Changing;
+﻿namespace FirebirdDbComparer.Tests.Compare.ComparerTestsData.Changing;
 
 public class UDFSimpleModuleName : ComparerTests.TestCaseStructure
 {

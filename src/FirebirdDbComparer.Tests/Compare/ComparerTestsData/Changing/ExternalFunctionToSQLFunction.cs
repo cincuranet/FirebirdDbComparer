@@ -1,6 +1,4 @@
-﻿using System;
-using FirebirdDbComparer.Compare;
-using FirebirdDbComparer.Exceptions;
+﻿using FirebirdDbComparer.Compare;
 
 namespace FirebirdDbComparer.Tests.Compare.ComparerTestsData.Changing;
 

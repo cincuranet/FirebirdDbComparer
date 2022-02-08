@@ -1,8 +1,3 @@
-using System;
-using System.Linq;
-using FirebirdDbComparer.Compare;
-using NUnit.Framework;
-
 namespace FirebirdDbComparer.Tests.Compare.ComparerTestsData.Creating;
 
 public class Trigger_Disconnect_Active : ComparerTests.TestCaseStructure

@@ -1,8 +1,3 @@
-using System;
-using System.Linq;
-using FirebirdDbComparer.Compare;
-using NUnit.Framework;
-
 namespace FirebirdDbComparer.Tests.Compare.ComparerTestsData.Creating;
 
 public class Index_DESC_OneField : ComparerTests.TestCaseStructure

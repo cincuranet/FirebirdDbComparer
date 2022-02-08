@@ -1,8 +1,3 @@
-using System;
-using System.Linq;
-using FirebirdDbComparer.Compare;
-using NUnit.Framework;
-
 namespace FirebirdDbComparer.Tests.Compare.ComparerTestsData.Changing;
 
 public class ColumnPKToPK_PKInline_PKUsingAlterWithName : ComparerTests.TestCaseStructure
