@@ -69,6 +69,20 @@ public sealed class Role : Primitive<Role>, IHasSystemFlag, IHasDescription
             yield return new Command()
                 .Append($"ALTER ROLE {RoleName.AsSqlIndentifier()} {(RoleFlag.HasFlag(RoleFlagType.RoleFlagMayTrust) ? "SET" : "DROP")} AUTO ADMIN MAPPING");
         }
+        if (EquatableHelper.PropertiesEqual(this, otherRole, EquatableProperties, nameof(SystemPrivileges)))
+        {
+            var systemPrivileges = SystemPrivileges?.ToPrivileges() ?? Enumerable.Empty<string>();
+            if (systemPrivileges.Any())
+            {
+                yield return new Command()
+                    .Append($"ALTER ROLE {RoleName.AsSqlIndentifier()} SET SYSTEM PRIVILEGES TO {string.Join(", ", systemPrivileges)}");
+            }
+            else
+            {
+                yield return new Command()
+                    .Append($"ALTER ROLE {RoleName.AsSqlIndentifier()} DROP SYSTEM PRIVILEGES");
+            }
+        }
         else
         {
             throw new NotSupportedOnFirebirdException($"Altering role is not supported ({RoleName}).");

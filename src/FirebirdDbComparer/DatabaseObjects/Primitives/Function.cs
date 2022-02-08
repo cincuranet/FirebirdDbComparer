@@ -157,6 +157,7 @@ public sealed class Function : Primitive<Function>, IHasSystemFlag, IHasDescript
         if (IsLegacy)
         {
             var otherFunction = FindOtherChecked(targetMetadata.MetadataFunctions.FunctionsByName, FunctionNameKey, "function");
+
             if (EquatableHelper.PropertiesEqual(this, otherFunction, EquatableProperties, new[] { nameof(ModuleName), nameof(EntryPoint) }))
             {
                 yield return new Command().Append($"ALTER EXTERNAL FUNCTION {FunctionName.AsSqlIndentifier()} ENTRY_POINT '{SqlHelper.DoubleSingleQuotes(EntryPoint)}' MODULE_NAME '{SqlHelper.DoubleSingleQuotes(ModuleName)}'");
