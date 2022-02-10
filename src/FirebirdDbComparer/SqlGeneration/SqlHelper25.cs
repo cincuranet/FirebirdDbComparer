@@ -362,6 +362,7 @@ public class SqlHelper25 : ISqlHelper
     public virtual bool ObjectTypeIsGenerator(int objectType) => objectType == 14;
     public virtual bool ObjectTypeIsCharacterSet(int objectType) => objectType == 11;
     public virtual bool ObjectTypeIsCollation(int objectType) => objectType == 17;
+    public virtual bool ObjectTypeIsSystemPrivilege(int objectType) => false;
 
     public virtual IEnumerable<Command> HandleAlterIdentity(RelationField field, RelationField otherField)
     {

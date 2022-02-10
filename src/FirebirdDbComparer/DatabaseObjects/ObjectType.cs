@@ -39,6 +39,7 @@ public class ObjectType : IEquatable<ObjectType>
     public bool IsCharacterSet => SqlHelper.ObjectTypeIsCharacterSet(this);
     public bool IsGenerator => SqlHelper.ObjectTypeIsGenerator(this);
     public bool IsCollation => SqlHelper.ObjectTypeIsCollation(this);
+    public bool IsSystemPrivilege => SqlHelper.ObjectTypeIsSystemPrivilege(this);
 
     public static implicit operator int(ObjectType value)
     {

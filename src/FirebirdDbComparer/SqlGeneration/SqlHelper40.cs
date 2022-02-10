@@ -54,6 +54,7 @@ public class SqlHelper40 : SqlHelper30
             15 => "FUNCTION",
             17 => "COLLATION",
             18 => "PACKAGE",
+            20 => "SYSTEM PRIVILEGE",
             21 => "DATABASE",
             22 => "TABLE",
             23 => "VIEW",
@@ -70,6 +71,8 @@ public class SqlHelper40 : SqlHelper30
             _ => throw new ArgumentOutOfRangeException($"Wrong type: {objectType}."),
         };
     }
+
+    public override bool ObjectTypeIsSystemPrivilege(int objectType) => objectType == 20;
 
     public override IEnumerable<Command> HandleAlterIdentity(RelationField field, RelationField otherField)
     {
