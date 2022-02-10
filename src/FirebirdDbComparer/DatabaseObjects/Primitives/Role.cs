@@ -64,23 +64,26 @@ public sealed class Role : Primitive<Role>, IHasSystemFlag, IHasDescription
     {
         var otherRole = FindOtherChecked(targetMetadata.MetadataRoles.Roles, RoleName, "role");
 
-        if (EquatableHelper.PropertiesEqual(this, otherRole, EquatableProperties, nameof(RoleFlag)))
+        if (EquatableHelper.PropertiesEqual(this, otherRole, EquatableProperties, nameof(RoleFlag), nameof(SystemPrivileges)))
         {
-            yield return new Command()
-                .Append($"ALTER ROLE {RoleName.AsSqlIndentifier()} {(RoleFlag.HasFlag(RoleFlagType.RoleFlagMayTrust) ? "SET" : "DROP")} AUTO ADMIN MAPPING");
-        }
-        if (EquatableHelper.PropertiesEqual(this, otherRole, EquatableProperties, nameof(SystemPrivileges)))
-        {
-            var systemPrivileges = SystemPrivileges?.ToPrivileges() ?? Enumerable.Empty<string>();
-            if (systemPrivileges.Any())
+            if (EquatableHelper.PropertiesEqual(this, otherRole, EquatableProperties, nameof(RoleFlag)))
             {
                 yield return new Command()
-                    .Append($"ALTER ROLE {RoleName.AsSqlIndentifier()} SET SYSTEM PRIVILEGES TO {string.Join(", ", systemPrivileges)}");
+                    .Append($"ALTER ROLE {RoleName.AsSqlIndentifier()} {(RoleFlag.HasFlag(RoleFlagType.RoleFlagMayTrust) ? "SET" : "DROP")} AUTO ADMIN MAPPING");
             }
-            else
+            if (EquatableHelper.PropertiesEqual(this, otherRole, EquatableProperties, nameof(SystemPrivileges)))
             {
-                yield return new Command()
-                    .Append($"ALTER ROLE {RoleName.AsSqlIndentifier()} DROP SYSTEM PRIVILEGES");
+                var systemPrivileges = SystemPrivileges?.ToPrivileges() ?? Enumerable.Empty<string>();
+                if (systemPrivileges.Any())
+                {
+                    yield return new Command()
+                        .Append($"ALTER ROLE {RoleName.AsSqlIndentifier()} SET SYSTEM PRIVILEGES TO {string.Join(", ", systemPrivileges)}");
+                }
+                else
+                {
+                    yield return new Command()
+                        .Append($"ALTER ROLE {RoleName.AsSqlIndentifier()} DROP SYSTEM PRIVILEGES");
+                }
             }
         }
         else
