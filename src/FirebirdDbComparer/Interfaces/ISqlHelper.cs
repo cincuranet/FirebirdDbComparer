@@ -56,5 +56,6 @@ public interface ISqlHelper
     bool ObjectTypeIsCharacterSet(int objectType);
     bool ObjectTypeIsCollation(int objectType);
     bool ObjectTypeIsSystemPrivilege(int objectType);
+    string SystemPrivilegeString(int systemPrivilege);
     IEnumerable<Command> HandleAlterIdentity(RelationField field, RelationField otherField);
 }

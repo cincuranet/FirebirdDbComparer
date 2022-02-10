@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using FirebirdDbComparer.Common;
 using FirebirdDbComparer.Interfaces;
 
@@ -24,57 +23,57 @@ public class SystemPrivileges : IEquatable<SystemPrivileges>
     public IEnumerable<string> ToPrivileges()
     {
         if (m_Value[1])
-            yield return "USER_MANAGEMENT";
+            yield return SqlHelper.SystemPrivilegeString(1);
         if (m_Value[2])
-            yield return "READ_RAW_PAGES";
+            yield return SqlHelper.SystemPrivilegeString(2);
         if (m_Value[3])
-            yield return "CREATE_USER_TYPES";
+            yield return SqlHelper.SystemPrivilegeString(3);
         if (m_Value[4])
-            yield return "USE_NBACKUP_UTILITY";
+            yield return SqlHelper.SystemPrivilegeString(4);
         if (m_Value[5])
-            yield return "CHANGE_SHUTDOWN_MODE";
+            yield return SqlHelper.SystemPrivilegeString(5);
         if (m_Value[6])
-            yield return "TRACE_ANY_ATTACHMENT";
+            yield return SqlHelper.SystemPrivilegeString(6);
         if (m_Value[7])
-            yield return "MONITOR_ANY_ATTACHMENT";
+            yield return SqlHelper.SystemPrivilegeString(7);
         if (m_Value[8])
-            yield return "ACCESS_SHUTDOWN_DATABASE";
+            yield return SqlHelper.SystemPrivilegeString(8);
         if (m_Value[9])
-            yield return "CREATE_DATABASE";
+            yield return SqlHelper.SystemPrivilegeString(9);
         if (m_Value[10])
-            yield return "DROP_DATABASE";
+            yield return SqlHelper.SystemPrivilegeString(10);
         if (m_Value[11])
-            yield return "USE_GBAK_UTILITY";
+            yield return SqlHelper.SystemPrivilegeString(11);
         if (m_Value[12])
-            yield return "USE_GSTAT_UTILITY";
+            yield return SqlHelper.SystemPrivilegeString(12);
         if (m_Value[13])
-            yield return "USE_GFIX_UTILITY";
+            yield return SqlHelper.SystemPrivilegeString(13);
         if (m_Value[14])
-            yield return "IGNORE_DB_TRIGGERS";
+            yield return SqlHelper.SystemPrivilegeString(14);
         if (m_Value[15])
-            yield return "CHANGE_HEADER_SETTINGS";
+            yield return SqlHelper.SystemPrivilegeString(15);
         if (m_Value[16])
-            yield return "SELECT_ANY_OBJECT_IN_DATABASE";
+            yield return SqlHelper.SystemPrivilegeString(16);
         if (m_Value[17])
-            yield return "ACCESS_ANY_OBJECT_IN_DATABASE";
+            yield return SqlHelper.SystemPrivilegeString(17);
         if (m_Value[18])
-            yield return "MODIFY_ANY_OBJECT_IN_DATABASE";
+            yield return SqlHelper.SystemPrivilegeString(18);
         if (m_Value[19])
-            yield return "CHANGE_MAPPING_RULES";
+            yield return SqlHelper.SystemPrivilegeString(19);
         if (m_Value[20])
-            yield return "USE_GRANTED_BY_CLAUSE";
+            yield return SqlHelper.SystemPrivilegeString(20);
         if (m_Value[21])
-            yield return "GRANT_REVOKE_ON_ANY_OBJECT";
+            yield return SqlHelper.SystemPrivilegeString(21);
         if (m_Value[22])
-            yield return "GRANT_REVOKE_ANY_DDL_RIGHT";
+            yield return SqlHelper.SystemPrivilegeString(22);
         if (m_Value[23])
-            yield return "CREATE_PRIVILEGED_ROLES";
+            yield return SqlHelper.SystemPrivilegeString(23);
         if (m_Value[24])
-            yield return "GET_DBCRYPT_INFO";
+            yield return SqlHelper.SystemPrivilegeString(24);
         if (m_Value[25])
-            yield return "MODIFY_EXT_CONN_POOL";
+            yield return SqlHelper.SystemPrivilegeString(25);
         if (m_Value[26])
-            yield return "REPLICATE_INTO_DATABASE";
+            yield return SqlHelper.SystemPrivilegeString(26);
     }
 
     public override int GetHashCode() => m_Value?.GetHashCode() ?? 0;

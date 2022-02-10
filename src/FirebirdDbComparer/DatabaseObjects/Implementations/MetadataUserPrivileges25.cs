@@ -248,7 +248,12 @@ select trim(UP.RDB$USER) as RDB$USER,
             builder.Append(userPrivilege.UserType.ToSqlObject());
             builder.Append(" ");
         }
-        builder.Append(userPrivilege.User.AsSqlIndentifier());
+        builder.Append(CreateUserName(userPrivilege));
         return builder.ToString();
+    }
+
+    protected virtual string CreateUserName(UserPrivilege userPrivilege)
+    {
+        return userPrivilege.User.AsSqlIndentifier();
     }
 }

@@ -68,11 +68,45 @@ public class SqlHelper40 : SqlHelper30
             31 => "CHARACTER SET",
             32 => "COLLATION",
             33 => "FILTER",
-            _ => throw new ArgumentOutOfRangeException($"Wrong type: {objectType}."),
+            _ => throw new ArgumentOutOfRangeException($"Wrong object type: {objectType}."),
         };
     }
 
     public override bool ObjectTypeIsSystemPrivilege(int objectType) => objectType == 20;
+
+    public override string SystemPrivilegeString(int systemPrivilege)
+    {
+        return systemPrivilege switch
+        {
+            1 => "USER_MANAGEMENT",
+            2 => "READ_RAW_PAGES",
+            3 => "CREATE_USER_TYPES",
+            4 => "USE_NBACKUP_UTILITY",
+            5 => "CHANGE_SHUTDOWN_MODE",
+            6 => "TRACE_ANY_ATTACHMENT",
+            7 => "MONITOR_ANY_ATTACHMENT",
+            8 => "ACCESS_SHUTDOWN_DATABASE",
+            9 => "CREATE_DATABASE",
+            10 => "DROP_DATABASE",
+            11 => "USE_GBAK_UTILITY",
+            12 => "USE_GSTAT_UTILITY",
+            13 => "USE_GFIX_UTILITY",
+            14 => "IGNORE_DB_TRIGGERS",
+            15 => "CHANGE_HEADER_SETTINGS",
+            16 => "SELECT_ANY_OBJECT_IN_DATABASE",
+            17 => "ACCESS_ANY_OBJECT_IN_DATABASE",
+            18 => "MODIFY_ANY_OBJECT_IN_DATABASE",
+            19 => "CHANGE_MAPPING_RULES",
+            20 => "USE_GRANTED_BY_CLAUSE",
+            21 => "GRANT_REVOKE_ON_ANY_OBJECT",
+            22 => "GRANT_REVOKE_ANY_DDL_RIGHT",
+            23 => "CREATE_PRIVILEGED_ROLES",
+            24 => "GET_DBCRYPT_INFO",
+            25 => "MODIFY_EXT_CONN_POOL",
+            26 => "REPLICATE_INTO_DATABASE",
+            _ => throw new ArgumentOutOfRangeException($"Unknown privilege: {systemPrivilege}."),
+        };
+    }
 
     public override IEnumerable<Command> HandleAlterIdentity(RelationField field, RelationField otherField)
     {

@@ -21,4 +21,16 @@ public class MetadataUserPrivileges40 : MetadataUserPrivileges30
             command.Append(" DEFAULT");
         }
     }
+
+    protected override string CreateUserName(UserPrivilege userPrivilege)
+    {
+        if (userPrivilege.UserType.IsSystemPrivilege)
+        {
+            return SqlHelper.SystemPrivilegeString(int.Parse(userPrivilege.User.ToString()));
+        }
+        else
+        {
+            return userPrivilege.User.AsSqlIndentifier();
+        }
+    }
 }
