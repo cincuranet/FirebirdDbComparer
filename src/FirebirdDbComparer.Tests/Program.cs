@@ -8,5 +8,7 @@ public static class Program
     public static int Main()
     {
         return new AutoRun(Assembly.GetEntryAssembly()).Execute(new string[] { @"--where=test=~/ComparerTests40\..*.*/" });
+        //return new AutoRun(Assembly.GetEntryAssembly()).Execute(new string[] { @"--where=test=~/ComparerTests30\..*.*/" });
+        //return new AutoRun(Assembly.GetEntryAssembly()).Execute(new string[] { @"--where=test=~/ComparerTests25\..*.*/" });
     }
 }
