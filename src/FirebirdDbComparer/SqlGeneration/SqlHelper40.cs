@@ -133,4 +133,14 @@ public class SqlHelper40 : SqlHelper30
                 yield return item;
         }
     }
+
+    public override string SqlSecurityString(bool? sqlSecurity)
+    {
+        return sqlSecurity switch
+        {
+            true => "DEFINER",
+            false => "INVOKER",
+            null => null,
+        };
+    }
 }

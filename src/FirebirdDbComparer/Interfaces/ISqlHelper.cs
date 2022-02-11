@@ -58,4 +58,5 @@ public interface ISqlHelper
     bool ObjectTypeIsSystemPrivilege(int objectType);
     string SystemPrivilegeString(int systemPrivilege);
     IEnumerable<Command> HandleAlterIdentity(RelationField field, RelationField otherField);
+    string SqlSecurityString(bool? sqlSecurity);
 }

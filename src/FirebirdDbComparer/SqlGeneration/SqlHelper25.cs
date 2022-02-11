@@ -378,6 +378,11 @@ public class SqlHelper25 : ISqlHelper
         yield break;
     }
 
+    public virtual string SqlSecurityString(bool? sqlSecurity)
+    {
+        throw new InvalidOperationException();
+    }
+
     protected virtual string ScalableNumber(string regularType, IDataType dataType)
     {
         if (dataType.FieldSubType == 2 || dataType.FieldSubType == 0 && dataType.FieldScale < 0)
