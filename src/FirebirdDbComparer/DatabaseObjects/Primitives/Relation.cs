@@ -25,7 +25,8 @@ public class Relation : Primitive<Relation>, IHasSystemFlag, IHasDescription
             new EquatableProperty<Relation>(x => x.ExternalDescription, nameof(ExternalDescription)),
             new EquatableProperty<Relation>(x => x.OwnerName, nameof(OwnerName)),
             new EquatableProperty<Relation>(x => x.SystemFlag, nameof(SystemFlag)),
-            new EquatableProperty<Relation>(x => x.Fields, nameof(Fields))
+            new EquatableProperty<Relation>(x => x.Fields, nameof(Fields)),
+            new EquatableProperty<Relation>(x => x.SqlSecurity, nameof(SqlSecurity))
         };
 
     public Relation(ISqlHelper sqlHelper)
@@ -137,6 +138,8 @@ public class Relation : Primitive<Relation>, IHasSystemFlag, IHasDescription
 
     protected virtual IEnumerable<Command> OnAlterTable(IMetadata sourceMetadata, IMetadata targetMetadata, IComparerContext context)
     {
+        var otherRelation = FindOtherChecked(targetMetadata.MetadataRelations.Relations, RelationName, "table");
+
         var fieldNames = sourceMetadata
             .MetadataRelations
             .Relations[RelationName]
@@ -186,6 +189,12 @@ public class Relation : Primitive<Relation>, IHasSystemFlag, IHasDescription
         foreach (var field in droppedFields)
         {
             context.DeferredColumnsToDrop.Add(new CommandGroup().Append(field.Drop(sourceMetadata, targetMetadata, context)));
+        }
+
+        // 3. SQL SECURITY
+        if (SqlSecurity == null && otherRelation.SqlSecurity != null)
+        {
+            yield return new Command().Append($"ALTER TABLE {RelationName.AsSqlIndentifier()} DROP SQL SECURITY");
         }
     }
 
