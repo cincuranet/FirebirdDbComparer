@@ -6,6 +6,7 @@ using System.Text;
 
 using FirebirdDbComparer.Common;
 using FirebirdDbComparer.Common.Equatable;
+using FirebirdDbComparer.Compare;
 using FirebirdDbComparer.DatabaseObjects.EquatableKeys;
 using FirebirdDbComparer.Interfaces;
 using FirebirdDbComparer.SqlGeneration;
@@ -41,6 +42,7 @@ public class Relation : Primitive<Relation>, IHasSystemFlag, IHasDescription
     public DatabaseStringOrdinal OwnerName { get; private set; }
     public IList<RelationField> Fields { get; private set; }
     public SystemFlagType SystemFlag { get; private set; }
+    public bool? SqlSecurity { get; private set; }
     public IList<Trigger> Triggers { get; set; }
     public IList<Trigger> UserTriggers { get; set; }
     public IList<RelationConstraint> RelationConstraints { get; set; }
@@ -83,6 +85,11 @@ public class Relation : Primitive<Relation>, IHasSystemFlag, IHasDescription
         {
             command.AppendLine();
             command.Append($"ON COMMIT {MetadataRelationType.ToDescription()} ROWS");
+        }
+        if (SqlSecurity != null)
+        {
+            command.AppendLine();
+            command.Append($"SQL SECURITY {((bool)SqlSecurity ? "DEFINER" : "INVOKER")}");
         }
         return command;
     }
@@ -220,6 +227,11 @@ public class Relation : Primitive<Relation>, IHasSystemFlag, IHasDescription
                 OwnerName = values["RDB$OWNER_NAME"].DbValueToString(),
                 SystemFlag = (SystemFlagType)values["RDB$SYSTEM_FLAG"].DbValueToInt32().GetValueOrDefault()
             };
+
+        if (sqlHelper.TargetVersion.AtLeast(TargetVersion.Version40))
+        {
+            result.SqlSecurity = values["RDB$SQL_SECURITY"].DbValueToBool();
+        }
 
         result.Fields = relationFields[result.RelationName].ToArray();
 
