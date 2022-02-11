@@ -90,7 +90,7 @@ public class Relation : Primitive<Relation>, IHasSystemFlag, IHasDescription
         if (SqlSecurity != null)
         {
             command.AppendLine();
-            command.Append($"SQL SECURITY {((bool)SqlSecurity ? "DEFINER" : "INVOKER")}");
+            command.Append($"SQL SECURITY {SqlSecurityString(SqlSecurity)}");
         }
         return command;
     }
@@ -196,6 +196,10 @@ public class Relation : Primitive<Relation>, IHasSystemFlag, IHasDescription
         {
             yield return new Command().Append($"ALTER TABLE {RelationName.AsSqlIndentifier()} DROP SQL SECURITY");
         }
+        else if (SqlSecurity != null && otherRelation.SqlSecurity != null && SqlSecurity != otherRelation.SqlSecurity)
+        {
+            yield return new Command().Append($"ALTER TABLE {RelationName.AsSqlIndentifier()} ALTER SQL SECURITY {SqlSecurityString(SqlSecurity)}");
+        }
     }
 
     protected virtual IEnumerable<Command> OnAlterView(IMetadata sourceMetadata, IMetadata targetMetadata, IComparerContext context)
@@ -219,6 +223,16 @@ public class Relation : Primitive<Relation>, IHasSystemFlag, IHasDescription
         var definitions = fields.Select(x => x.CreateDefinition(targetMetadata, sourceMetadata, context, onlyName: onlyNames));
         builder.Append(string.Join($",{Environment.NewLine}  ", definitions));
         return builder.ToString();
+    }
+
+    private static string SqlSecurityString(bool? sqlSecurity)
+    {
+        return sqlSecurity switch
+        {
+            true => "DEFINER",
+            false => "INVOKER",
+            null => null,
+        };
     }
 
     internal static Relation CreateFrom(ISqlHelper sqlHelper, IDictionary<string, object> values, ILookup<Identifier, RelationField> relationFields)
