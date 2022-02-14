@@ -24,7 +24,8 @@ public sealed class Trigger : Primitive<Trigger>, IHasSystemFlag, IHasDescriptio
             new EquatableProperty<Trigger>(x => x.Inactive, nameof(Inactive)),
             new EquatableProperty<Trigger>(x => x.SystemFlag, nameof(SystemFlag)),
             new EquatableProperty<Trigger>(x => x.EngineName, nameof(EngineName)),
-            new EquatableProperty<Trigger>(x => x.EntryPoint, nameof(EntryPoint))
+            new EquatableProperty<Trigger>(x => x.EntryPoint, nameof(EntryPoint)),
+            new EquatableProperty<Trigger>(x => x.SqlSecurity, nameof(SqlSecurity))
         };
 
     public Trigger(ISqlHelper sqlHelper)
@@ -44,6 +45,7 @@ public sealed class Trigger : Primitive<Trigger>, IHasSystemFlag, IHasDescriptio
     public SystemFlagType SystemFlag { get; private set; }
     public Identifier EngineName { get; private set; }
     public DatabaseStringOrdinal EntryPoint { get; private set; }
+    public bool? SqlSecurity { get; private set; }
     public RelationConstraint Constraint { get; set; }
     public Relation Relation { get; set; }
 
@@ -89,6 +91,11 @@ public sealed class Trigger : Primitive<Trigger>, IHasSystemFlag, IHasDescriptio
         }
         else
         {
+            if (SqlSecurity != null)
+            {
+                command.Append($"SQL SECURITY {SqlHelper.SqlSecurityString(SqlSecurity)}");
+                command.AppendLine();
+            }
             command.Append(TriggerSource);
         }
         yield return command;
@@ -103,15 +110,25 @@ public sealed class Trigger : Primitive<Trigger>, IHasSystemFlag, IHasDescriptio
     protected override IEnumerable<Command> OnAlter(IMetadata sourceMetadata, IMetadata targetMetadata, IComparerContext context)
     {
         var otherTrigger = FindOtherChecked(targetMetadata.MetadataTriggers.TriggersByName, TriggerName, "trigger");
+
         if ((TriggerClass != otherTrigger.TriggerClass)
             || (TriggerClass == TriggerClassType.DB && TriggerType != otherTrigger.TriggerType)
             || (TriggerClass == TriggerClassType.DDL && TriggerType != otherTrigger.TriggerType))
         {
             throw new NotSupportedOnFirebirdException($"Altering DB and DDL trigger type is not supported ({TriggerName}).");
         }
+        else if (SqlSecurity == null && otherTrigger.SqlSecurity != null)
+        {
+            yield return new Command().Append($"ALTER TRIGGER {TriggerName.AsSqlIndentifier()} DROP SQL SECURITY");
+        }
+        else if (SqlSecurity != null && otherTrigger.SqlSecurity != null && SqlSecurity != otherTrigger.SqlSecurity)
+        {
+            yield return new Command().Append($"ALTER TRIGGER {TriggerName.AsSqlIndentifier()} SQL SECURITY {SqlHelper.SqlSecurityString(SqlSecurity)}");
+        }
         else
         {
-            return OnCreate(sourceMetadata, targetMetadata, context);
+            foreach (var item in OnCreate(sourceMetadata, targetMetadata, context))
+                yield return item;
         }
     }
 
@@ -142,6 +159,11 @@ public sealed class Trigger : Primitive<Trigger>, IHasSystemFlag, IHasDescriptio
         {
             result.EngineName = new Identifier(sqlHelper, values["RDB$ENGINE_NAME"].DbValueToString());
             result.EntryPoint = values["RDB$ENTRYPOINT"].DbValueToString();
+        }
+
+        if (sqlHelper.TargetVersion.AtLeast(TargetVersion.Version40))
+        {
+            result.SqlSecurity = values["RDB$SQL_SECURITY"].DbValueToBool();
         }
 
         return result;

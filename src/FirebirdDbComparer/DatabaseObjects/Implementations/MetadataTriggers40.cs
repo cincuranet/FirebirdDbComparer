@@ -7,4 +7,18 @@ public class MetadataTriggers40 : MetadataTriggers30
     public MetadataTriggers40(IMetadata metadata, ISqlHelper sqlHelper)
         : base(metadata, sqlHelper)
     { }
+
+    protected override string CommandText => @"
+select trim(T.RDB$TRIGGER_NAME) as RDB$TRIGGER_NAME,
+       trim(T.RDB$RELATION_NAME) as RDB$RELATION_NAME,
+       T.RDB$TRIGGER_SEQUENCE,
+       T.RDB$TRIGGER_TYPE,
+       T.RDB$TRIGGER_SOURCE,
+       T.RDB$DESCRIPTION,
+       T.RDB$TRIGGER_INACTIVE,
+       T.RDB$SYSTEM_FLAG,
+       trim(T.RDB$ENGINE_NAME) as RDB$ENGINE_NAME,
+       trim(T.RDB$ENTRYPOINT) as RDB$ENTRYPOINT,
+       T.RDB$SQL_SECURITY
+  from RDB$TRIGGERS T";
 }
