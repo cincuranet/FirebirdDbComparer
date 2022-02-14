@@ -38,7 +38,6 @@ select D.RDB$DESCRIPTION,
         Initialize(values);
     }
 
-    [SuppressMessage("ReSharper", "PossibleInvalidOperationException")]
     protected virtual void Initialize(IDictionary<string, object> values)
     {
         Description = values["RDB$DESCRIPTION"].DbValueToString();

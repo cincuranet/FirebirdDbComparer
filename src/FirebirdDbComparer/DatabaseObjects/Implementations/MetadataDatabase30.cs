@@ -24,7 +24,6 @@ select D.RDB$DESCRIPTION,
   from RDB$DATABASE D
        cross join MON$DATABASE M";
 
-    [SuppressMessage("ReSharper", "PossibleInvalidOperationException")]
     protected override void Initialize(IDictionary<string, object> values)
     {
         base.Initialize(values);
