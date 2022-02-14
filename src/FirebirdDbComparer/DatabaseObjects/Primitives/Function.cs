@@ -31,7 +31,8 @@ public sealed class Function : Primitive<Function>, IHasSystemFlag, IHasDescript
             new EquatableProperty<Function>(x => x.FunctionSource, nameof(FunctionSource)),
             new EquatableProperty<Function>(x => x.Owner, nameof(Owner)),
             new EquatableProperty<Function>(x => x.LegacyFlag, nameof(LegacyFlag)),
-            new EquatableProperty<Function>(x => x.DeterministicFlag, nameof(DeterministicFlag))
+            new EquatableProperty<Function>(x => x.DeterministicFlag, nameof(DeterministicFlag)),
+            new EquatableProperty<Function>(x => x.SqlSecurity, nameof(SqlSecurity))
         };
 
     public Function(ISqlHelper sqlHelper)
@@ -53,6 +54,7 @@ public sealed class Function : Primitive<Function>, IHasSystemFlag, IHasDescript
     public DeterministicFlagType DeterministicFlag { get; private set; }
     public DatabaseStringOrdinal Description { get; private set; }
     public SystemFlagType SystemFlag { get; private set; }
+    public bool? SqlSecurity { get; private set; }
     public Package Package { get; set; }
 
     internal bool IsLegacy => LegacyFlag == null || LegacyFlag == LegacyFlagType.LegacyStyle;
@@ -113,6 +115,11 @@ public sealed class Function : Primitive<Function>, IHasSystemFlag, IHasDescript
             }
             else
             {
+                if (SqlSecurity != null)
+                {
+                    command.Append($"SQL SECURITY {SqlHelper.SqlSecurityString(SqlSecurity)}");
+                    command.AppendLine();
+                }
                 command.Append("AS");
                 command.AppendLine();
                 if (context.EmptyBodiesEnabled)
@@ -264,6 +271,11 @@ public sealed class Function : Primitive<Function>, IHasSystemFlag, IHasDescript
             result.DeterministicFlag = (DeterministicFlagType)values["RDB$DETERMINISTIC_FLAG"].DbValueToInt32().GetValueOrDefault();
 
             result.FunctionNameKey = new Identifier(sqlHelper, result.PackageName, result.FunctionName);
+        }
+
+        if (sqlHelper.TargetVersion.AtLeast(TargetVersion.Version40))
+        {
+            result.SqlSecurity = values["RDB$SQL_SECURITY"].DbValueToBool();
         }
 
         result.FunctionArguments = functionArguments[result.FunctionNameKey].ToArray();
