@@ -29,7 +29,8 @@ public sealed class Procedure : Primitive<Procedure>, IHasSystemFlag, IHasDescri
             new EquatableProperty<Procedure>(x => x.EngineName, nameof(EngineName)),
             new EquatableProperty<Procedure>(x => x.EntryPoint, nameof(EntryPoint)),
             new EquatableProperty<Procedure>(x => x.PackageName, nameof(PackageName)),
-            new EquatableProperty<Procedure>(x => x.PrivateFlag, nameof(PrivateFlag))
+            new EquatableProperty<Procedure>(x => x.PrivateFlag, nameof(PrivateFlag)),
+            new EquatableProperty<Procedure>(x => x.SqlSecurity, nameof(SqlSecurity))
         };
 
     public Procedure(ISqlHelper sqlHelper)
@@ -50,6 +51,7 @@ public sealed class Procedure : Primitive<Procedure>, IHasSystemFlag, IHasDescri
     public DatabaseStringOrdinal EntryPoint { get; private set; }
     public Identifier PackageName { get; private set; }
     public PrivateFlagType PrivateFlag { get; private set; }
+    public bool? SqlSecurity { get; private set; }
     public IList<ProcedureParameter> ProcedureParameters { get; set; }
     public Package Package { get; set; }
 
@@ -96,6 +98,11 @@ public sealed class Procedure : Primitive<Procedure>, IHasSystemFlag, IHasDescri
         }
         else
         {
+            if (SqlSecurity != null)
+            {
+                command.Append($"SQL SECURITY {SqlHelper.SqlSecurityString(SqlSecurity)}");
+                command.AppendLine();
+            }
             command.Append("AS");
             command.AppendLine();
             if (context.EmptyBodiesEnabled)
@@ -198,6 +205,11 @@ public sealed class Procedure : Primitive<Procedure>, IHasSystemFlag, IHasDescri
             result.PrivateFlag = (PrivateFlagType)values["RDB$PRIVATE_FLAG"].DbValueToInt32().GetValueOrDefault();
 
             result.ProcedureNameKey = new Identifier(sqlHelper, result.PackageName, result.ProcedureName);
+        }
+
+        if (sqlHelper.TargetVersion.AtLeast(TargetVersion.Version40))
+        {
+            result.SqlSecurity = values["RDB$SQL_SECURITY"].DbValueToBool();
         }
 
         result.ProcedureParameters = procedureParameters[result.ProcedureNameKey].ToArray();
