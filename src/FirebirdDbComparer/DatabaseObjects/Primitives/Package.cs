@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 using FirebirdDbComparer.Common;
 using FirebirdDbComparer.Common.Equatable;
+using FirebirdDbComparer.Compare;
 using FirebirdDbComparer.Interfaces;
 using FirebirdDbComparer.SqlGeneration;
 
@@ -14,8 +15,9 @@ public sealed class Package : Primitive<Package>, IHasSystemFlag, IHasDescriptio
     {
         private static readonly EquatableProperty<Package>[] s_EquatableProperties =
         {
-                new EquatableProperty<Package>(x => x.PackageHeaderSource, nameof(PackageHeaderSource))
-            };
+            new EquatableProperty<Package>(x => x.PackageHeaderSource, nameof(PackageHeaderSource)),
+            new EquatableProperty<Package>(x => x.SqlSecurity, nameof(SqlSecurity))
+        };
 
         public PackageHeaderEqualityComparer()
             : base(s_EquatableProperties)
@@ -26,8 +28,8 @@ public sealed class Package : Primitive<Package>, IHasSystemFlag, IHasDescriptio
     {
         private static readonly EquatableProperty<Package>[] s_EquatableProperties =
         {
-                new EquatableProperty<Package>(x => x.PackageBodySource, nameof(PackageBodySource))
-            };
+            new EquatableProperty<Package>(x => x.PackageBodySource, nameof(PackageBodySource))
+        };
 
         public PackageBodyEqualityComparer()
             : base(s_EquatableProperties)
@@ -39,7 +41,8 @@ public sealed class Package : Primitive<Package>, IHasSystemFlag, IHasDescriptio
             new EquatableProperty<Package>(x => x.PackageName, nameof(PackageName)),
             new EquatableProperty<Package>(x => x.PackageHeaderSource, nameof(PackageHeaderSource)),
             new EquatableProperty<Package>(x => x.PackageBodySource, nameof(PackageBodySource)),
-            new EquatableProperty<Package>(x => x.OwnerName, nameof(OwnerName))
+            new EquatableProperty<Package>(x => x.OwnerName, nameof(OwnerName)),
+            new EquatableProperty<Package>(x => x.SqlSecurity, nameof(SqlSecurity))
         };
 
     public Package(ISqlHelper sqlHelper)
@@ -56,6 +59,7 @@ public sealed class Package : Primitive<Package>, IHasSystemFlag, IHasDescriptio
     public Identifier OwnerName { get; private set; }
     public SystemFlagType SystemFlag { get; private set; }
     public DatabaseStringOrdinal Description { get; private set; }
+    public bool? SqlSecurity { get; private set; }
 
     protected override Package Self => this;
 
@@ -71,6 +75,11 @@ public sealed class Package : Primitive<Package>, IHasSystemFlag, IHasDescriptio
         else
         {
             command.Append($"RECREATE PACKAGE BODY {PackageName.AsSqlIndentifier()}");
+        }
+        if (SqlSecurity != null)
+        {
+            command.AppendLine();
+            command.Append($"SQL SECURITY {SqlHelper.SqlSecurityString(SqlSecurity)}");
         }
         command.AppendLine();
         command.Append("AS");
@@ -120,6 +129,12 @@ public sealed class Package : Primitive<Package>, IHasSystemFlag, IHasDescriptio
                 SystemFlag = (SystemFlagType)values["RDB$SYSTEM_FLAG"].DbValueToInt32().GetValueOrDefault(),
                 Description = values["RDB$DESCRIPTION"].DbValueToString()
             };
+
+        if (sqlHelper.TargetVersion.AtLeast(TargetVersion.Version40))
+        {
+            result.SqlSecurity = values["RDB$SQL_SECURITY"].DbValueToBool();
+        }
+
         return result;
     }
 }
