@@ -48,7 +48,7 @@ public sealed class Comparer : IComparer
     {
         IEnumerable<(Func<IMetadata, IMetadata, IComparerContext, IEnumerable<CommandGroup>> action, string name)> Actions()
         {
-            yield return (Handle<IMetadataDatabase>(x => x.HandleDatabase), "DATABASE");
+            yield return (ProcessDatabase(), "DATABASE");
             yield return (Handle<IMetadataFunctions>(x => x.CreateLegacyFunctions), "UDFS (new)");
             yield return (Handle<IMetadataCollations>(x => x.CreateCollations), "COLLATIONS (new)");
             yield return (Handle<IMetadataCharacterSets>(x => x.AlterCharacterSets), "CHARACTER SETS (alter)");
@@ -113,6 +113,15 @@ public sealed class Comparer : IComparer
 
     private static Func<IMetadata, IMetadata, IComparerContext, IEnumerable<CommandGroup>> ProcessDeferredColumnsToDrop()
     {
-        return (_, __, c) => c.DeferredColumnsToDrop;
+        return (_, _, c) => c.DeferredColumnsToDrop;
+    }
+
+    private static Func<IMetadata, IMetadata, IComparerContext, IEnumerable<CommandGroup>> ProcessDatabase()
+    {
+        return (s, t, c) =>
+        {
+            var result = s.MetadataDatabase.ProcessDatabase(t, c);
+            return result != null ? new[] { result } : Array.Empty<CommandGroup>();
+        };
     }
 }

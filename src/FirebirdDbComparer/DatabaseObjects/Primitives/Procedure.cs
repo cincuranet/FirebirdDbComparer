@@ -153,11 +153,11 @@ public sealed class Procedure : Primitive<Procedure>, IHasSystemFlag, IHasDescri
         builder.Append(" ");
         if (context.EmptyBodiesEnabled)
         {
-            builder.Append(SqlHelper.GetDataType(parameter.Field, sourceMetadata.MetadataCharacterSets.CharacterSetsById, sourceMetadata.MetadataDatabase.CharacterSet.CharacterSetId));
+            builder.Append(SqlHelper.GetDataType(parameter.Field, sourceMetadata.MetadataCharacterSets.CharacterSetsById, sourceMetadata.MetadataDatabase.Database.CharacterSet.CharacterSetId));
         }
         else
         {
-            builder.Append(SqlHelper.GetDataType(parameter, sourceMetadata.MetadataCharacterSets.CharacterSetsById, sourceMetadata.MetadataDatabase.CharacterSet.CharacterSetId));
+            builder.Append(SqlHelper.GetDataType(parameter, sourceMetadata.MetadataCharacterSets.CharacterSetsById, sourceMetadata.MetadataDatabase.Database.CharacterSet.CharacterSetId));
         }
         var notNullClause = SqlHelper.HandleNullable(parameter);
         if (notNullClause != null)

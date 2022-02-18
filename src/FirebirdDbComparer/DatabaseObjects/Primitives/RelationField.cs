@@ -79,7 +79,7 @@ public sealed class RelationField : Primitive<RelationField>, IHasDescription, I
         }
         if (!onlyName)
         {
-            var dataType = SqlHelper.GetDataType(this, sourceMetadata.MetadataCharacterSets.CharacterSetsById, sourceMetadata.MetadataDatabase.CharacterSet.CharacterSetId);
+            var dataType = SqlHelper.GetDataType(this, sourceMetadata.MetadataCharacterSets.CharacterSetsById, sourceMetadata.MetadataDatabase.Database.CharacterSet.CharacterSetId);
             if (Field.ComputedSource != null)
             {
                 builder.Append("COMPUTED BY ");
@@ -159,7 +159,7 @@ public sealed class RelationField : Primitive<RelationField>, IHasDescription, I
         {
             if (context.EmptyBodiesEnabled)
             {
-                var dataType = SqlHelper.GetDataType(this, targetMetadata.MetadataCharacterSets.CharacterSetsById, targetMetadata.MetadataDatabase.CharacterSet.CharacterSetId);
+                var dataType = SqlHelper.GetDataType(this, targetMetadata.MetadataCharacterSets.CharacterSetsById, targetMetadata.MetadataDatabase.Database.CharacterSet.CharacterSetId);
                 yield return new Command().Append(AlterTableColumnHelper($"COMPUTED BY ({CreateShimFieldContent(dataType)})"));
             }
             else

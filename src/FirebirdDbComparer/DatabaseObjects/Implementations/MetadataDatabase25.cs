@@ -1,9 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-
-using FirebirdDbComparer.Common;
 using FirebirdDbComparer.DatabaseObjects.Primitives;
 using FirebirdDbComparer.Interfaces;
 using FirebirdDbComparer.SqlGeneration;
@@ -12,16 +9,13 @@ namespace FirebirdDbComparer.DatabaseObjects.Implementations;
 
 public class MetadataDatabase25 : DatabaseObject, IMetadataDatabase, ISupportsComment
 {
+    private Database m_Database;
+
     public MetadataDatabase25(IMetadata metadata, ISqlHelper sqlHelper)
         : base(metadata, sqlHelper)
     { }
 
-    public DatabaseStringOrdinal Description { get; private set; }
-    public Identifier CharacterSetName { get; private set; }
-    public CharacterSet CharacterSet { get; private set; }
-    public int Dialect { get; private set; }
-    public short OdsMajor { get; private set; }
-    public short OdsMinor { get; private set; }
+    public Database Database => m_Database;
 
     protected virtual string CommandText => @"
 select D.RDB$DESCRIPTION,
@@ -34,49 +28,48 @@ select D.RDB$DESCRIPTION,
 
     public override void Initialize()
     {
-        var values = Execute(CommandText).Single();
-        Initialize(values);
-    }
-
-    protected virtual void Initialize(IDictionary<string, object> values)
-    {
-        Description = values["RDB$DESCRIPTION"].DbValueToString();
-        CharacterSetName = new Identifier(SqlHelper, values["RDB$CHARACTER_SET_NAME"].DbValueToString());
-        Dialect = values["MON$SQL_DIALECT"].DbValueToInt32().Value;
-        OdsMajor = values["MON$ODS_MAJOR"].DbValueToInt16().Value;
-        OdsMinor = values["MON$ODS_MINOR"].DbValueToInt16().Value;
+        m_Database = Execute(CommandText)
+            .Select(d => Database.CreateFrom(SqlHelper, d))
+            .Single();
     }
 
     public override void FinishInitialization()
     {
-        CharacterSet =
+        Database.CharacterSet =
             Metadata
                 .MetadataCharacterSets
-                .CharacterSetsByName[CharacterSetName];
+                .CharacterSetsByName[Database.CharacterSetName];
     }
 
     IEnumerable<CommandGroup> ISupportsComment.Handle(IMetadata other, IComparerContext context)
     {
-        if (Description == null && other.MetadataDatabase.Description != null)
+        var result = new CommandGroup();
+
+        if (Database.Description == null && other.MetadataDatabase.Database.Description != null)
         {
-            yield return new CommandGroup().Append(new Command().Append("COMMENT ON DATABASE IS NULL"));
+            result.Append(new Command().Append("COMMENT ON DATABASE IS NULL"));
         }
-        else if (Description != null && Description != other.MetadataDatabase.Description)
+        else if (Database.Description != null && Database.Description != other.MetadataDatabase.Database.Description)
         {
-            yield return new CommandGroup().Append(new Command().Append($"COMMENT ON DATABASE IS '{SqlHelper.DoubleSingleQuotes(Description)}'"));
+            result.Append(new Command().Append($"COMMENT ON DATABASE IS '{SqlHelper.DoubleSingleQuotes(Database.Description)}'"));
+        }
+
+        if (!result.IsEmpty)
+        {
+            yield return result;
         }
     }
 
-    public IEnumerable<CommandGroup> HandleDatabase(IMetadata other, IComparerContext context)
+    public virtual CommandGroup ProcessDatabase(IMetadata other, IComparerContext context)
     {
-        if (Dialect != 3 || other.MetadataDatabase.Dialect != 3)
+        if (Database.Dialect != 3 || other.MetadataDatabase.Database.Dialect != 3)
         {
             throw new NotSupportedException("Only Dialect 3 databases are supported.");
         }
-        if (CharacterSet.CharacterSetId != other.MetadataDatabase.CharacterSet.CharacterSetId)
+        if (Database.CharacterSet.CharacterSetId != other.MetadataDatabase.Database.CharacterSet.CharacterSetId)
         {
-            throw new InvalidOperationException($"Databases have different character sets: {CharacterSet.CharacterSetName} and {other.MetadataDatabase.CharacterSet.CharacterSetName}.");
+            throw new InvalidOperationException($"Databases have different character sets: {Database.CharacterSet.CharacterSetName} and {other.MetadataDatabase.Database.CharacterSet.CharacterSetName}.");
         }
-        yield break;
+        return null;
     }
 }

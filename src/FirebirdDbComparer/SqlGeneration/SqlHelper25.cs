@@ -173,10 +173,10 @@ public class SqlHelper25 : ISqlHelper
     public virtual IEnumerable<Command> HandleAlterDataType<TField>(Func<string, string> alterActionFactory, TField field, TField otherField, IMetadata sourceMetadata, IMetadata targetMetadata)
     {
         var characterSets = sourceMetadata.MetadataCharacterSets.CharacterSetsById;
-        var defaultCharacterSet = sourceMetadata.MetadataDatabase.CharacterSet;
+        var defaultCharacterSet = sourceMetadata.MetadataDatabase.Database.CharacterSet;
 
         var otherCharacterSets = sourceMetadata.MetadataCharacterSets.CharacterSetsById;
-        var otherDefaultCharacterSet = sourceMetadata.MetadataDatabase.CharacterSet;
+        var otherDefaultCharacterSet = sourceMetadata.MetadataDatabase.Database.CharacterSet;
 
         var dataType = GetDataType((dynamic)field, characterSets, defaultCharacterSet.CharacterSetId);
         var otherDataType = GetDataType((dynamic)otherField, otherCharacterSets, otherDefaultCharacterSet.CharacterSetId);

@@ -73,7 +73,7 @@ public sealed class Field : Primitive<Field>, IDataType, IHasSystemFlag, IHasDes
         command
             .Append($"CREATE DOMAIN {FieldName.AsSqlIndentifier()} AS")
             .AppendLine()
-            .Append(SqlHelper.GetDataType(this, sourceMetadata.MetadataCharacterSets.CharacterSetsById, sourceMetadata.MetadataDatabase.CharacterSet.CharacterSetId));
+            .Append(SqlHelper.GetDataType(this, sourceMetadata.MetadataCharacterSets.CharacterSetsById, sourceMetadata.MetadataDatabase.Database.CharacterSet.CharacterSetId));
         var defaultClause = SqlHelper.HandleDefault(this);
         if (defaultClause != null)
         {

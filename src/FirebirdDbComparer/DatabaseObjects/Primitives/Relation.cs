@@ -107,7 +107,7 @@ public class Relation : Primitive<Relation>, IHasSystemFlag, IHasDescription
         if (context.EmptyBodiesEnabled)
         {
             command.AppendLine();
-            var fields = string.Join(", ", Fields.Select(x => SqlHelper.GetDataType(x.Field, sourceMetadata.MetadataCharacterSets.CharacterSetsById, sourceMetadata.MetadataDatabase.CharacterSet.CharacterSetId)).Select(RelationField.CreateShimFieldContent));
+            var fields = string.Join(", ", Fields.Select(x => SqlHelper.GetDataType(x.Field, sourceMetadata.MetadataCharacterSets.CharacterSetsById, sourceMetadata.MetadataDatabase.Database.CharacterSet.CharacterSetId)).Select(RelationField.CreateShimFieldContent));
             command.Append($"SELECT {fields} FROM RDB$DATABASE");
         }
         else

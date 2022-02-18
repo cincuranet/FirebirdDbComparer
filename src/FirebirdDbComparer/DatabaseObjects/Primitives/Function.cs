@@ -219,11 +219,11 @@ public sealed class Function : Primitive<Function>, IHasSystemFlag, IHasDescript
         }
         if (context.EmptyBodiesEnabled)
         {
-            builder.Append(SqlHelper.GetDataType(argument.Field, sourceMetadata.MetadataCharacterSets.CharacterSetsById, sourceMetadata.MetadataDatabase.CharacterSet.CharacterSetId));
+            builder.Append(SqlHelper.GetDataType(argument.Field, sourceMetadata.MetadataCharacterSets.CharacterSetsById, sourceMetadata.MetadataDatabase.Database.CharacterSet.CharacterSetId));
         }
         else
         {
-            builder.Append(SqlHelper.GetDataType(argument, sourceMetadata.MetadataCharacterSets.CharacterSetsById, sourceMetadata.MetadataDatabase.CharacterSet.CharacterSetId));
+            builder.Append(SqlHelper.GetDataType(argument, sourceMetadata.MetadataCharacterSets.CharacterSetsById, sourceMetadata.MetadataDatabase.Database.CharacterSet.CharacterSetId));
         }
         var notNullClause = SqlHelper.HandleNullable(argument);
         if (notNullClause != null)

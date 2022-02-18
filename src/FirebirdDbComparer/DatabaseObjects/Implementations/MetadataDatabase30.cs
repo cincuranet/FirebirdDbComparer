@@ -1,8 +1,5 @@
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-
-using FirebirdDbComparer.Common;
 using FirebirdDbComparer.Interfaces;
+using FirebirdDbComparer.SqlGeneration;
 
 namespace FirebirdDbComparer.DatabaseObjects.Implementations;
 
@@ -11,8 +8,6 @@ public class MetadataDatabase30 : MetadataDatabase25
     public MetadataDatabase30(IMetadata metadata, ISqlHelper sqlHelper)
         : base(metadata, sqlHelper)
     { }
-
-    public int? Linger { get; private set; }
 
     protected override string CommandText => @"
 select D.RDB$DESCRIPTION,
@@ -24,10 +19,17 @@ select D.RDB$DESCRIPTION,
   from RDB$DATABASE D
        cross join MON$DATABASE M";
 
-    protected override void Initialize(IDictionary<string, object> values)
+    public override CommandGroup ProcessDatabase(IMetadata other, IComparerContext context)
     {
-        base.Initialize(values);
+        var result = base.ProcessDatabase(other, context) ?? new CommandGroup();
 
-        Linger = values["RDB$LINGER"].DbValueToInt32();
+        var linger = Database.Linger ?? 0;
+        var otherLinger = other.MetadataDatabase.Database.Linger ?? 0;
+        if (linger != otherLinger)
+        {
+            result.Append(new Command().Append($"ALTER DATABASE SET LINGER TO {linger}"));
+        }
+
+        return !result.IsEmpty ? result : null;
     }
 }
