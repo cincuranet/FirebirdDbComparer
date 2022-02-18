@@ -62,14 +62,17 @@ select D.RDB$DESCRIPTION,
 
     public virtual CommandGroup ProcessDatabase(IMetadata other, IComparerContext context)
     {
+        var result = new CommandGroup();
+
         if (Database.Dialect != 3 || other.MetadataDatabase.Database.Dialect != 3)
         {
             throw new NotSupportedException("Only Dialect 3 databases are supported.");
         }
         if (Database.CharacterSet.CharacterSetId != other.MetadataDatabase.Database.CharacterSet.CharacterSetId)
         {
-            throw new InvalidOperationException($"Databases have different character sets: {Database.CharacterSet.CharacterSetName} and {other.MetadataDatabase.Database.CharacterSet.CharacterSetName}.");
+            result.Append(SqlHelper.AlterDatabaseCharset(Database, other.MetadataDatabase.Database));
         }
-        return null;
+
+        return !result.IsEmpty ? result : null;
     }
 }

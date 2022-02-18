@@ -88,4 +88,9 @@ public class SqlHelper30 : SqlHelper25
     {
         return item.EngineName != null && item.EntryPoint != null;
     }
+
+    public override Command AlterDatabaseCharset(Database database, Database otherDatabase)
+    {
+        return new Command().Append($"ALTER DATABASE SET DEFAULT CHARACTER SET {database.CharacterSetName}");
+    }
 }

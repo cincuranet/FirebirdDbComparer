@@ -383,6 +383,11 @@ public class SqlHelper25 : ISqlHelper
         throw new InvalidOperationException();
     }
 
+    public virtual Command AlterDatabaseCharset(Database database, Database otherDatabase)
+    {
+        throw new InvalidOperationException($"Databases have different character sets: {database.CharacterSetName} and {otherDatabase.CharacterSetName}.");        
+    }
+
     protected virtual string ScalableNumber(string regularType, IDataType dataType)
     {
         if (dataType.FieldSubType == 2 || dataType.FieldSubType == 0 && dataType.FieldScale < 0)

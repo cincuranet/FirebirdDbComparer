@@ -59,4 +59,5 @@ public interface ISqlHelper
     string SystemPrivilegeString(int systemPrivilege);
     IEnumerable<Command> HandleAlterIdentity(RelationField field, RelationField otherField);
     string SqlSecurityString(bool? sqlSecurity);
+    Command AlterDatabaseCharset(Database database, Database otherDatabase);
 }
