@@ -76,7 +76,7 @@ public static class Helpers
                 {
                     if (e.Data != null)
                     {
-                        if (Regex.IsMatch(e.Data, @"^/\* CREATE DATABASE '.+ \*/$", RegexOptions.CultureInvariant))
+                        if (e.Data.StartsWith("/* CREATE DATABASE '", StringComparison.InvariantCulture))
                         {
                             return;
                         }

@@ -24,12 +24,9 @@ select D.RDB$DESCRIPTION,
     {
         var result = base.ProcessDatabase(other, context) ?? new CommandGroup();
 
-        if (Database.SqlSecurity == null && other.MetadataDatabase.Database.SqlSecurity != null)
-        {
-#warning HERE
-            result.Append(new Command().Append("ALTER DATABASE DROP SQL SECURITY"));
-        }
-        else if (Database.SqlSecurity != null && other.MetadataDatabase.Database.SqlSecurity != null && Database.SqlSecurity != other.MetadataDatabase.Database.SqlSecurity)
+        var sqlSecurity = Database.SqlSecurity ?? false;
+        var otherSqlSecurity = other.MetadataDatabase.Database.SqlSecurity ?? false;
+        if (sqlSecurity != otherSqlSecurity)
         {
             result.Append(new Command().Append($"ALTER DATABASE SET DEFAULT SQL SECURITY {SqlHelper.SqlSecurityString(Database.SqlSecurity)}"));
         }
