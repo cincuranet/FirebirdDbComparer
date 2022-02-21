@@ -6,8 +6,6 @@ public class RemoveSQLSecurityInvokerFromPackage : ComparerTests.TestCaseStructu
 {
     public override bool IsCompatibleWithVersion(TargetVersion targetVersion)
     {
-#warning Because of firebird#7129
-        return false;
         return targetVersion.AtLeast(TargetVersion.Version40);
     }
 
