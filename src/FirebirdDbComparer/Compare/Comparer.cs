@@ -1,28 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-
 using FirebirdDbComparer.Interfaces;
-using FirebirdDbComparer.IoC;
 using FirebirdDbComparer.SqlGeneration;
 
 namespace FirebirdDbComparer.Compare;
 
-public sealed class Comparer : IComparer
-{
-    public static Comparer ForTwoDatabases(IComparerSettings settings, string sourceConnectionString, string targetConnectionString)
-    {
-        var container = Bootstrapper.BootstrapContainerDefault(settings);
-        var metadataFactory = container.Resolve<IMetadataFactory>();
-        var sourceMetadata = metadataFactory.Create(sourceConnectionString);
-        var targetMetadata = metadataFactory.Create(targetConnectionString);
-        Parallel.Invoke(
-            sourceMetadata.Initialize,
-            targetMetadata.Initialize);
-        return (Comparer)container.Resolve<IComparerFactory>().Create(settings, sourceMetadata, targetMetadata);
-    }
-
+public sealed partial class Comparer : IComparer
+{  
     public Comparer(ScriptBuilder scriptBuilder, IComparerContext comparerContext, IMetadata sourceMetadata, IMetadata targetMetadata)
     {
         ScriptBuilder = scriptBuilder ?? throw new ArgumentNullException(nameof(scriptBuilder));

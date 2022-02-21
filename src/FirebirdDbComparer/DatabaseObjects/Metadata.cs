@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 
 using FirebirdDbComparer.Interfaces;
@@ -9,13 +8,14 @@ namespace FirebirdDbComparer.DatabaseObjects;
 
 internal class Metadata : IMetadata
 {
-    public Metadata(string connectionString, IDatabaseObjectFactory databaseObjectFactory)
+    public Metadata(string connectionString, Func<Metadata, IReadOnlyCollection<IDatabaseObject>> databaseObjectFactory)
     {
         ConnectionString = connectionString;
-        DatabaseObjectFactory = databaseObjectFactory ?? throw new ArgumentNullException(nameof(databaseObjectFactory));
+        m_DatabaseObjectFactory = databaseObjectFactory ?? throw new ArgumentNullException(nameof(databaseObjectFactory));
     }
 
-    IReadOnlyCollection<IDatabaseObject> m_DatabaseObjects;
+    private Func<Metadata, IReadOnlyCollection<IDatabaseObject>> m_DatabaseObjectFactory;
+    private IReadOnlyCollection<IDatabaseObject> m_DatabaseObjects;
     private IMetadataCollations m_MetadataCollations;
     private IMetadataConstraints m_MetadataConstraints;
     private IMetadataDatabase m_MetadataDatabase;
@@ -34,7 +34,6 @@ internal class Metadata : IMetadata
     private IMetadataPackages m_MetadataPackages;
 
     public string ConnectionString { get; }
-    public IDatabaseObjectFactory DatabaseObjectFactory { get; }
     public IReadOnlyCollection<IDatabaseObject> DatabaseObjects => m_DatabaseObjects;
     public IMetadataCollations MetadataCollations => m_MetadataCollations ??= GetSpecificDatabaseObject<IMetadataCollations>();
     public IMetadataConstraints MetadataConstraints => m_MetadataConstraints ??= GetSpecificDatabaseObject<IMetadataConstraints>();
@@ -61,7 +60,7 @@ internal class Metadata : IMetadata
     {
         if (m_DatabaseObjects == null)
         {
-            m_DatabaseObjects = new ReadOnlyCollection<IDatabaseObject>(DatabaseObjectFactory.ResolveAll(this));
+            m_DatabaseObjects = m_DatabaseObjectFactory.Invoke(this);
 
             foreach (var databaseObject in m_DatabaseObjects)
             {
