@@ -8,7 +8,7 @@ namespace FirebirdDbComparer.DatabaseObjects;
 
 public sealed class Identifier : DatabaseStringOrdinal
 {
-    public static IList<Identifier> EmptyIdentifierList = new List<Identifier>();
+    public static readonly IList<Identifier> EmptyIdentifierList = new List<Identifier>();
 
     private readonly bool m_IsComposite;
 
