@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 using FirebirdDbComparer.Interfaces;
 
@@ -14,7 +13,7 @@ internal class Metadata : IMetadata
         m_DatabaseObjectFactory = databaseObjectFactory ?? throw new ArgumentNullException(nameof(databaseObjectFactory));
     }
 
-    private Func<Metadata, IReadOnlyCollection<IDatabaseObject>> m_DatabaseObjectFactory;
+    private readonly Func<Metadata, IReadOnlyCollection<IDatabaseObject>> m_DatabaseObjectFactory;
 
     public string ConnectionString { get; }
     public IReadOnlyCollection<IDatabaseObject> DatabaseObjects { get; private set; }
