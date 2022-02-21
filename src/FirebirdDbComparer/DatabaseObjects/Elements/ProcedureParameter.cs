@@ -62,6 +62,8 @@ public sealed class ProcedureParameter : SqlElement<ProcedureParameter>, IHasDes
 
     protected override EquatableProperty<ProcedureParameter>[] EquatableProperties => s_EquatableProperties;
 
+    public TypeObjectNameKey TypeObjectNameKey => m_PrimitiveTypeKey ??= new TypeObjectNameKey(GetType(), ParameterName);
+
     internal static ProcedureParameter CreateFrom(ISqlHelper sqlHelper, IDictionary<string, object> values)
     {
         var result =
@@ -91,6 +93,4 @@ public sealed class ProcedureParameter : SqlElement<ProcedureParameter>, IHasDes
         }
         return result;
     }
-
-    public TypeObjectNameKey TypeObjectNameKey => m_PrimitiveTypeKey ??= new TypeObjectNameKey(GetType(), ParameterName);
 }
