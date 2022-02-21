@@ -46,7 +46,7 @@ public sealed class Comparer : IComparer
 
     private IEnumerable<(string name, IEnumerable<CommandGroup> commandGroups)> CompareImpl()
     {
-        IEnumerable<(Func<IMetadata, IMetadata, IComparerContext, IEnumerable<CommandGroup>> action, string name)> Actions()
+        static IEnumerable<(Func<IMetadata, IMetadata, IComparerContext, IEnumerable<CommandGroup>> action, string name)> Actions()
         {
             yield return (ProcessDatabase(), "DATABASE");
             yield return (Handle<IMetadataFunctions>(x => x.CreateLegacyFunctions), "UDFS (new)");
