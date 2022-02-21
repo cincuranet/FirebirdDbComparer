@@ -69,7 +69,7 @@ public sealed class Dependency : SqlElement<Dependency>, ITypeObjectNameKey
 
     protected override EquatableProperty<Dependency>[] EquatableProperties => s_EquatableProperties;
 
-    public TypeObjectNameKey TypeObjectNameKey => m_PrimitiveTypeKey ?? (m_PrimitiveTypeKey = new TypeObjectNameKey(GetType(), TypeObjectNameKey.BuildObjectName(SqlHelper, PackageName, DependedOnName, DependentName)));
+    public TypeObjectNameKey TypeObjectNameKey => m_PrimitiveTypeKey ??= new TypeObjectNameKey(GetType(), TypeObjectNameKey.BuildObjectName(SqlHelper, PackageName, DependedOnName, DependentName));
 
     internal static Dependency CreateFrom(ISqlHelper sqlHelper, IDictionary<string, object> values)
     {

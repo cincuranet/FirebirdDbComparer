@@ -15,7 +15,7 @@ public abstract class Primitive<T> : SqlElement<T>, ITypeObjectNameKey where T :
         : base(sqlHelper)
     { }
 
-    public TypeObjectNameKey TypeObjectNameKey => m_PrimitiveTypeKeyCache ?? (m_PrimitiveTypeKeyCache = new TypeObjectNameKey(typeof(T), OnPrimitiveTypeKeyObjectName()));
+    public TypeObjectNameKey TypeObjectNameKey => m_PrimitiveTypeKeyCache ??= new TypeObjectNameKey(typeof(T), OnPrimitiveTypeKeyObjectName());
 
     public IEnumerable<Command> Create(IMetadata sourceMetadata, IMetadata targetMetadata, IComparerContext context)
     {

@@ -36,22 +36,22 @@ internal class Metadata : IMetadata
     public string ConnectionString { get; }
     public IDatabaseObjectFactory DatabaseObjectFactory { get; }
     public IReadOnlyCollection<IDatabaseObject> DatabaseObjects => m_DatabaseObjects;
-    public IMetadataCollations MetadataCollations => m_MetadataCollations ?? (m_MetadataCollations = GetSpecificDatabaseObject<IMetadataCollations>());
-    public IMetadataConstraints MetadataConstraints => m_MetadataConstraints ?? (m_MetadataConstraints = GetSpecificDatabaseObject<IMetadataConstraints>());
-    public IMetadataDatabase MetadataDatabase => m_MetadataDatabase ?? (m_MetadataDatabase = GetSpecificDatabaseObject<IMetadataDatabase>());
-    public IMetadataDependencies MetadataDependencies => m_MetadataDependencies ?? (m_MetadataDependencies = GetSpecificDatabaseObject<IMetadataDependencies>());
-    public IMetadataExceptions MetadataExceptions => m_MetadataExceptions ?? (m_MetadataExceptions = GetSpecificDatabaseObject<IMetadataExceptions>());
-    public IMetadataFields MetadataFields => m_MetadataFields ?? (m_MetadataFields = GetSpecificDatabaseObject<IMetadataFields>());
-    public IMetadataFunctions MetadataFunctions => m_MetadataFunctions ?? (m_MetadataFunctions = GetSpecificDatabaseObject<IMetadataFunctions>());
-    public IMetadataGenerators MetadataGenerators => m_MetadataGenerators ?? (m_MetadataGenerators = GetSpecificDatabaseObject<IMetadataGenerators>());
-    public IMetadataCharacterSets MetadataCharacterSets => m_MetadataCharacterSets ?? (m_MetadataCharacterSets = GetSpecificDatabaseObject<IMetadataCharacterSets>());
-    public IMetadataIndices MetadataIndices => m_MetadataIndices ?? (m_MetadataIndices = GetSpecificDatabaseObject<IMetadataIndices>());
-    public IMetadataProcedures MetadataProcedures => m_MetadataProcedures ?? (m_MetadataProcedures = GetSpecificDatabaseObject<IMetadataProcedures>());
-    public IMetadataRelations MetadataRelations => m_MetadataRelations ?? (m_MetadataRelations = GetSpecificDatabaseObject<IMetadataRelations>());
-    public IMetadataRoles MetadataRoles => m_MetadataRoles ?? (m_MetadataRoles = GetSpecificDatabaseObject<IMetadataRoles>());
-    public IMetadataTriggers MetadataTriggers => m_MetadataTriggers ?? (m_MetadataTriggers = GetSpecificDatabaseObject<IMetadataTriggers>());
-    public IMetadataUserPrivileges MetadataUserPrivileges => m_MetadataUserPrivileges ?? (m_MetadataUserPrivileges = GetSpecificDatabaseObject<IMetadataUserPrivileges>());
-    public IMetadataPackages MetadataPackages => m_MetadataPackages ?? (m_MetadataPackages = GetSpecificDatabaseObject<IMetadataPackages>());
+    public IMetadataCollations MetadataCollations => m_MetadataCollations ??= GetSpecificDatabaseObject<IMetadataCollations>();
+    public IMetadataConstraints MetadataConstraints => m_MetadataConstraints ??= GetSpecificDatabaseObject<IMetadataConstraints>();
+    public IMetadataDatabase MetadataDatabase => m_MetadataDatabase ??= GetSpecificDatabaseObject<IMetadataDatabase>();
+    public IMetadataDependencies MetadataDependencies => m_MetadataDependencies ??= GetSpecificDatabaseObject<IMetadataDependencies>();
+    public IMetadataExceptions MetadataExceptions => m_MetadataExceptions ??= GetSpecificDatabaseObject<IMetadataExceptions>();
+    public IMetadataFields MetadataFields => m_MetadataFields ??= GetSpecificDatabaseObject<IMetadataFields>();
+    public IMetadataFunctions MetadataFunctions => m_MetadataFunctions ??= GetSpecificDatabaseObject<IMetadataFunctions>();
+    public IMetadataGenerators MetadataGenerators => m_MetadataGenerators ??= GetSpecificDatabaseObject<IMetadataGenerators>();
+    public IMetadataCharacterSets MetadataCharacterSets => m_MetadataCharacterSets ??= GetSpecificDatabaseObject<IMetadataCharacterSets>();
+    public IMetadataIndices MetadataIndices => m_MetadataIndices ??= GetSpecificDatabaseObject<IMetadataIndices>();
+    public IMetadataProcedures MetadataProcedures => m_MetadataProcedures ??= GetSpecificDatabaseObject<IMetadataProcedures>();
+    public IMetadataRelations MetadataRelations => m_MetadataRelations ??= GetSpecificDatabaseObject<IMetadataRelations>();
+    public IMetadataRoles MetadataRoles => m_MetadataRoles ??= GetSpecificDatabaseObject<IMetadataRoles>();
+    public IMetadataTriggers MetadataTriggers => m_MetadataTriggers ??= GetSpecificDatabaseObject<IMetadataTriggers>();
+    public IMetadataUserPrivileges MetadataUserPrivileges => m_MetadataUserPrivileges ??= GetSpecificDatabaseObject<IMetadataUserPrivileges>();
+    public IMetadataPackages MetadataPackages => m_MetadataPackages ??= GetSpecificDatabaseObject<IMetadataPackages>();
     public T GetSpecificDatabaseObject<T>() where T : IDatabaseObject
     {
         return DatabaseObjects.OfType<T>().SingleOrDefault();

@@ -92,5 +92,5 @@ public sealed class ProcedureParameter : SqlElement<ProcedureParameter>, IHasDes
         return result;
     }
 
-    public TypeObjectNameKey TypeObjectNameKey => m_PrimitiveTypeKey ?? (m_PrimitiveTypeKey = new TypeObjectNameKey(GetType(), ParameterName));
+    public TypeObjectNameKey TypeObjectNameKey => m_PrimitiveTypeKey ??= new TypeObjectNameKey(GetType(), ParameterName);
 }
