@@ -229,10 +229,10 @@ select trim(VR.RDB$VIEW_NAME) as RDB$VIEW_NAME,
                 .Where(r =>
                        {
                            createdRelationFieldsByRelation.TryGetValue(r.RelationName, out var createdFields);
-                           createdFields = createdFields ?? Identifier.EmptyIdentifierList;
+                           createdFields ??= Identifier.EmptyIdentifierList;
 
                            droppedRelationFieldsByRelation.TryGetValue(r.RelationName, out var droppedFields);
-                           droppedFields = droppedFields ?? Identifier.EmptyIdentifierList;
+                           droppedFields ??= Identifier.EmptyIdentifierList;
 
                            var currentFields =
                                r.Fields
