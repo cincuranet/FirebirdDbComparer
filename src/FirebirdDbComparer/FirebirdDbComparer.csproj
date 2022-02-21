@@ -11,6 +11,7 @@
         <PackageProjectUrl>https://github.com/cincuranet/FirebirdDbComparer</PackageProjectUrl>
         <Description>https://www.tabsoverspaces.com/tools/firebird-db-comparer</Description>
         <PackageTags>firebird, compare, comparer, metadata, structure</PackageTags>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="FirebirdSql.Data.FirebirdClient" Version="8.5.4" />
