@@ -14,7 +14,7 @@ create table t (id int);
 
 create trigger new_ee_trigger
 after update on t
-external name 'FooBar!Foo.NewEETrigger'
+external name 'FirebirdDbComparer.Tests.FooBar!Foo.NewEETrigger'
 engine FbNetExternalEngine;				
 ";
 

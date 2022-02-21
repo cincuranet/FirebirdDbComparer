@@ -21,7 +21,7 @@ end^
 create package body some_pkg
 as
 begin
-  function new_ee_function(in1 integer) returns bigint external name 'FooBar!Foo.NewEEFunction' engine FbNetExternalEngine;
+  function new_ee_function(in1 integer) returns bigint external name 'FirebirdDbComparer.Tests.FooBar!Foo.NewEEFunction' engine FbNetExternalEngine;
 end^
 
 set term ;^				
@@ -39,7 +39,7 @@ end^
 create package body some_pkg
 as
 begin
-  function new_ee_function(in1 integer) returns integer external name 'FooBar!Foo.NewEEFunction' engine FbNetExternalEngine;
+  function new_ee_function(in1 integer) returns integer external name 'FirebirdDbComparer.Tests.FooBar!Foo.NewEEFunction' engine FbNetExternalEngine;
 end^
 
 set term ;^				

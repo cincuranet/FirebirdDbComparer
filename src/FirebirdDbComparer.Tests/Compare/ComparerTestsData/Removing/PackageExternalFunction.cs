@@ -42,7 +42,7 @@ as
 begin
   function foo(in1 integer) returns integer as begin return 1; end
 
-  function new_ee_function(in1 integer) returns integer external name 'FooBar!Foo.NewEEFunction' engine FbNetExternalEngine;
+  function new_ee_function(in1 integer) returns integer external name 'FirebirdDbComparer.Tests.FooBar!Foo.NewEEFunction' engine FbNetExternalEngine;
 end^
 
 set term ;^				

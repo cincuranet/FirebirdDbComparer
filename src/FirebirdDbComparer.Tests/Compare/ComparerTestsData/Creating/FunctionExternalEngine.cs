@@ -12,7 +12,7 @@ public class FunctionExternalEngine : ComparerTests.TestCaseStructure
     public override string Source => @"
 create function new_ee_function(in1 integer)
 returns integer
-external name 'FooBar!Foo.NewEEFunction'
+external name 'FirebirdDbComparer.Tests.FooBar!Foo.NewEEFunction'
 engine FbNetExternalEngine;				
 ";
 

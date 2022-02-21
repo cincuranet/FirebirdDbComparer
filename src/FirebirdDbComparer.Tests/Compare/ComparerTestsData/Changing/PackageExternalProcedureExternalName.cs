@@ -21,7 +21,7 @@ end^
 create package body some_pkg
 as
 begin
-  procedure new_ee_procedure(in1 integer) returns (out1 integer) external name 'FooBar!Foo.NewEEProcedure2' engine FbNetExternalEngine;
+  procedure new_ee_procedure(in1 integer) returns (out1 integer) external name 'FirebirdDbComparer.Tests.FooBar!Foo.NewEEProcedure2' engine FbNetExternalEngine;
 end^
 
 set term ;^				
@@ -39,7 +39,7 @@ end^
 create package body some_pkg
 as
 begin
-  procedure new_ee_procedure(in1 integer) returns (out1 integer) external name 'FooBar!Foo.NewEEProcedure' engine FbNetExternalEngine;
+  procedure new_ee_procedure(in1 integer) returns (out1 integer) external name 'FirebirdDbComparer.Tests.FooBar!Foo.NewEEProcedure' engine FbNetExternalEngine;
 end^
 
 set term ;^				

@@ -14,7 +14,7 @@ create table t (i int);
 
 create function new_ee_function(in1 integer)
 returns integer
-external name 'FooBar!Foo.NewEEFunction'
+external name 'FirebirdDbComparer.Tests.FooBar!Foo.NewEEFunction'
 engine FbNetExternalEngine;
 
 set term ~;

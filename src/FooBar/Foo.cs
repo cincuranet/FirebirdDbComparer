@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-public static class foo
+public static class Foo
 {
     public static IEnumerator<ValueTuple<long?>> NewEEProcedure(long? in1)
     {

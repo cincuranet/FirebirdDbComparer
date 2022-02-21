@@ -24,7 +24,7 @@ set term ;^
     public override string Target => @"
 create function DLLVERSION(dummy BIGINT)
 returns varchar(255)
-external name 'FooBar!Foo.DllVersion'
+external name 'FirebirdDbComparer.Tests.FooBar!Foo.DllVersion'
 engine FbNetExternalEngine;
 ";
 }
