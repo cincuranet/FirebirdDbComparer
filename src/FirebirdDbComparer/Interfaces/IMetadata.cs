@@ -6,9 +6,7 @@ public interface IMetadata
 {
     string ConnectionString { get; }
     void Initialize();
-    T GetSpecificDatabaseObject<T>() where T : IDatabaseObject;
     IReadOnlyCollection<IDatabaseObject> DatabaseObjects { get; }
-
     IMetadataCollations MetadataCollations { get; }
     IMetadataConstraints MetadataConstraints { get; }
     IMetadataDatabase MetadataDatabase { get; }

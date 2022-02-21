@@ -15,59 +15,93 @@ internal class Metadata : IMetadata
     }
 
     private Func<Metadata, IReadOnlyCollection<IDatabaseObject>> m_DatabaseObjectFactory;
-    private IReadOnlyCollection<IDatabaseObject> m_DatabaseObjects;
-    private IMetadataCollations m_MetadataCollations;
-    private IMetadataConstraints m_MetadataConstraints;
-    private IMetadataDatabase m_MetadataDatabase;
-    private IMetadataDependencies m_MetadataDependencies;
-    private IMetadataExceptions m_MetadataExceptions;
-    private IMetadataFields m_MetadataFields;
-    private IMetadataFunctions m_MetadataFunctions;
-    private IMetadataGenerators m_MetadataGenerators;
-    private IMetadataCharacterSets m_MetadataCharacterSets;
-    private IMetadataIndices m_MetadataIndices;
-    private IMetadataProcedures m_MetadataProcedures;
-    private IMetadataRelations m_MetadataRelations;
-    private IMetadataRoles m_MetadataRoles;
-    private IMetadataTriggers m_MetadataTriggers;
-    private IMetadataUserPrivileges m_MetadataUserPrivileges;
-    private IMetadataPackages m_MetadataPackages;
 
     public string ConnectionString { get; }
-    public IReadOnlyCollection<IDatabaseObject> DatabaseObjects => m_DatabaseObjects;
-    public IMetadataCollations MetadataCollations => m_MetadataCollations ??= GetSpecificDatabaseObject<IMetadataCollations>();
-    public IMetadataConstraints MetadataConstraints => m_MetadataConstraints ??= GetSpecificDatabaseObject<IMetadataConstraints>();
-    public IMetadataDatabase MetadataDatabase => m_MetadataDatabase ??= GetSpecificDatabaseObject<IMetadataDatabase>();
-    public IMetadataDependencies MetadataDependencies => m_MetadataDependencies ??= GetSpecificDatabaseObject<IMetadataDependencies>();
-    public IMetadataExceptions MetadataExceptions => m_MetadataExceptions ??= GetSpecificDatabaseObject<IMetadataExceptions>();
-    public IMetadataFields MetadataFields => m_MetadataFields ??= GetSpecificDatabaseObject<IMetadataFields>();
-    public IMetadataFunctions MetadataFunctions => m_MetadataFunctions ??= GetSpecificDatabaseObject<IMetadataFunctions>();
-    public IMetadataGenerators MetadataGenerators => m_MetadataGenerators ??= GetSpecificDatabaseObject<IMetadataGenerators>();
-    public IMetadataCharacterSets MetadataCharacterSets => m_MetadataCharacterSets ??= GetSpecificDatabaseObject<IMetadataCharacterSets>();
-    public IMetadataIndices MetadataIndices => m_MetadataIndices ??= GetSpecificDatabaseObject<IMetadataIndices>();
-    public IMetadataProcedures MetadataProcedures => m_MetadataProcedures ??= GetSpecificDatabaseObject<IMetadataProcedures>();
-    public IMetadataRelations MetadataRelations => m_MetadataRelations ??= GetSpecificDatabaseObject<IMetadataRelations>();
-    public IMetadataRoles MetadataRoles => m_MetadataRoles ??= GetSpecificDatabaseObject<IMetadataRoles>();
-    public IMetadataTriggers MetadataTriggers => m_MetadataTriggers ??= GetSpecificDatabaseObject<IMetadataTriggers>();
-    public IMetadataUserPrivileges MetadataUserPrivileges => m_MetadataUserPrivileges ??= GetSpecificDatabaseObject<IMetadataUserPrivileges>();
-    public IMetadataPackages MetadataPackages => m_MetadataPackages ??= GetSpecificDatabaseObject<IMetadataPackages>();
-    public T GetSpecificDatabaseObject<T>() where T : IDatabaseObject
-    {
-        return DatabaseObjects.OfType<T>().SingleOrDefault();
-    }
+    public IReadOnlyCollection<IDatabaseObject> DatabaseObjects { get; private set; }
+    public IMetadataCollations MetadataCollations { get; private set; }
+    public IMetadataConstraints MetadataConstraints { get; private set; }
+    public IMetadataDatabase MetadataDatabase { get; private set; }
+    public IMetadataDependencies MetadataDependencies { get; private set; }
+    public IMetadataExceptions MetadataExceptions { get; private set; }
+    public IMetadataFields MetadataFields { get; private set; }
+    public IMetadataFunctions MetadataFunctions { get; private set; }
+    public IMetadataGenerators MetadataGenerators { get; private set; }
+    public IMetadataCharacterSets MetadataCharacterSets { get; private set; }
+    public IMetadataIndices MetadataIndices { get; private set; }
+    public IMetadataProcedures MetadataProcedures { get; private set; }
+    public IMetadataRelations MetadataRelations { get; private set; }
+    public IMetadataRoles MetadataRoles { get; private set; }
+    public IMetadataTriggers MetadataTriggers { get; private set; }
+    public IMetadataUserPrivileges MetadataUserPrivileges { get; private set; }
+    public IMetadataPackages MetadataPackages { get; private set; }
 
     public void Initialize()
     {
-        if (m_DatabaseObjects == null)
+        if (DatabaseObjects == null)
         {
-            m_DatabaseObjects = m_DatabaseObjectFactory.Invoke(this);
+            DatabaseObjects = m_DatabaseObjectFactory.Invoke(this);
 
-            foreach (var databaseObject in m_DatabaseObjects)
+            foreach (var databaseObject in DatabaseObjects)
+            {
+                switch (databaseObject)
+                {
+                    case IMetadataCollations metadataCollations:
+                        MetadataCollations = metadataCollations;
+                        break;
+                    case IMetadataConstraints metadataConstraints:
+                        MetadataConstraints = metadataConstraints;
+                        break;
+                    case IMetadataDatabase metadataDatabase:
+                        MetadataDatabase = metadataDatabase;
+                        break;
+                    case IMetadataDependencies metadataDependencies:
+                        MetadataDependencies = metadataDependencies;
+                        break;
+                    case IMetadataExceptions metadataExceptions:
+                        MetadataExceptions = metadataExceptions;
+                        break;
+                    case IMetadataFields metadataFields:
+                        MetadataFields = metadataFields;
+                        break;
+                    case IMetadataFunctions metadataFunctions:
+                        MetadataFunctions = metadataFunctions;
+                        break;
+                    case IMetadataGenerators metadataGenerators:
+                        MetadataGenerators = metadataGenerators;
+                        break;
+                    case IMetadataCharacterSets metadataCharacterSets:
+                        MetadataCharacterSets = metadataCharacterSets;
+                        break;
+                    case IMetadataIndices metadataIndices:
+                        MetadataIndices = metadataIndices;
+                        break;
+                    case IMetadataProcedures metadataProcedures:
+                        MetadataProcedures = metadataProcedures;
+                        break;
+                    case IMetadataRelations metadataRelations:
+                        MetadataRelations = metadataRelations;
+                        break;
+                    case IMetadataRoles metadataRoles:
+                        MetadataRoles = metadataRoles;
+                        break;
+                    case IMetadataTriggers metadataTriggers:
+                        MetadataTriggers = metadataTriggers;
+                        break;
+                    case IMetadataUserPrivileges metadataUserPrivileges:
+                        MetadataUserPrivileges = metadataUserPrivileges;
+                        break;
+                    case IMetadataPackages metadataPackages:
+                        MetadataPackages = metadataPackages;
+                        break;
+                }
+            }
+
+            foreach (var databaseObject in DatabaseObjects)
             {
                 databaseObject.Initialize();
             }
 
-            foreach (var databaseObject in m_DatabaseObjects)
+            foreach (var databaseObject in DatabaseObjects)
             {
                 databaseObject.FinishInitialization();
             }
