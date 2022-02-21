@@ -132,7 +132,7 @@ select trim(VR.RDB$VIEW_NAME) as RDB$VIEW_NAME,
             relation.Triggers =
                 Metadata.MetadataTriggers.TriggersByRelation.TryGetValue(relation.RelationName, out var triggers)
                     ? triggers
-                    : new Trigger[0];
+                    : Array.Empty<Trigger>();
 
             relation.UserTriggers =
                 FilterSystemFlagUser(relation.Triggers)
@@ -141,12 +141,12 @@ select trim(VR.RDB$VIEW_NAME) as RDB$VIEW_NAME,
             relation.RelationConstraints =
                 Metadata.MetadataConstraints.RelationConstraintsByRelation.TryGetValue(relation.RelationName, out var constraints)
                     ? constraints
-                    : new RelationConstraint[0];
+                    : Array.Empty<RelationConstraint>();
 
             relation.Indices =
                 Metadata.MetadataIndices.IndicesByRelation.TryGetValue(relation.RelationName, out var indices)
                     ? indices
-                    : new Index[0];
+                    : Array.Empty<Index>();
         }
     }
 
