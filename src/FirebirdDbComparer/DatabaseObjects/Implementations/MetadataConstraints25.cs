@@ -293,15 +293,12 @@ select trim(RC.RDB$CONSTRAINT_NAME) as RDB$CONSTRAINT_NAME,
                     })
                 .OrderBy(rc =>
                          {
-                             switch (rc.RelationConstraintType)
+                             return rc.RelationConstraintType switch
                              {
-                                 case RelationConstraintType.PrimaryKey:
-                                     return 1;
-                                 case RelationConstraintType.Unique:
-                                     return 2;
-                                 default:
-                                     return 3;
-                             }
+                                 RelationConstraintType.PrimaryKey => 1,
+                                 RelationConstraintType.Unique => 2,
+                                 _ => 3,
+                             };
                          })
                 .ThenBy(rc => rc.RelationName)
                 .ThenBy(rc => rc.ConstraintName);

@@ -16,21 +16,15 @@ public class SqlHelper40 : SqlHelper30
 
     public override string GetDataType(IDataType dataType, IDictionary<int, CharacterSet> characterSets, int defaultCharacterSetId)
     {
-        switch (dataType.FieldType)
+        return dataType.FieldType switch
         {
-            case FieldType.DecFloat16:
-                return "DECFLOAT(16)";
-            case FieldType.DecFloat34:
-                return "DECFLOAT(34)";
-            case FieldType.Int128:
-                return ScalableNumber("INT128", dataType);
-            case FieldType.TimeWithTimeZone:
-                return "TIME WITH TIME ZONE";
-            case FieldType.TimestampWithTimeZone:
-                return "TIMESTAMP WITH TIME ZONE";
-            default:
-                return base.GetDataType(dataType, characterSets, defaultCharacterSetId);
-        }
+            FieldType.DecFloat16 => "DECFLOAT(16)",
+            FieldType.DecFloat34 => "DECFLOAT(34)",
+            FieldType.Int128 => ScalableNumber("INT128", dataType),
+            FieldType.TimeWithTimeZone => "TIME WITH TIME ZONE",
+            FieldType.TimestampWithTimeZone => "TIMESTAMP WITH TIME ZONE",
+            _ => base.GetDataType(dataType, characterSets, defaultCharacterSetId),
+        };
     }
 
     /// <summary>

@@ -75,13 +75,11 @@ public class SqlHelper30 : SqlHelper25
 
     public override string GetDataType(IDataType dataType, IDictionary<int, CharacterSet> characterSets, int defaultCharacterSetId)
     {
-        switch (dataType.FieldType)
+        return dataType.FieldType switch
         {
-            case FieldType.Boolean:
-                return "BOOLEAN";
-            default:
-                return base.GetDataType(dataType, characterSets, defaultCharacterSetId);
-        }
+            FieldType.Boolean => "BOOLEAN",
+            _ => base.GetDataType(dataType, characterSets, defaultCharacterSetId),
+        };
     }
 
     public override bool IsValidExternalEngine(IHasExternalEngine item)

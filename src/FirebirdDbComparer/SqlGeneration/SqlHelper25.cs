@@ -138,15 +138,12 @@ public class SqlHelper25 : ISqlHelper
 
     public virtual string GetDataType(RelationField relationField, IDictionary<int, CharacterSet> characterSets, int defaultCharacterSetId)
     {
-        switch (relationField.Field.MetadataFieldType)
+        return relationField.Field.MetadataFieldType switch
         {
-            case MetadataFieldType.SystemGenerated:
-                return GetDataType(relationField.Field, characterSets, defaultCharacterSetId);
-            case MetadataFieldType.Domain:
-                return relationField.FieldSource.AsSqlIndentifier();
-            default:
-                throw new NotSupportedException($"Unknown field type: {relationField.Field.MetadataFieldType}.");
-        }
+            MetadataFieldType.SystemGenerated => GetDataType(relationField.Field, characterSets, defaultCharacterSetId),
+            MetadataFieldType.Domain => relationField.FieldSource.AsSqlIndentifier(),
+            _ => throw new NotSupportedException($"Unknown field type: {relationField.Field.MetadataFieldType}."),
+        };
     }
 
     public virtual IEnumerable<Command> HandleAlterCollation(Identifier fieldName, Identifier relationName, IHasCollation collation, IHasCollation otherCollation)
@@ -261,19 +258,18 @@ public class SqlHelper25 : ISqlHelper
 
     public virtual string HandleCollate<T>(T item, IDictionary<CollationKey, Collation> collations) where T : IHasCollation, IUsesField
     {
-        switch (item.Field.MetadataFieldType)
+        return item.Field.MetadataFieldType switch
         {
-            case MetadataFieldType.SystemGenerated:
-                return item.CollationId != null
-                           ? Collate(collations, (int)item.Field.CharacterSetId, (int)item.CollationId)
-                           : HandleCollate(item.Field, collations);
-            case MetadataFieldType.Domain:
-                return item.CollationId != null
-                           ? Collate(collations, (int)item.Field.CharacterSetId, (int)item.CollationId)
-                           : null;
-            default:
-                throw new NotSupportedException($"Unknown field type: {item.Field.MetadataFieldType}.");
-        }
+            MetadataFieldType.SystemGenerated
+                => item.CollationId != null
+                    ? Collate(collations, (int)item.Field.CharacterSetId, (int)item.CollationId)
+                    : HandleCollate(item.Field, collations),
+            MetadataFieldType.Domain
+                => item.CollationId != null
+                    ? Collate(collations, (int)item.Field.CharacterSetId, (int)item.CollationId)
+                    : null,
+            _ => throw new NotSupportedException($"Unknown field type: {item.Field.MetadataFieldType}."),
+        };
     }
 
     public virtual string HandleDefault(IHasDefaultSource item)
